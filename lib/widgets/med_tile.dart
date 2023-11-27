@@ -33,7 +33,7 @@ class MedicationTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  '$medication.name - $medication.dosage',
+                  '${medication.name} - ${medication.dosage}',
                   style: TextStyle(
                     fontFamily: 'OpenSans',
                     fontSize: 18,

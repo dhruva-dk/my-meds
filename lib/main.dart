@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:medication_tracker/database/objectbox.dart';
+
 import 'package:medication_tracker/objectbox.g.dart';
-import 'package:medication_tracker/services/medication_provider.dart';
+
 import 'package:medication_tracker/views/homeview.dart';
 
 void main() async {

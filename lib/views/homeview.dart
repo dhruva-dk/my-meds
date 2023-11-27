@@ -3,13 +3,19 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:medication_tracker/models/medication_model.dart';
 import 'package:medication_tracker/views/addtest.dart';
 import 'package:medication_tracker/widgets/med_tile.dart';
-import 'package:medication_tracker/services/medication_provider.dart'; // Import your medication provider
+// Import your medication provider
 
 class HomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // Listening to the medicationListProvider
-    final medicationList = ref.watch(medicationListProvider);
+    /// placeholder medication data in medicationList
+    final medicationList = new List<Medication>.generate(
+        6,
+        (i) => new Medication(
+            name: 'Medication ',
+            dosage: 'Dosage ',
+            additionalInfo: 'Additional Info '));
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -21,7 +27,35 @@ class HomeScreen extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            // Your existing widgets...
+            //padding only on left 16px and a header saying "Your Medications"
+            Padding(
+              padding: const EdgeInsets.only(left: 16.0, top: 8.0),
+              child: Text(
+                'Your Medications',
+                style: TextStyle(
+                  fontFamily: 'OpenSans',
+                  fontSize: 30,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+
+            //padding only on left 16px, 0 on top and a subheader in grey with the current date
+            Padding(
+              padding: const EdgeInsets.only(left: 16.0),
+              child: Text(
+                'Today, ${DateTime.now().month}/${DateTime.now().day}/${DateTime.now().year}',
+                style: TextStyle(
+                  fontFamily: 'OpenSans',
+                  fontSize: 18,
+                  color: Colors.grey[300],
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 16),
+
             Expanded(
               child: Container(
                 decoration: BoxDecoration(
