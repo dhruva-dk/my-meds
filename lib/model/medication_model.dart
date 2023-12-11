@@ -1,6 +1,4 @@
-
 class Medication {
-
   int id = 0; // ObjectBox manages this field for unique identification
 
   String name;
@@ -19,6 +17,7 @@ class Medication {
       'name': name,
       'dosage': dosage,
       'additionalInfo': additionalInfo,
+      'id': id,
     };
   }
 
@@ -28,6 +27,7 @@ class Medication {
       name: json['name'],
       dosage: json['dosage'],
       additionalInfo: json['additionalInfo'],
+      id: json['id'],
     );
   }
 }
