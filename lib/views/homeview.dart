@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:medication_tracker/models/medication_model.dart';
 import 'package:medication_tracker/views/addtest.dart';
 import 'package:medication_tracker/widgets/med_tile.dart';
 // Import your medication provider
 
-class HomeScreen extends ConsumerWidget {
+class HomeScreen extends StatelessWidget {
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(
+    BuildContext context,
+  ) {
     // Listening to the medicationListProvider
     /// placeholder medication data in medicationList
     final medicationList = new List<Medication>.generate(

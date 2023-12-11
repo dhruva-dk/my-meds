@@ -1,9 +1,6 @@
-// import objectbox
-import 'package:objectbox/objectbox.dart';
 
-@Entity()
 class Medication {
-  @Id()
+
   int id = 0; // ObjectBox manages this field for unique identification
 
   String name;

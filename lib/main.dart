@@ -1,20 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import 'package:medication_tracker/objectbox.g.dart';
+import 'package:medication_tracker/models/medication_model.dart';
 
 import 'package:medication_tracker/views/homeview.dart';
 
 void main() async {
   //initialzie with providerscope
   WidgetsFlutterBinding.ensureInitialized();
-  await openStore();
 
-  runApp(ProviderScope(child: MyApp()));
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key});
 
   // This widget is the root of your application.
   @override
@@ -50,4 +47,6 @@ class MyApp extends StatelessWidget {
       home: HomeScreen(),
     );
   }
+    
+  
 }
