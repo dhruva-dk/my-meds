@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:medication_tracker/models/medication_model.dart';
+import 'package:medication_tracker/model/medication_model.dart';
+import 'package:medication_tracker/providers/medication_provider.dart';
 
-import 'package:medication_tracker/views/homeview.dart';
+import 'package:medication_tracker/ui/homeview.dart';
+//import provider
+import 'package:provider/provider.dart';
 
-void main() async {
-  //initialzie with providerscope
-  WidgetsFlutterBinding.ensureInitialized();
-
-  runApp(MyApp());
+void main() {
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => MedicationProvider(),
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -47,6 +52,4 @@ class MyApp extends StatelessWidget {
       home: HomeScreen(),
     );
   }
-    
-  
 }

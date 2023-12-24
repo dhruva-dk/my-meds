@@ -1,5 +1,5 @@
 class Medication {
-  int id = 0; // ObjectBox manages this field for unique identification
+  int id = 0;
 
   String name;
   String dosage;

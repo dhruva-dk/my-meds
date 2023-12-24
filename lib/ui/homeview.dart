@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 
-import 'package:medication_tracker/models/medication_model.dart';
-import 'package:medication_tracker/views/addtest.dart';
+import 'package:medication_tracker/providers/medication_provider.dart';
+import 'package:medication_tracker/ui/addtest.dart';
 import 'package:medication_tracker/widgets/med_tile.dart';
 // Import your medication provider
+
+//import provider
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatelessWidget {
   @override
@@ -12,12 +15,6 @@ class HomeScreen extends StatelessWidget {
   ) {
     // Listening to the medicationListProvider
     /// placeholder medication data in medicationList
-    final medicationList = new List<Medication>.generate(
-        6,
-        (i) => new Medication(
-            name: 'Medication ',
-            dosage: 'Dosage ',
-            additionalInfo: 'Additional Info '));
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -33,7 +30,7 @@ class HomeScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(left: 16.0, top: 8.0),
               child: Text(
-                'Your Medications',
+                'John Doe',
                 style: TextStyle(
                   fontFamily: 'OpenSans',
                   fontSize: 30,
@@ -47,7 +44,7 @@ class HomeScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(left: 16.0),
               child: Text(
-                'Today, ${DateTime.now().month}/${DateTime.now().day}/${DateTime.now().year}',
+                "Date of Birth: 01/01/2000",
                 style: TextStyle(
                   fontFamily: 'OpenSans',
                   fontSize: 18,
@@ -68,17 +65,22 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.only(top: 12.0),
-                  child: ListView.builder(
-                    itemCount: medicationList.length,
-                    itemBuilder: (context, index) {
-                      final medication = medicationList[index];
-                      return MedicationTile(
-                          medication:
-                              medication); // Using your custom MedTile widget
-                    },
-                  ),
-                ),
+                    padding: const EdgeInsets.only(top: 12.0),
+                    child: Consumer<MedicationProvider>(
+                      builder: (context, medicationProvider, child) {
+                        final medicationList = medicationProvider.medications;
+
+                        return ListView.builder(
+                          itemCount: medicationList.length,
+                          itemBuilder: (context, index) {
+                            final medication = medicationList[index];
+                            return MedicationTile(
+                                medication:
+                                    medication); // Using your custom MedicationTile widget
+                          },
+                        );
+                      },
+                    )),
               ),
             ),
           ],
