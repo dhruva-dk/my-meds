@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:medication_tracker/database/database.dart';
 import 'package:medication_tracker/model/medication_model.dart';
-import 'package:provider/provider.dart';
 
 class MedicationProvider with ChangeNotifier {
   final DatabaseHelper _databaseHelper = DatabaseHelper.instance;
@@ -16,6 +15,7 @@ class MedicationProvider with ChangeNotifier {
 
   Future<void> loadMedications() async {
     _medications = await _databaseHelper.queryAllRows();
+    print(_medications);
     notifyListeners();
   }
 

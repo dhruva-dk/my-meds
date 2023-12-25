@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:medication_tracker/providers/medication_provider.dart';
 import 'package:medication_tracker/ui/addtest.dart';
+import 'package:medication_tracker/ui/fdasearch.dart';
 import 'package:medication_tracker/widgets/med_tile.dart';
 // Import your medication provider
 
@@ -90,7 +91,7 @@ class HomeScreen extends StatelessWidget {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => TestStoragePage()),
+            MaterialPageRoute(builder: (context) => FDASearchPage()),
           );
         },
         backgroundColor: Colors.black,

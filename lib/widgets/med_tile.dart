@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:medication_tracker/model/medication_model.dart';
+import 'package:medication_tracker/providers/medication_provider.dart';
+import 'package:provider/provider.dart';
 
 class MedicationTile extends StatelessWidget {
   final Medication medication;
@@ -41,7 +43,6 @@ class MedicationTile extends StatelessWidget {
                     color: Colors.black,
                   ),
                 ),
-                //SizedBox(height: 4),
                 Text(
                   medication.additionalInfo,
                   style: TextStyle(
@@ -54,33 +55,29 @@ class MedicationTile extends StatelessWidget {
             ),
           ),
           Theme(
-            data: // Change the color of the popup menu
-                Theme.of(context).copyWith(),
+            data: Theme.of(context).copyWith(),
             child: PopupMenuButton<String>(
               onSelected: (String result) {
-                // Handle menu selection
+                if (result == 'delete') {
+                  _deleteMedication(context, medication.id!);
+                }
               },
               shape: RoundedRectangleBorder(
-                // Making the popup menu rounded
                 borderRadius: BorderRadius.circular(16.0),
               ),
               itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
                 const PopupMenuItem<String>(
                   value: 'delete',
-                  child: Row(
-                    children: [
-                      Icon(Icons.delete, color: Colors.red), // Red trash icon
-                      SizedBox(width: 8), // Space between icon and text
-                      Text(
-                        'Delete',
+                  child: ListTile(
+                    leading: Icon(Icons.delete, color: Colors.red),
+                    title: Text('Delete',
                         style: TextStyle(
+                          fontFamily: 'OpenSans',
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
                           color: Colors.white,
-                        ),
-                      ),
-                    ],
+                        )),
                   ),
-
-                  // Change background color
                 ),
               ],
             ),
@@ -88,5 +85,11 @@ class MedicationTile extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  void _deleteMedication(BuildContext context, int id) {
+    // Call the delete method from MedicationProvider
+    Provider.of<MedicationProvider>(context, listen: false)
+        .deleteMedication(id);
   }
 }

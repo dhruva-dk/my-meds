@@ -1,12 +1,12 @@
 class Medication {
-  int id = 0;
+  int? id;
 
   String name;
   String dosage;
   String additionalInfo;
 
   Medication(
-      {this.id = 0,
+      {this.id,
       required this.name,
       required this.dosage,
       required this.additionalInfo});

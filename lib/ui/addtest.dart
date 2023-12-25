@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-
-import 'dart:convert';
+import 'package:medication_tracker/model/medication_model.dart';
+import 'package:medication_tracker/providers/medication_provider.dart';
+import 'package:provider/provider.dart';
 
 class TestStoragePage extends StatefulWidget {
   const TestStoragePage({super.key});
@@ -16,8 +17,31 @@ class _TestStoragePageState extends State<TestStoragePage> {
       TextEditingController();
 
   void _cancel() {
-    //navigate back to home screen on same route
     Navigator.pop(context);
+  }
+
+  void _accept(BuildContext context) async {
+    final String name = _nameController.text;
+    final String dosage = _dosageController.text;
+    final String additionalInfo = _additionalInfoController.text;
+
+    // Create a Medication object
+    Medication newMedication = Medication(
+      name: name,
+      dosage: dosage,
+      additionalInfo: additionalInfo,
+    );
+
+    // Save the medication using MedicationProvider
+    try {
+      await Provider.of<MedicationProvider>(context, listen: false)
+          .addMedication(newMedication);
+      Navigator.pop(context); // Go back to the previous screen after saving
+    } catch (e) {
+      // Handle errors, e.g., show a Snackbar
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Error saving medication')));
+    }
   }
 
   @override
@@ -29,16 +53,20 @@ class _TestStoragePageState extends State<TestStoragePage> {
         child: Column(
           children: <Widget>[
             TextField(
-                controller: _nameController,
-                decoration: InputDecoration(labelText: 'Medication Name')),
+              controller: _nameController,
+              decoration: InputDecoration(labelText: 'Medication Name'),
+            ),
             TextField(
-                controller: _dosageController,
-                decoration: InputDecoration(labelText: 'Dosage')),
+              controller: _dosageController,
+              decoration: InputDecoration(labelText: 'Dosage'),
+            ),
             TextField(
-                controller: _additionalInfoController,
-                decoration: InputDecoration(labelText: 'Additional Info')),
+              controller: _additionalInfoController,
+              decoration: InputDecoration(labelText: 'Additional Info'),
+            ),
             SizedBox(height: 20),
-            ElevatedButton(onPressed: () {}, child: Text('Accept')),
+            ElevatedButton(
+                onPressed: () => _accept(context), child: Text('Accept')),
             TextButton(onPressed: _cancel, child: Text('Cancel')),
           ],
         ),
@@ -46,5 +74,3 @@ class _TestStoragePageState extends State<TestStoragePage> {
     );
   }
 }
-
-void main() => runApp(MaterialApp(home: TestStoragePage()));
