@@ -12,8 +12,13 @@ class FDAAPIServiceProvider with ChangeNotifier {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
+  String _errorMessage = '';
+  String get errorMessage => _errorMessage;
+
   Future<void> searchMedications(String query) async {
     _isLoading = true;
+    _errorMessage = '';
+
     notifyListeners();
 
     try {
@@ -24,7 +29,8 @@ class FDAAPIServiceProvider with ChangeNotifier {
       // Handle exceptions
       _isLoading = false;
       //throw exception
-      throw Exception('Failed to load medications from FDA');
+      _errorMessage = 'An error occurred: $e';
+      notifyListeners();
     }
   }
 }

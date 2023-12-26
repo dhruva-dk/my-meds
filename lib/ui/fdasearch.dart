@@ -53,7 +53,7 @@ class _FDASearchPageState extends State<FDASearchPage> {
               controller: _searchController,
               // ... text field decoration ...
               decoration: InputDecoration(
-                hintText: 'Search',
+                hintText: 'Search (min 5 characters))',
                 prefixIcon: Icon(Icons.search),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(24),
@@ -64,19 +64,53 @@ class _FDASearchPageState extends State<FDASearchPage> {
                 ),
               ),
             ),
+            SizedBox(height: 8),
+
+            //button to skip to manual entry
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                primary: Colors.black, // Button color
+                onPrimary: Colors.white, // Text color
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(24), // Rounded corners
+                ),
+                padding: EdgeInsets.symmetric(horizontal: 32, vertical: 8),
+                minimumSize:
+                    Size(double.infinity, 45), // Maximum width and fixed height
+              ),
+              onPressed: () {
+                // Add your onPressed code here!
+              },
+              child: Text(
+                'Manual Input',
+                style: TextStyle(fontSize: 14),
+              ),
+            ),
+
             SizedBox(height: 16),
+
             Expanded(
               child: Consumer<FDAAPIServiceProvider>(
                 builder: (context, provider, child) {
-                  if (provider.isLoading) {
-                    return const Center(child: CircularProgressIndicator());
+                  try {
+                    if (provider.searchResults.isEmpty) {
+                      return Center(child: Text('No results'));
+                    }
+                    if (provider.errorMessage.isNotEmpty) {
+                      return Center(child: Text(provider.errorMessage));
+                    }
+                    if (provider.isLoading) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    return ListView.builder(
+                      itemCount: provider.searchResults.length,
+                      itemBuilder: (context, index) {
+                        return SearchTile(drug: provider.searchResults[index]);
+                      },
+                    );
+                  } catch (e) {
+                    return Center(child: Text('Error: $e'));
                   }
-                  return ListView.builder(
-                    itemCount: provider.searchResults.length,
-                    itemBuilder: (context, index) {
-                      return SearchTile(drug: provider.searchResults[index]);
-                    },
-                  );
                 },
               ),
             ),

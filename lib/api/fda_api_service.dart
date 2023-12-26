@@ -8,18 +8,22 @@ class FDAAPIService {
 
   Future<List<FDADrug>> searchMedications(String query) async {
     query = query.toLowerCase();
-    final url =
-        Uri.parse('$baseUrl?search=brand_name:$query OR generic_name:$query');
+    final url = Uri.parse(
+        '$baseUrl?search=brand_name:$query+generic_name:$query&limit=5');
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
-      List<FDADrug> medications = [];
+      if (data['results'] != null && data['results'].isNotEmpty) {
+        List<FDADrug> medications = [];
 
-      for (var item in data['results']) {
-        medications.add(FDADrug.fromJson(item));
+        for (var item in data['results']) {
+          medications.add(FDADrug.fromJson(item));
+        }
+        return medications;
+      } else {
+        throw Exception('No results found');
       }
-      return medications;
     } else {
       // Handle network error or invalid response
       throw Exception('Failed to load medications from FDA');
