@@ -29,7 +29,7 @@ class FDAAPIServiceProvider with ChangeNotifier {
       // Handle exceptions
       _isLoading = false;
       //throw exception
-      _errorMessage = 'An error occurred: $e';
+      _errorMessage = '$e';
       notifyListeners();
     }
   }

@@ -30,7 +30,7 @@ class _FDASearchPageState extends State<FDASearchPage> {
   void _onSearchChanged() {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
     _debounce = Timer(const Duration(milliseconds: 500), () {
-      if (_searchController.text.length >= 5) {
+      if (_searchController.text.length >= 3) {
         Provider.of<FDAAPIServiceProvider>(context, listen: false)
             .searchMedications(_searchController.text.toLowerCase());
       }
@@ -53,7 +53,7 @@ class _FDASearchPageState extends State<FDASearchPage> {
               controller: _searchController,
               // ... text field decoration ...
               decoration: InputDecoration(
-                hintText: 'Search (min 5 characters))',
+                hintText: 'Search (min 3 characters)',
                 prefixIcon: Icon(Icons.search),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(24),
@@ -93,9 +93,6 @@ class _FDASearchPageState extends State<FDASearchPage> {
               child: Consumer<FDAAPIServiceProvider>(
                 builder: (context, provider, child) {
                   try {
-                    if (provider.searchResults.isEmpty) {
-                      return Center(child: Text('No results'));
-                    }
                     if (provider.errorMessage.isNotEmpty) {
                       return Center(child: Text(provider.errorMessage));
                     }
@@ -120,48 +117,3 @@ class _FDASearchPageState extends State<FDASearchPage> {
     );
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-/*import 'package:flutter/material.dart';
-
-class FDASearchPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('FDA Search'),
-      ),
-      body: Container(
-        padding: EdgeInsets.all(16),
-        child: Column(
-          children: [
-            TextField(
-              decoration: InputDecoration(
-                hintText: 'Search',
-                prefixIcon: Icon(Icons.search),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(24),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(24),
-                  borderSide: BorderSide(color: Colors.black, width: 2),
-                ),
-              ),
-            ),
-            SizedBox(height: 16),
-            // Add additional functionality here
-          ],
-        ),
-      ),
-    );
-  }
-}*/

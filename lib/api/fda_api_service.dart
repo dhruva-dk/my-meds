@@ -9,7 +9,7 @@ class FDAAPIService {
   Future<List<FDADrug>> searchMedications(String query) async {
     query = query.toLowerCase();
     final url = Uri.parse(
-        '$baseUrl?search=brand_name:$query+generic_name:$query&limit=5');
+        '$baseUrl?search=brand_name:$query+generic_name:$query&limit=20');
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
@@ -26,7 +26,7 @@ class FDAAPIService {
       }
     } else {
       // Handle network error or invalid response
-      throw Exception('Failed to load medications from FDA');
+      throw Exception('No Results Found');
     }
   }
 }
