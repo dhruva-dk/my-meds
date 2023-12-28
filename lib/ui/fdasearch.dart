@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:medication_tracker/providers/fda_api_provider.dart';
+import 'package:medication_tracker/ui/createmedication.dart';
 import 'package:provider/provider.dart';
 import 'package:medication_tracker/widgets/search_tile.dart';
 
@@ -80,6 +81,7 @@ class _FDASearchPageState extends State<FDASearchPage> {
               ),
               onPressed: () {
                 // Add your onPressed code here!
+                //navigate to create medication page with no initial drug
               },
               child: Text(
                 'Manual Input',
@@ -102,7 +104,18 @@ class _FDASearchPageState extends State<FDASearchPage> {
                     return ListView.builder(
                       itemCount: provider.searchResults.length,
                       itemBuilder: (context, index) {
-                        return SearchTile(drug: provider.searchResults[index]);
+                        return GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => CreateMedicationPage(
+                                        initialDrug:
+                                            provider.searchResults[index])),
+                              );
+                            },
+                            child: SearchTile(
+                                drug: provider.searchResults[index]));
                       },
                     );
                   } catch (e) {
