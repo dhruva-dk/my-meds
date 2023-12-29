@@ -5,9 +5,9 @@ import 'package:medication_tracker/providers/medication_provider.dart';
 import 'package:provider/provider.dart';
 
 class CreateMedicationPage extends StatefulWidget {
-  final FDADrug initialDrug;
+  final FDADrug? initialDrug;
 
-  CreateMedicationPage({required this.initialDrug});
+  CreateMedicationPage({this.initialDrug});
 
   @override
   _CreateMedicationPageState createState() => _CreateMedicationPageState();
@@ -22,12 +22,12 @@ class _CreateMedicationPageState extends State<CreateMedicationPage> {
   void initState() {
     super.initState();
     _nameController = TextEditingController(
-        text:
-            "${widget.initialDrug.brandName} - ${widget.initialDrug.genericName}");
-    _dosageController =
-        TextEditingController(); // Initialize with appropriate data if available
-    _additionalInfoController =
-        TextEditingController(); // Initialize with appropriate data if available
+      text: widget.initialDrug != null
+          ? "${widget.initialDrug!.brandName} - ${widget.initialDrug!.genericName}"
+          : '',
+    );
+    _dosageController = TextEditingController();
+    _additionalInfoController = TextEditingController();
   }
 
   @override

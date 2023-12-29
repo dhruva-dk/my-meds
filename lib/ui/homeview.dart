@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:medication_tracker/providers/medication_provider.dart';
 import 'package:medication_tracker/ui/addtest.dart';
+import 'package:medication_tracker/ui/editprofile.dart';
 import 'package:medication_tracker/ui/fdasearch.dart';
 import 'package:medication_tracker/widgets/med_tile.dart';
 // Import your medication provider
@@ -28,17 +29,41 @@ class HomeScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             //padding only on left 16px and a header saying "Your Medications"
-            Padding(
-              padding: const EdgeInsets.only(left: 16.0, top: 8.0),
-              child: Text(
-                'John Doe',
-                style: TextStyle(
-                  fontFamily: 'OpenSans',
-                  fontSize: 30,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.white,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 16.0, top: 8.0),
+                  child: Text(
+                    'John Doe',
+                    style: TextStyle(
+                      fontFamily: 'OpenSans',
+                      fontSize: 30,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white,
+                    ),
+                  ),
                 ),
-              ),
+                //iconbutton to go to edit profile
+                Padding(
+                  padding: const EdgeInsets.only(right: 16, top: 8.0),
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.account_circle,
+                      color: Colors.white,
+                      size: 30,
+                    ),
+                    onPressed: () {
+                      // Navigate to the Edit Profile page
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => EditProfilePage()),
+                      );
+                    },
+                  ),
+                ),
+              ],
             ),
 
             //padding only on left 16px, 0 on top and a subheader in grey with the current date

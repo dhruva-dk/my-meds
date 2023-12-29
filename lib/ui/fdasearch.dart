@@ -82,6 +82,12 @@ class _FDASearchPageState extends State<FDASearchPage> {
               onPressed: () {
                 // Add your onPressed code here!
                 //navigate to create medication page with no initial drug
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CreateMedicationPage(),
+                  ),
+                );
               },
               child: Text(
                 'Manual Input',
