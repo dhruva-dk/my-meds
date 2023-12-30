@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:medication_tracker/providers/medication_provider.dart';
-import 'package:medication_tracker/ui/addtest.dart';
 import 'package:medication_tracker/ui/editprofile.dart';
 import 'package:medication_tracker/ui/fdasearch.dart';
 import 'package:medication_tracker/widgets/med_tile.dart';
@@ -11,6 +10,8 @@ import 'package:medication_tracker/widgets/med_tile.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
   @override
   Widget build(
     BuildContext context,
@@ -32,8 +33,8 @@ class HomeScreen extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 16.0, top: 8.0),
+                const Padding(
+                  padding: EdgeInsets.only(left: 16.0, top: 8.0),
                   child: Text(
                     'John Doe',
                     style: TextStyle(
@@ -48,7 +49,7 @@ class HomeScreen extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(right: 16, top: 8.0),
                   child: IconButton(
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.account_circle,
                       color: Colors.white,
                       size: 30,
@@ -58,7 +59,7 @@ class HomeScreen extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => EditProfilePage()),
+                            builder: (context) => const EditProfilePage()),
                       );
                     },
                   ),
@@ -85,7 +86,7 @@ class HomeScreen extends StatelessWidget {
               child: Container(
                 decoration: BoxDecoration(
                   color: Colors.grey[200],
-                  borderRadius: BorderRadius.only(
+                  borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(30.0),
                     topRight: Radius.circular(30.0),
                   ),
@@ -116,14 +117,14 @@ class HomeScreen extends StatelessWidget {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => FDASearchPage()),
+            MaterialPageRoute(builder: (context) => const FDASearchPage()),
           );
         },
         backgroundColor: Colors.black,
-        child: Icon(Icons.add, color: Colors.white, size: 20),
-        shape: CircleBorder(),
+        shape: const CircleBorder(),
         elevation: 3.0,
         materialTapTargetSize: MaterialTapTargetSize.padded,
+        child: const Icon(Icons.add, color: Colors.white, size: 20),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );

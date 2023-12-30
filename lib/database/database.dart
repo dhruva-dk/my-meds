@@ -13,14 +13,14 @@ class DatabaseException implements Exception {
 }
 
 class DatabaseHelper {
-  static final _databaseName = "MedicationDatabase.db";
-  static final _databaseVersion = 1;
-  static final table = 'medication_table';
+  static const _databaseName = "MedicationDatabase.db";
+  static const _databaseVersion = 1;
+  static const table = 'medication_table';
 
-  static final columnId = 'id';
-  static final columnName = 'name';
-  static final columnDosage = 'dosage';
-  static final columnAdditionalInfo = 'additionalInfo';
+  static const columnId = 'id';
+  static const columnName = 'name';
+  static const columnDosage = 'dosage';
+  static const columnAdditionalInfo = 'additionalInfo';
 
   // Make this a singleton class
   DatabaseHelper._privateConstructor();

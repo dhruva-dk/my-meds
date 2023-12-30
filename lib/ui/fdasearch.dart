@@ -8,6 +8,8 @@ import 'package:medication_tracker/widgets/search_tile.dart';
 import 'dart:async';
 
 class FDASearchPage extends StatefulWidget {
+  const FDASearchPage({super.key});
+
   @override
   _FDASearchPageState createState() => _FDASearchPageState();
 }
@@ -42,7 +44,7 @@ class _FDASearchPageState extends State<FDASearchPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('FDA Search'),
+        title: const Text('FDA Search'),
         backgroundColor: Colors.grey[200],
       ),
       backgroundColor: Colors.grey[200],
@@ -55,29 +57,28 @@ class _FDASearchPageState extends State<FDASearchPage> {
               // ... text field decoration ...
               decoration: InputDecoration(
                 hintText: 'Search (min 3 characters)',
-                prefixIcon: Icon(Icons.search),
+                prefixIcon: const Icon(Icons.search),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(24),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(24),
-                  borderSide: BorderSide(color: Colors.black, width: 2),
+                  borderSide: const BorderSide(color: Colors.black, width: 2),
                 ),
               ),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
 
             //button to skip to manual entry
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                primary: Colors.black, // Button color
-                onPrimary: Colors.white, // Text color
+                foregroundColor: Colors.white, backgroundColor: Colors.black, // Text color
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(24), // Rounded corners
                 ),
-                padding: EdgeInsets.symmetric(horizontal: 32, vertical: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 8),
                 minimumSize:
-                    Size(double.infinity, 45), // Maximum width and fixed height
+                    const Size(double.infinity, 45), // Maximum width and fixed height
               ),
               onPressed: () {
                 // Add your onPressed code here!
@@ -85,17 +86,17 @@ class _FDASearchPageState extends State<FDASearchPage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => CreateMedicationPage(),
+                    builder: (context) => const CreateMedicationPage(),
                   ),
                 );
               },
-              child: Text(
+              child: const Text(
                 'Manual Input',
                 style: TextStyle(fontSize: 14),
               ),
             ),
 
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
 
             Expanded(
               child: Consumer<FDAAPIServiceProvider>(

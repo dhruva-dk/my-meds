@@ -40,34 +40,34 @@ class _TestStoragePageState extends State<TestStoragePage> {
     } catch (e) {
       // Handle errors, e.g., show a Snackbar
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Error saving medication')));
+          .showSnackBar(const SnackBar(content: Text('Error saving medication')));
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Test Local Storage')),
+      appBar: AppBar(title: const Text('Test Local Storage')),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           children: <Widget>[
             TextField(
               controller: _nameController,
-              decoration: InputDecoration(labelText: 'Medication Name'),
+              decoration: const InputDecoration(labelText: 'Medication Name'),
             ),
             TextField(
               controller: _dosageController,
-              decoration: InputDecoration(labelText: 'Dosage'),
+              decoration: const InputDecoration(labelText: 'Dosage'),
             ),
             TextField(
               controller: _additionalInfoController,
-              decoration: InputDecoration(labelText: 'Additional Info'),
+              decoration: const InputDecoration(labelText: 'Additional Info'),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
-                onPressed: () => _accept(context), child: Text('Accept')),
-            TextButton(onPressed: _cancel, child: Text('Cancel')),
+                onPressed: () => _accept(context), child: const Text('Accept')),
+            TextButton(onPressed: _cancel, child: const Text('Cancel')),
           ],
         ),
       ),

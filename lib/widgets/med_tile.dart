@@ -6,14 +6,14 @@ import 'package:provider/provider.dart';
 class MedicationTile extends StatelessWidget {
   final Medication medication;
 
-  MedicationTile({
+  const MedicationTile({super.key, 
     required this.medication,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -23,7 +23,7 @@ class MedicationTile extends StatelessWidget {
             color: Colors.grey.withOpacity(0.2),
             spreadRadius: 1,
             blurRadius: 5,
-            offset: Offset(0, 1),
+            offset: const Offset(0, 1),
           ),
         ],
       ),
@@ -36,7 +36,7 @@ class MedicationTile extends StatelessWidget {
               children: <Widget>[
                 Text(
                   '${medication.name} - ${medication.dosage}',
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontFamily: 'OpenSans',
                     fontSize: 18,
                     fontWeight: FontWeight.w500,

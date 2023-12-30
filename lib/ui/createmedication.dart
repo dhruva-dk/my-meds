@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 class CreateMedicationPage extends StatefulWidget {
   final FDADrug? initialDrug;
 
-  CreateMedicationPage({this.initialDrug});
+  const CreateMedicationPage({super.key, this.initialDrug});
 
   @override
   _CreateMedicationPageState createState() => _CreateMedicationPageState();
@@ -61,7 +61,7 @@ class _CreateMedicationPageState extends State<CreateMedicationPage> {
     } catch (e) {
       // Handle errors, e.g., show a Snackbar
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Error saving medication')));
+          .showSnackBar(const SnackBar(content: Text('Error saving medication')));
     }
   }
 
@@ -70,69 +70,68 @@ class _CreateMedicationPageState extends State<CreateMedicationPage> {
     return Scaffold(
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
-        title: Text('Create Medication'),
+        title: const Text('Create Medication'),
         backgroundColor: Colors.grey[200],
       ),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
             TextField(
               controller: _nameController,
               decoration: InputDecoration(
                 labelText: 'Name',
-                labelStyle: TextStyle(color: Colors.black),
+                labelStyle: const TextStyle(color: Colors.black),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(24),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(24),
-                  borderSide: BorderSide(color: Colors.black, width: 2),
+                  borderSide: const BorderSide(color: Colors.black, width: 2),
                 ),
               ),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             TextField(
               controller: _dosageController,
               decoration: InputDecoration(
                 labelText: 'Dosage',
-                labelStyle: TextStyle(color: Colors.black),
+                labelStyle: const TextStyle(color: Colors.black),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(24),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(24),
-                  borderSide: BorderSide(color: Colors.black, width: 2),
+                  borderSide: const BorderSide(color: Colors.black, width: 2),
                 ),
               ),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             TextField(
               controller: _additionalInfoController,
               decoration: InputDecoration(
                 labelText: 'Additional Info',
-                labelStyle: TextStyle(color: Colors.black),
+                labelStyle: const TextStyle(color: Colors.black),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(24),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(24),
-                  borderSide: BorderSide(color: Colors.black, width: 2),
+                  borderSide: const BorderSide(color: Colors.black, width: 2),
                 ),
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                primary: Colors.black, // Button color
-                onPrimary: Colors.white, // Text color
-                minimumSize: Size(double.infinity, 50), // Button size
+                foregroundColor: Colors.white, backgroundColor: Colors.black, // Text color
+                minimumSize: const Size(double.infinity, 50), // Button size
               ),
               onPressed: () {
                 // TODO: Implement the logic to add the medication
                 _accept(context);
               },
-              child: Text('Add Medication'),
+              child: const Text('Add Medication'),
             ),
           ],
         ),

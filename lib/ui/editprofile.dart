@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class EditProfilePage extends StatefulWidget {
+  const EditProfilePage({super.key});
+
   @override
   _EditProfilePageState createState() => _EditProfilePageState();
 }
@@ -17,75 +19,75 @@ class _EditProfilePageState extends State<EditProfilePage> {
     return Scaffold(
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
-        title: Text('Edit Profile'),
+        title: const Text('Edit Profile'),
         backgroundColor: Colors.grey[200],
       ),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
             TextField(
               controller: _nameController,
               decoration: InputDecoration(
                 labelText: 'Name',
-                labelStyle: TextStyle(color: Colors.black),
+                labelStyle: const TextStyle(color: Colors.black),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(24),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(24),
-                  borderSide: BorderSide(color: Colors.black, width: 2),
+                  borderSide: const BorderSide(color: Colors.black, width: 2),
                 ),
               ),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             TextField(
               controller: _dobController,
               decoration: InputDecoration(
                 labelText: 'Date of Birth',
-                labelStyle: TextStyle(color: Colors.black),
+                labelStyle: const TextStyle(color: Colors.black),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(24),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(24),
-                  borderSide: BorderSide(color: Colors.black, width: 2),
+                  borderSide: const BorderSide(color: Colors.black, width: 2),
                 ),
               ),
               onTap: () {
                 // Implement DatePicker logic here
               },
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             TextField(
               controller: _pcpController,
               decoration: InputDecoration(
                 labelText: 'Primary Care Physician',
-                labelStyle: TextStyle(color: Colors.black),
+                labelStyle: const TextStyle(color: Colors.black),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(24),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(24),
-                  borderSide: BorderSide(color: Colors.black, width: 2),
+                  borderSide: const BorderSide(color: Colors.black, width: 2),
                 ),
               ),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
 
             //health conditions
             TextField(
               controller: _healthConditionsController,
               decoration: InputDecoration(
                 labelText: 'Health Conditions',
-                labelStyle: TextStyle(color: Colors.black),
+                labelStyle: const TextStyle(color: Colors.black),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(24),
                 ),
                 hintText: 'Health conditions',
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(24),
-                  borderSide: BorderSide(color: Colors.black, width: 2),
+                  borderSide: const BorderSide(color: Colors.black, width: 2),
                 ),
               ),
               keyboardType: TextInputType.multiline,
@@ -93,17 +95,16 @@ class _EditProfilePageState extends State<EditProfilePage> {
               minLines: 1,
             ),
 
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                primary: Colors.black,
-                onPrimary: Colors.white,
-                minimumSize: Size(double.infinity, 50),
+                foregroundColor: Colors.white, backgroundColor: Colors.black,
+                minimumSize: const Size(double.infinity, 50),
               ),
               onPressed: () {
                 // TODO: Implement the logic to save the profile
               },
-              child: Text('Save Profile'),
+              child: const Text('Save Profile'),
             ),
           ],
         ),
