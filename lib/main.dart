@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:medication_tracker/providers/fda_api_provider.dart';
 
 import 'package:medication_tracker/providers/medication_provider.dart';
+import 'package:medication_tracker/providers/profile_provider.dart';
 
 import 'package:medication_tracker/ui/homeview.dart';
 //import provider
@@ -13,6 +14,8 @@ void main() {
       providers: [
         ChangeNotifierProvider(create: (context) => MedicationProvider()),
         ChangeNotifierProvider(create: (context) => FDAAPIServiceProvider()),
+        //profile provider
+        ChangeNotifierProvider(create: (context) => ProfileProvider()),
       ],
       child: const MyApp(),
     ),

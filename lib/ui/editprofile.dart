@@ -19,7 +19,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     return Scaffold(
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
-        title: const Text('Edit Profile'),
+        title: const Text('Your Profile'),
         backgroundColor: Colors.grey[200],
       ),
       body: Padding(
@@ -62,7 +62,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
             TextField(
               controller: _pcpController,
               decoration: InputDecoration(
-                labelText: 'Primary Care Physician',
+                labelText: 'Primary Care Physician (optional)',
                 labelStyle: const TextStyle(color: Colors.black),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(24),
@@ -84,7 +84,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(24),
                 ),
-                hintText: 'Health conditions',
+                hintText: 'Health conditions (optional)',
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(24),
                   borderSide: const BorderSide(color: Colors.black, width: 2),
@@ -98,7 +98,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
             const SizedBox(height: 16),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.white, backgroundColor: Colors.black,
+                foregroundColor: Colors.white,
+                backgroundColor: Colors.black,
                 minimumSize: const Size(double.infinity, 50),
               ),
               onPressed: () {
