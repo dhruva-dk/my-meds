@@ -127,7 +127,7 @@ class _StartPageState extends State<StartPage> {
 
       // Update SharedPreferences to indicate the first launch is complete
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setBool('first_launch', true);
+      await prefs.setBool('first_launch', false);
 
       if (!mounted) return;
 
