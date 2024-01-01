@@ -1,36 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:medication_tracker/providers/fda_api_provider.dart';
-
 import 'package:medication_tracker/providers/medication_provider.dart';
 import 'package:medication_tracker/providers/profile_provider.dart';
-
-import 'package:medication_tracker/ui/homeview.dart';
-//import provider
+import 'package:medication_tracker/ui/homeview.dart'; // Import your StartPage
+import 'package:medication_tracker/ui/startpage.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  bool isFirstLaunch = prefs.getBool('first_launch') ?? true;
+  //prefs.setBool('first_launch', true);
+
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => MedicationProvider()),
         ChangeNotifierProvider(create: (context) => FDAAPIServiceProvider()),
-        //profile provider
         ChangeNotifierProvider(create: (context) => ProfileProvider()),
       ],
-      child: const MyApp(),
+      child: MyApp(isFirstLaunch: isFirstLaunch),
     ),
   );
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final bool isFirstLaunch;
+  const MyApp({super.key, required this.isFirstLaunch});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
+        //... theme data ...
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
         useMaterial3: true,
 
@@ -41,7 +45,7 @@ class MyApp extends StatelessWidget {
               TextStyle(color: Colors.white), // Text color for popup menu items
         ),
       ),
-      home: const HomeScreen(),
+      home: isFirstLaunch ? StartPage() : const HomeScreen(),
     );
   }
 }

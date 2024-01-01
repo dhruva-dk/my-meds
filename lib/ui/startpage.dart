@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:medication_tracker/model/user_profile.dart';
+import 'package:medication_tracker/providers/profile_provider.dart';
+import 'package:medication_tracker/ui/homeview.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class StartPage extends StatefulWidget {
   @override
@@ -23,22 +28,25 @@ class _StartPageState extends State<StartPage> {
         child: Form(
           key: _formKey,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Text('Welcome!',
-                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: Text(
-                    'To continue, please fill in the following information',
-                    style: TextStyle(fontSize: 18)),
+                  style: TextStyle(fontSize: 42, fontWeight: FontWeight.bold)),
+              //const SizedBox(height: 8),
+              Text(
+                'To continue, please fill in the following information.',
+                style: TextStyle(fontSize: 18, color: Colors.grey[800]),
+                textAlign: TextAlign.center,
               ),
+              const SizedBox(height: 32),
               TextFormField(
                 controller: _nameController,
                 decoration: _inputDecoration('Name'),
                 validator: (value) =>
                     value!.isEmpty ? 'Please enter your name' : null,
               ),
+              const SizedBox(height: 8),
               TextFormField(
                 controller: _dobController,
                 decoration: _inputDecoration('Date of Birth'),
@@ -46,18 +54,21 @@ class _StartPageState extends State<StartPage> {
                     value!.isEmpty ? 'Please enter your date of birth' : null,
                 onTap: () => _selectDate(context),
               ),
+              const SizedBox(height: 8),
               TextFormField(
                 controller: _pcpController,
                 decoration:
                     _inputDecoration('Primary Care Physician (optional)'),
               ),
+              const SizedBox(height: 8),
               TextFormField(
                 controller: _healthConditionsController,
                 decoration: _inputDecoration('Health Conditions (optional)'),
                 keyboardType: TextInputType.multiline,
-                maxLines: 4,
+                minLines: 3,
+                maxLines: 6,
               ),
-              Spacer(),
+              const SizedBox(height: 32),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                     primary: Colors.black,
@@ -92,14 +103,39 @@ class _StartPageState extends State<StartPage> {
     );
     if (picked != null) {
       setState(() {
-        _dobController.text = DateFormat('yyyy-MM-dd').format(picked);
+        _dobController.text = DateFormat('MM/dd/yyyy').format(picked);
       });
     }
   }
 
-  void _submitForm() {
-    if (_formKey.currentState!.validate()) {
-      // Handle form submission
+  void _submitForm() async {
+    if (_formKey.currentState!.validate() &&
+        _dobController.text.isNotEmpty &&
+        _nameController.text.isNotEmpty) {
+      // Save the profile details
+      //...
+
+      UserProfile profile = UserProfile(
+        name: _nameController.text,
+        dob: _dobController.text,
+        pcp: _pcpController.text,
+        healthConditions: _healthConditionsController.text,
+      );
+
+      // Save the profile to the database
+      Provider.of<ProfileProvider>(context, listen: false).saveProfile(profile);
+
+      // Update SharedPreferences to indicate the first launch is complete
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('first_launch', true);
+
+      if (!mounted) return;
+
+      // Navigate to the HomeScreen
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const HomeScreen()),
+      );
     }
   }
 }

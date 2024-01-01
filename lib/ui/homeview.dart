@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:medication_tracker/providers/medication_provider.dart';
+import 'package:medication_tracker/providers/profile_provider.dart';
 import 'package:medication_tracker/ui/editprofile.dart';
 import 'package:medication_tracker/ui/fdasearch.dart';
 import 'package:medication_tracker/widgets/med_tile.dart';
@@ -18,6 +19,7 @@ class HomeScreen extends StatelessWidget {
   ) {
     // Listening to the medicationListProvider
     /// placeholder medication data in medicationList
+    final profileProvider = Provider.of<ProfileProvider>(context);
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -33,11 +35,11 @@ class HomeScreen extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Padding(
-                  padding: EdgeInsets.only(left: 16.0, top: 8.0),
+                Padding(
+                  padding: const EdgeInsets.only(left: 16.0, top: 8.0),
                   child: Text(
-                    'John Doe',
-                    style: TextStyle(
+                    profileProvider.userProfile?.name ?? "Name not available",
+                    style: const TextStyle(
                       fontFamily: 'OpenSans',
                       fontSize: 30,
                       fontWeight: FontWeight.w500,
@@ -71,7 +73,7 @@ class HomeScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(left: 16.0),
               child: Text(
-                "Date of Birth: 01/01/2000",
+                "Date of Birth: ${profileProvider.userProfile?.dob ?? "No date of birth"}",
                 style: TextStyle(
                   fontFamily: 'OpenSans',
                   fontSize: 18,

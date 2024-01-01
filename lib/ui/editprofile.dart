@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:medication_tracker/model/user_profile.dart';
+import 'package:medication_tracker/providers/profile_provider.dart';
+import 'package:provider/provider.dart';
 
 class EditProfilePage extends StatefulWidget {
   const EditProfilePage({super.key});
@@ -13,6 +17,56 @@ class _EditProfilePageState extends State<EditProfilePage> {
   final TextEditingController _pcpController = TextEditingController();
   final TextEditingController _healthConditionsController =
       TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+    final profileProvider =
+        Provider.of<ProfileProvider>(context, listen: false);
+    final profile = profileProvider.userProfile;
+    if (profile != null) {
+      _nameController.text = profile.name;
+      _dobController.text = profile.dob;
+      _pcpController.text = profile.pcp;
+      _healthConditionsController.text = profile.healthConditions;
+    }
+  }
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(1900),
+      lastDate: DateTime.now(),
+    );
+    if (picked != null) {
+      setState(() {
+        _dobController.text = DateFormat('MM/dd/yyyy').format(picked);
+      });
+    }
+  }
+
+  void _saveProfile() {
+    if (_formKey.currentState!.validate()) {
+      final profile = UserProfile(
+        name: _nameController.text,
+        dob: _dobController.text,
+        pcp: _pcpController.text,
+        healthConditions: _healthConditionsController.text,
+      );
+      Provider.of<ProfileProvider>(context, listen: false).saveProfile(profile);
+      // Navigate back or show a success message
+      // show snack bar: profile updated
+
+      // Show a Snackbar indicating profile successfully updated
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Profile successfully updated'),
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,91 +78,61 @@ class _EditProfilePageState extends State<EditProfilePage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: _nameController,
-              decoration: InputDecoration(
-                labelText: 'Name',
-                labelStyle: const TextStyle(color: Colors.black),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(24),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(24),
-                  borderSide: const BorderSide(color: Colors.black, width: 2),
-                ),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              TextFormField(
+                controller: _nameController,
+                decoration: _inputDecoration('Name'),
+                validator: (value) =>
+                    value!.isEmpty ? 'Please enter your name' : null,
               ),
-            ),
-            const SizedBox(height: 8),
-            TextField(
-              controller: _dobController,
-              decoration: InputDecoration(
-                labelText: 'Date of Birth',
-                labelStyle: const TextStyle(color: Colors.black),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(24),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(24),
-                  borderSide: const BorderSide(color: Colors.black, width: 2),
-                ),
+              const SizedBox(height: 8),
+              TextFormField(
+                controller: _dobController,
+                decoration: _inputDecoration('Date of Birth'),
+                validator: (value) =>
+                    value!.isEmpty ? 'Please enter your date of birth' : null,
+                onTap: () => _selectDate(context),
               ),
-              onTap: () {
-                // Implement DatePicker logic here
-              },
-            ),
-            const SizedBox(height: 8),
-            TextField(
-              controller: _pcpController,
-              decoration: InputDecoration(
-                labelText: 'Primary Care Physician (optional)',
-                labelStyle: const TextStyle(color: Colors.black),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(24),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(24),
-                  borderSide: const BorderSide(color: Colors.black, width: 2),
-                ),
+              const SizedBox(height: 8),
+              TextFormField(
+                controller: _pcpController,
+                decoration:
+                    _inputDecoration('Primary Care Physician (optional)'),
               ),
-            ),
-            const SizedBox(height: 8),
-
-            //health conditions
-            TextField(
-              controller: _healthConditionsController,
-              decoration: InputDecoration(
-                labelText: 'Health Conditions',
-                labelStyle: const TextStyle(color: Colors.black),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(24),
-                ),
-                hintText: 'Health conditions (optional)',
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(24),
-                  borderSide: const BorderSide(color: Colors.black, width: 2),
-                ),
+              const SizedBox(height: 8),
+              TextFormField(
+                controller: _healthConditionsController,
+                decoration: _inputDecoration('Health Conditions (optional)'),
+                keyboardType: TextInputType.multiline,
+                maxLines: 6,
               ),
-              keyboardType: TextInputType.multiline,
-              maxLines: 8, // Increased size of the box
-              minLines: 1,
-            ),
-
-            const SizedBox(height: 16),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.white,
-                backgroundColor: Colors.black,
-                minimumSize: const Size(double.infinity, 50),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.white,
+                  backgroundColor: Colors.black,
+                  minimumSize: const Size(double.infinity, 50),
+                ),
+                onPressed: _saveProfile,
+                child: const Text('Save Profile'),
               ),
-              onPressed: () {
-                // TODO: Implement the logic to save the profile
-              },
-              child: const Text('Save Profile'),
-            ),
-          ],
+            ],
+          ),
         ),
+      ),
+    );
+  }
+
+  InputDecoration _inputDecoration(String label) {
+    return InputDecoration(
+      labelText: label,
+      border: OutlineInputBorder(borderRadius: BorderRadius.circular(24)),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(24),
+        borderSide: BorderSide(color: Colors.black, width: 2),
       ),
     );
   }
