@@ -60,18 +60,16 @@ class _CreateMedicationPageState extends State<CreateMedicationPage> {
               route.isFirst); // Go back to the previous screen after saving
     } catch (e) {
       // Handle errors, e.g., show a Snackbar
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('Error saving medication')));
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Error saving medication')));
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[200],
       appBar: AppBar(
         title: const Text('Create Medication'),
-        backgroundColor: Colors.grey[200],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -124,7 +122,8 @@ class _CreateMedicationPageState extends State<CreateMedicationPage> {
             const SizedBox(height: 16),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.white, backgroundColor: Colors.black, // Text color
+                foregroundColor: Colors.white,
+                backgroundColor: Colors.black, // Text color
                 minimumSize: const Size(double.infinity, 50), // Button size
               ),
               onPressed: () {

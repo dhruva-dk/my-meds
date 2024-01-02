@@ -45,9 +45,9 @@ class _FDASearchPageState extends State<FDASearchPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('FDA Search'),
-        backgroundColor: Colors.grey[200],
+        // backgroundColor: Colors.grey[200],
       ),
-      backgroundColor: Colors.grey[200],
+      //backgroundColor: Colors.grey[200],
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

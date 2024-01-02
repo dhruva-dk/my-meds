@@ -35,14 +35,28 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(
         //... theme data ...
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
+        colorScheme: ColorScheme.light(
+          primary: Colors.black, // Color of the header and selected items
+          onPrimary: Colors.white, // Color of text and icons on the header
+          surface: Colors.white, // Background color of the picker
+          onSurface: Colors.black, // Color of text and icons on the picker
+        ),
         useMaterial3: true,
-
+        scaffoldBackgroundColor: Colors.grey[200], // Default background color
+        appBarTheme: AppBarTheme(
+          color: Colors.grey[200], // AppBar background color
+          iconTheme: IconThemeData(color: Colors.black), // AppBar icon color
+          titleTextStyle: TextStyle(
+              color: Colors.black, fontSize: 20), // AppBar title text style
+        ),
         // Setting the popup menu theme
         popupMenuTheme: const PopupMenuThemeData(
           color: Colors.black, // Default popup menu background color
           textStyle:
               TextStyle(color: Colors.white), // Text color for popup menu items
+        ),
+        datePickerTheme: DatePickerThemeData(
+          backgroundColor: Colors.white,
         ),
       ),
       home: isFirstLaunch ? StartPage() : const HomeScreen(),
