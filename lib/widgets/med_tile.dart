@@ -6,7 +6,8 @@ import 'package:provider/provider.dart';
 class MedicationTile extends StatelessWidget {
   final Medication medication;
 
-  const MedicationTile({super.key, 
+  const MedicationTile({
+    super.key,
     required this.medication,
   });
 

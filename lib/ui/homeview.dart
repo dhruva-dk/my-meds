@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:medication_tracker/providers/medication_provider.dart';
 import 'package:medication_tracker/providers/profile_provider.dart';
+import 'package:medication_tracker/ui/createmedication.dart';
+import 'package:medication_tracker/ui/editmedication.dart';
 import 'package:medication_tracker/ui/editprofile.dart';
 import 'package:medication_tracker/ui/fdasearch.dart';
 import 'package:medication_tracker/widgets/med_tile.dart';
@@ -103,9 +105,17 @@ class HomeScreen extends StatelessWidget {
                           itemCount: medicationList.length,
                           itemBuilder: (context, index) {
                             final medication = medicationList[index];
-                            return MedicationTile(
-                                medication:
-                                    medication); // Using your custom MedicationTile widget
+                            return GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => EditMedicationPage(
+                                          medication: medication)),
+                                );
+                              },
+                              child: MedicationTile(medication: medication),
+                            ); // Using your custom MedicationTile widget
                           },
                         );
                       },

@@ -72,13 +72,15 @@ class _FDASearchPageState extends State<FDASearchPage> {
             //button to skip to manual entry
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.white, backgroundColor: Colors.black, // Text color
+                foregroundColor: Colors.white,
+                backgroundColor: Colors.black, // Text color
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(24), // Rounded corners
                 ),
-                padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 8),
-                minimumSize:
-                    const Size(double.infinity, 45), // Maximum width and fixed height
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 32, vertical: 8),
+                minimumSize: const Size(
+                    double.infinity, 50), // Maximum width and fixed height
               ),
               onPressed: () {
                 // Add your onPressed code here!
