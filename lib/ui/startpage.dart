@@ -22,63 +22,67 @@ class _StartPageState extends State<StartPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text('Welcome!',
-                    style:
-                        TextStyle(fontSize: 42, fontWeight: FontWeight.bold)),
-                //const SizedBox(height: 8),
-                Text(
-                  'To continue, please fill in the following information.',
-                  style: TextStyle(fontSize: 18, color: Colors.grey[800]),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 32),
-                TextFormField(
-                  controller: _nameController,
-                  decoration: _inputDecoration('Name'),
-                  validator: (value) =>
-                      value!.isEmpty ? 'Please enter your name' : null,
-                ),
-                const SizedBox(height: 8),
-                TextFormField(
-                  controller: _dobController,
-                  decoration: _inputDecoration('Date of Birth'),
-                  validator: (value) =>
-                      value!.isEmpty ? 'Please enter your date of birth' : null,
-                  onTap: () => _selectDate(context),
-                ),
-                const SizedBox(height: 8),
-                TextFormField(
-                  controller: _pcpController,
-                  decoration:
-                      _inputDecoration('Primary Care Physician (optional)'),
-                ),
-                const SizedBox(height: 8),
-                TextFormField(
-                  controller: _healthConditionsController,
-                  decoration: _inputDecoration('Health Conditions (optional)'),
-                  keyboardType: TextInputType.multiline,
-                  minLines: 3,
-                  maxLines: 6,
-                ),
-                const SizedBox(height: 32),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      primary: Colors.black,
-                      onPrimary: Colors.white,
-                      minimumSize: Size(double.infinity, 50)),
-                  onPressed: _submitForm,
-                  child: Text('Continue'),
-                ),
-              ],
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: SingleChildScrollView(
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text('Welcome!',
+                      style:
+                          TextStyle(fontSize: 42, fontWeight: FontWeight.bold)),
+                  //const SizedBox(height: 8),
+                  Text(
+                    'To continue, please fill in the following information.',
+                    style: TextStyle(fontSize: 18, color: Colors.grey[800]),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 32),
+                  TextFormField(
+                    controller: _nameController,
+                    decoration: _inputDecoration('Name'),
+                    validator: (value) =>
+                        value!.isEmpty ? 'Please enter your name' : null,
+                  ),
+                  const SizedBox(height: 8),
+                  TextFormField(
+                    controller: _dobController,
+                    decoration: _inputDecoration('Date of Birth'),
+                    validator: (value) => value!.isEmpty
+                        ? 'Please enter your date of birth'
+                        : null,
+                    onTap: () => _selectDate(context),
+                  ),
+                  const SizedBox(height: 8),
+                  TextFormField(
+                    controller: _pcpController,
+                    decoration:
+                        _inputDecoration('Primary Care Physician (optional)'),
+                  ),
+                  const SizedBox(height: 8),
+                  TextFormField(
+                    controller: _healthConditionsController,
+                    decoration:
+                        _inputDecoration('Health Conditions (optional)'),
+                    keyboardType: TextInputType.multiline,
+                    minLines: 3,
+                    maxLines: 6,
+                  ),
+                  const SizedBox(height: 32),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        primary: Colors.black,
+                        onPrimary: Colors.white,
+                        minimumSize: Size(double.infinity, 50)),
+                    onPressed: _submitForm,
+                    child: Text('Continue'),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

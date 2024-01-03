@@ -54,7 +54,7 @@ class _FDASearchPageState extends State<FDASearchPage> {
               controller: _searchController,
               // ... text field decoration ...
               decoration: InputDecoration(
-                hintText: 'Search (min 3 characters)',
+                hintText: 'Search',
                 prefixIcon: const Icon(Icons.search),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(24),
