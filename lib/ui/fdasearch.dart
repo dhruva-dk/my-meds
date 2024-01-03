@@ -48,93 +48,90 @@ class _FDASearchPageState extends State<FDASearchPage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              TextField(
-                controller: _searchController,
-                // ... text field decoration ...
-                decoration: InputDecoration(
-                  hintText: 'Search (min 3 characters)',
-                  prefixIcon: const Icon(Icons.search),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(24),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(24),
-                    borderSide: const BorderSide(color: Colors.black, width: 2),
-                  ),
+        child: Column(
+          children: [
+            TextField(
+              controller: _searchController,
+              // ... text field decoration ...
+              decoration: InputDecoration(
+                hintText: 'Search (min 3 characters)',
+                prefixIcon: const Icon(Icons.search),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(24),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(24),
+                  borderSide: const BorderSide(color: Colors.black, width: 2),
                 ),
               ),
-              const SizedBox(height: 8),
+            ),
+            const SizedBox(height: 8),
 
-              //button to skip to manual entry
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  backgroundColor: Colors.black, // Text color
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(24), // Rounded corners
-                  ),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 32, vertical: 8),
-                  minimumSize: const Size(
-                      double.infinity, 50), // Maximum width and fixed height
+            //button to skip to manual entry
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: Colors.black, // Text color
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(24), // Rounded corners
                 ),
-                onPressed: () {
-                  // Add your onPressed code here!
-                  //navigate to create medication page with no initial drug
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const CreateMedicationPage(),
-                    ),
-                  );
-                },
-                child: const Text(
-                  'Manual Input',
-                  style: TextStyle(fontSize: 14),
-                ),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 32, vertical: 8),
+                minimumSize: const Size(
+                    double.infinity, 50), // Maximum width and fixed height
               ),
+              onPressed: () {
+                // Add your onPressed code here!
+                //navigate to create medication page with no initial drug
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const CreateMedicationPage(),
+                  ),
+                );
+              },
+              child: const Text(
+                'Manual Input',
+                style: TextStyle(fontSize: 14),
+              ),
+            ),
 
-              const SizedBox(height: 16),
+            const SizedBox(height: 16),
 
-              Expanded(
-                child: Consumer<FDAAPIServiceProvider>(
-                  builder: (context, provider, child) {
-                    try {
-                      if (provider.errorMessage.isNotEmpty) {
-                        return Center(child: Text(provider.errorMessage));
-                      }
-                      if (provider.isLoading) {
-                        return const Center(child: CircularProgressIndicator());
-                      }
-                      return ListView.builder(
-                        itemCount: provider.searchResults.length,
-                        itemBuilder: (context, index) {
-                          return GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          CreateMedicationPage(
-                                              initialDrug: provider
-                                                  .searchResults[index])),
-                                );
-                              },
-                              child: SearchTile(
-                                  drug: provider.searchResults[index]));
-                        },
-                      );
-                    } catch (e) {
-                      return Center(child: Text('Error: $e'));
+            Expanded(
+              child: Consumer<FDAAPIServiceProvider>(
+                builder: (context, provider, child) {
+                  try {
+                    if (provider.errorMessage.isNotEmpty) {
+                      return Center(child: Text(provider.errorMessage));
                     }
-                  },
-                ),
+                    if (provider.isLoading) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    return ListView.builder(
+                      itemCount: provider.searchResults.length,
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => CreateMedicationPage(
+                                        initialDrug:
+                                            provider.searchResults[index])),
+                              );
+                            },
+                            child: SearchTile(
+                                drug: provider.searchResults[index]));
+                      },
+                    );
+                  } catch (e) {
+                    return Center(child: Text('Error: $e'));
+                  }
+                },
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
