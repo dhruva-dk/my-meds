@@ -73,66 +73,68 @@ class _CreateMedicationPageState extends State<CreateMedicationPage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: _nameController,
-              decoration: InputDecoration(
-                labelText: 'Name',
-                labelStyle: const TextStyle(color: Colors.black),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(24),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(24),
-                  borderSide: const BorderSide(color: Colors.black, width: 2),
-                ),
-              ),
-            ),
-            const SizedBox(height: 8),
-            TextField(
-              controller: _dosageController,
-              decoration: InputDecoration(
-                labelText: 'Dosage',
-                labelStyle: const TextStyle(color: Colors.black),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(24),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(24),
-                  borderSide: const BorderSide(color: Colors.black, width: 2),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              TextField(
+                controller: _nameController,
+                decoration: InputDecoration(
+                  labelText: 'Name',
+                  labelStyle: const TextStyle(color: Colors.black),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(24),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(24),
+                    borderSide: const BorderSide(color: Colors.black, width: 2),
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(height: 8),
-            TextField(
-              controller: _additionalInfoController,
-              decoration: InputDecoration(
-                labelText: 'Additional Info',
-                labelStyle: const TextStyle(color: Colors.black),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(24),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(24),
-                  borderSide: const BorderSide(color: Colors.black, width: 2),
+              const SizedBox(height: 8),
+              TextField(
+                controller: _dosageController,
+                decoration: InputDecoration(
+                  labelText: 'Dosage',
+                  labelStyle: const TextStyle(color: Colors.black),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(24),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(24),
+                    borderSide: const BorderSide(color: Colors.black, width: 2),
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.white,
-                backgroundColor: Colors.black, // Text color
-                minimumSize: const Size(double.infinity, 50), // Button size
+              const SizedBox(height: 8),
+              TextField(
+                controller: _additionalInfoController,
+                decoration: InputDecoration(
+                  labelText: 'Additional Info',
+                  labelStyle: const TextStyle(color: Colors.black),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(24),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(24),
+                    borderSide: const BorderSide(color: Colors.black, width: 2),
+                  ),
+                ),
               ),
-              onPressed: () {
-                // TODO: Implement the logic to add the medication
-                _accept(context);
-              },
-              child: const Text('Add Medication'),
-            ),
-          ],
+              const SizedBox(height: 16),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.white,
+                  backgroundColor: Colors.black, // Text color
+                  minimumSize: const Size(double.infinity, 50), // Button size
+                ),
+                onPressed: () {
+                  // TODO: Implement the logic to add the medication
+                  _accept(context);
+                },
+                child: const Text('Add Medication'),
+              ),
+            ],
+          ),
         ),
       ),
     );

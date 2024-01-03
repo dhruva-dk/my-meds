@@ -62,62 +62,64 @@ class _EditMedicationPageState extends State<EditMedicationPage> {
       appBar: AppBar(
         title: Text('Edit Medication'),
       ),
-      body: Container(
-        padding: EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            TextField(
-              controller: _nameController,
-              decoration: InputDecoration(
-                labelText: 'Medication Name',
-                border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(24)),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(24),
-                  borderSide: BorderSide(color: Colors.black, width: 2),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              TextField(
+                controller: _nameController,
+                decoration: InputDecoration(
+                  labelText: 'Medication Name',
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(24)),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(24),
+                    borderSide: BorderSide(color: Colors.black, width: 2),
+                  ),
                 ),
               ),
-            ),
-            SizedBox(height: 8),
-            TextField(
-              controller: _dosageController,
-              decoration: InputDecoration(
-                labelText: 'Dosage',
-                border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(24)),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(24),
-                  borderSide: BorderSide(color: Colors.black, width: 2),
+              SizedBox(height: 8),
+              TextField(
+                controller: _dosageController,
+                decoration: InputDecoration(
+                  labelText: 'Dosage',
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(24)),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(24),
+                    borderSide: BorderSide(color: Colors.black, width: 2),
+                  ),
                 ),
               ),
-            ),
-            SizedBox(height: 8),
-            TextField(
-              controller: _additionalInfoController,
-              decoration: InputDecoration(
-                labelText: 'Additional Info',
-                border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(24)),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(24),
-                  borderSide: BorderSide(color: Colors.black, width: 2),
+              SizedBox(height: 8),
+              TextField(
+                controller: _additionalInfoController,
+                decoration: InputDecoration(
+                  labelText: 'Additional Info',
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(24)),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(24),
+                    borderSide: BorderSide(color: Colors.black, width: 2),
+                  ),
                 ),
               ),
-            ),
-            SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () => _saveMedication(context),
-              child: Text('Save Medication'),
-              style: ElevatedButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(24)),
-                foregroundColor: Colors.white,
-                backgroundColor: Colors.black, // Text color
-                minimumSize: const Size(double.infinity, 50), // Button size
+              SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () => _saveMedication(context),
+                child: Text('Save Medication'),
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(24)),
+                  foregroundColor: Colors.white,
+                  backgroundColor: Colors.black, // Text color
+                  minimumSize: const Size(double.infinity, 50), // Button size
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

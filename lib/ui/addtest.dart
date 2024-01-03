@@ -39,8 +39,8 @@ class _TestStoragePageState extends State<TestStoragePage> {
       Navigator.pop(context); // Go back to the previous screen after saving
     } catch (e) {
       // Handle errors, e.g., show a Snackbar
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('Error saving medication')));
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Error saving medication')));
     }
   }
 

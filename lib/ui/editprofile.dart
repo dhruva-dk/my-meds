@@ -76,48 +76,50 @@ class _EditProfilePageState extends State<EditProfilePage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              TextFormField(
-                controller: _nameController,
-                decoration: _inputDecoration('Name'),
-                validator: (value) =>
-                    value!.isEmpty ? 'Please enter your name' : null,
-              ),
-              const SizedBox(height: 8),
-              TextFormField(
-                controller: _dobController,
-                decoration: _inputDecoration('Date of Birth'),
-                validator: (value) =>
-                    value!.isEmpty ? 'Please enter your date of birth' : null,
-                onTap: () => _selectDate(context),
-              ),
-              const SizedBox(height: 8),
-              TextFormField(
-                controller: _pcpController,
-                decoration:
-                    _inputDecoration('Primary Care Physician (optional)'),
-              ),
-              const SizedBox(height: 8),
-              TextFormField(
-                controller: _healthConditionsController,
-                decoration: _inputDecoration('Health Conditions (optional)'),
-                keyboardType: TextInputType.multiline,
-                maxLines: 6,
-              ),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  backgroundColor: Colors.black,
-                  minimumSize: const Size(double.infinity, 50),
+        child: SingleChildScrollView(
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                TextFormField(
+                  controller: _nameController,
+                  decoration: _inputDecoration('Name'),
+                  validator: (value) =>
+                      value!.isEmpty ? 'Please enter your name' : null,
                 ),
-                onPressed: _saveProfile,
-                child: const Text('Save Profile'),
-              ),
-            ],
+                const SizedBox(height: 8),
+                TextFormField(
+                  controller: _dobController,
+                  decoration: _inputDecoration('Date of Birth'),
+                  validator: (value) =>
+                      value!.isEmpty ? 'Please enter your date of birth' : null,
+                  onTap: () => _selectDate(context),
+                ),
+                const SizedBox(height: 8),
+                TextFormField(
+                  controller: _pcpController,
+                  decoration:
+                      _inputDecoration('Primary Care Physician (optional)'),
+                ),
+                const SizedBox(height: 8),
+                TextFormField(
+                  controller: _healthConditionsController,
+                  decoration: _inputDecoration('Health Conditions (optional)'),
+                  keyboardType: TextInputType.multiline,
+                  maxLines: 6,
+                ),
+                const SizedBox(height: 16),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor: Colors.black,
+                    minimumSize: const Size(double.infinity, 50),
+                  ),
+                  onPressed: _saveProfile,
+                  child: const Text('Save Profile'),
+                ),
+              ],
+            ),
           ),
         ),
       ),
