@@ -96,6 +96,31 @@ class _FDASearchPageState extends State<FDASearchPage> {
               ),
             ),
 
+            const SizedBox(height: 8),
+
+            // button which looks the same as "manual Input" but says "Take a picture"
+
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: Colors.black, // Text color
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(24), // Rounded corners
+                ),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 32, vertical: 8),
+                minimumSize: const Size(
+                    double.infinity, 50), // Maximum width and fixed height
+              ),
+              onPressed: () {
+                // Add your onPressed code here!
+              },
+              child: const Text(
+                'Take a Picture',
+                style: TextStyle(fontSize: 14),
+              ),
+            ),
+
             const SizedBox(height: 16),
 
             Expanded(

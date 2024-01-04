@@ -17,6 +17,7 @@ class _StartPageState extends State<StartPage> {
   final TextEditingController _pcpController = TextEditingController();
   final TextEditingController _healthConditionsController =
       TextEditingController();
+  final TextEditingController _pharmacyController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
@@ -33,12 +34,18 @@ class _StartPageState extends State<StartPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Text('Welcome!',
-                      style:
-                          TextStyle(fontSize: 42, fontWeight: FontWeight.bold)),
+                      style: TextStyle(
+                          fontSize: 42,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: "OpenSans")),
                   //const SizedBox(height: 8),
                   Text(
                     'To continue, please fill in the following information.',
-                    style: TextStyle(fontSize: 18, color: Colors.grey[800]),
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.grey[800],
+                      fontFamily: "OpenSans",
+                    ),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 32),
@@ -60,8 +67,15 @@ class _StartPageState extends State<StartPage> {
                   const SizedBox(height: 8),
                   TextFormField(
                     controller: _pcpController,
+                    decoration: _inputDecoration(
+                        'Primary Care Physician/Phone number (optional)'),
+                  ),
+                  const SizedBox(height: 8),
+                  //text field for Pharmacy/Phone number
+                  TextFormField(
+                    controller: _pharmacyController,
                     decoration:
-                        _inputDecoration('Primary Care Physician (optional)'),
+                        _inputDecoration('Pharmacy/Phone number (optional)'),
                   ),
                   const SizedBox(height: 8),
                   TextFormField(
@@ -126,6 +140,7 @@ class _StartPageState extends State<StartPage> {
         dob: _dobController.text,
         pcp: _pcpController.text,
         healthConditions: _healthConditionsController.text,
+        pharmacy: _pharmacyController.text,
       );
 
       // Save the profile to the database

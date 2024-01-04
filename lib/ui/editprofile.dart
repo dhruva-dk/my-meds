@@ -17,6 +17,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   final TextEditingController _pcpController = TextEditingController();
   final TextEditingController _healthConditionsController =
       TextEditingController();
+  final TextEditingController _pharmacyController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
@@ -30,6 +31,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
       _dobController.text = profile.dob;
       _pcpController.text = profile.pcp;
       _healthConditionsController.text = profile.healthConditions;
+      _pharmacyController.text = profile.pharmacy;
     }
   }
 
@@ -54,6 +56,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
         dob: _dobController.text,
         pcp: _pcpController.text,
         healthConditions: _healthConditionsController.text,
+        pharmacy: _pharmacyController.text,
       );
       Provider.of<ProfileProvider>(context, listen: false).saveProfile(profile);
       // Navigate back or show a success message
@@ -98,8 +101,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 const SizedBox(height: 8),
                 TextFormField(
                   controller: _pcpController,
+                  decoration: _inputDecoration(
+                      'Primary Care Physician / Phone number (optional)'),
+                ),
+                const SizedBox(height: 8),
+                TextFormField(
+                  controller: _pharmacyController,
                   decoration:
-                      _inputDecoration('Primary Care Physician (optional)'),
+                      _inputDecoration('Pharmacy / Phone number (optional)'),
                 ),
                 const SizedBox(height: 8),
                 TextFormField(

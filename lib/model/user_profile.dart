@@ -4,13 +4,15 @@ class UserProfile {
   String dob; // Date of Birth as String
   String pcp; // Primary Care Physician
   String healthConditions;
+  String pharmacy;
 
   UserProfile(
       {this.id,
       required this.name,
       required this.dob,
       this.pcp = '',
-      this.healthConditions = ''});
+      this.healthConditions = '',
+      this.pharmacy = ''});
 
   // Convert a UserProfile instance into a map
   Map<String, dynamic> toMap() {
@@ -20,6 +22,7 @@ class UserProfile {
       'dob': dob,
       'pcp': pcp,
       'healthConditions': healthConditions,
+      'pharmacy': pharmacy,
     };
   }
 
@@ -31,6 +34,7 @@ class UserProfile {
       dob: map['dob'],
       pcp: map['pcp'] ?? '',
       healthConditions: map['healthConditions'] ?? '',
+      pharmacy: map['pharmacy'] ?? '',
     );
   }
 }
