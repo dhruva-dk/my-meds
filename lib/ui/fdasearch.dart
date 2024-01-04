@@ -66,63 +66,60 @@ class _FDASearchPageState extends State<FDASearchPage> {
               ),
             ),
             const SizedBox(height: 8),
-
-            //button to skip to manual entry
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.white,
-                backgroundColor: Colors.black, // Text color
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(24), // Rounded corners
-                ),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 32, vertical: 8),
-                minimumSize: const Size(
-                    double.infinity, 50), // Maximum width and fixed height
-              ),
-              onPressed: () {
-                // Add your onPressed code here!
-                //navigate to create medication page with no initial drug
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const CreateMedicationPage(),
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor:
+                          Colors.black, // Black color for Manual Input
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(24),
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                    ),
+                    onPressed: () {
+                      // Navigate to create medication page with no initial drug
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const CreateMedicationPage(),
+                        ),
+                      );
+                    },
+                    child: const Text(
+                      'Manual Input',
+                      style: TextStyle(fontSize: 14),
+                    ),
                   ),
-                );
-              },
-              child: const Text(
-                'Manual Input',
-                style: TextStyle(fontSize: 14),
-              ),
-            ),
-
-            const SizedBox(height: 8),
-
-            // button which looks the same as "manual Input" but says "Take a picture"
-
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.white,
-                backgroundColor: Colors.black, // Text color
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(24), // Rounded corners
                 ),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 32, vertical: 8),
-                minimumSize: const Size(
-                    double.infinity, 50), // Maximum width and fixed height
-              ),
-              onPressed: () {
-                // Add your onPressed code here!
-              },
-              child: const Text(
-                'Take a Picture',
-                style: TextStyle(fontSize: 14),
-              ),
+                const SizedBox(width: 8), // Spacing between buttons
+                Expanded(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.black, // Text color
+                      backgroundColor:
+                          Colors.grey[100], // Button background color
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(24),
+                        side: BorderSide(color: Colors.black, width: 2),
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 16), // Increased padding
+                    ),
+                    onPressed: () {
+                      // Add your onPressed code here for taking a picture
+                    },
+                    child: const Text(
+                      'Take a Picture',
+                      style: TextStyle(fontSize: 14),
+                    ),
+                  ),
+                ),
+              ],
             ),
-
             const SizedBox(height: 16),
-
             Expanded(
               child: Consumer<FDAAPIServiceProvider>(
                 builder: (context, provider, child) {

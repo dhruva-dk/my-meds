@@ -11,7 +11,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences prefs = await SharedPreferences.getInstance();
   bool isFirstLaunch = prefs.getBool('first_launch') ?? true;
-  prefs.setBool('first_launch', true);
+  //prefs.setBool('first_launch', true);
 
   runApp(
     MultiProvider(
