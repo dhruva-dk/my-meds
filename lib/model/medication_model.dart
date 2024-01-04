@@ -29,7 +29,7 @@ class Medication {
       name: json['name'],
       dosage: json['dosage'],
       additionalInfo: json['additionalInfo'],
-      imageUrl: json['imageUrl'] ?? '', // Default to empty if null
+      imageUrl: json['imageUrl'],
     );
   }
 }

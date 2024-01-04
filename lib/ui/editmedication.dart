@@ -14,6 +14,7 @@ class EditMedicationPage extends StatefulWidget {
 }
 
 class _EditMedicationPageState extends State<EditMedicationPage> {
+  final _formKey = GlobalKey<FormState>();
   late TextEditingController _nameController;
   late TextEditingController _dosageController;
   late TextEditingController _additionalInfoController;
@@ -35,26 +36,37 @@ class _EditMedicationPageState extends State<EditMedicationPage> {
     super.dispose();
   }
 
-  void _saveMedication(BuildContext context) {
-    final String name = _nameController.text;
-    final String dosage = _dosageController.text;
-    final String additionalInfo = _additionalInfoController.text;
-
-    // Update the medication object
-    Medication updatedMedication = Medication(
-      id: widget.medication.id,
-      name: name,
-      dosage: dosage,
-      additionalInfo: additionalInfo,
-      imageUrl: widget.medication.imageUrl,
+  InputDecoration _inputDecoration(String label) {
+    return InputDecoration(
+      labelText: label,
+      labelStyle: const TextStyle(color: Colors.black),
+      border: OutlineInputBorder(borderRadius: BorderRadius.circular(24)),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(24),
+        borderSide: BorderSide(color: Colors.black, width: 2),
+      ),
     );
+  }
 
-    // Update the medication in the provider
-    Provider.of<MedicationProvider>(context, listen: false)
-        .updateMedication(updatedMedication);
+  void _saveMedication(BuildContext context) {
+    if (_formKey.currentState!.validate()) {
+      final String name = _nameController.text;
+      final String dosage = _dosageController.text;
+      final String additionalInfo = _additionalInfoController.text;
 
-    // Navigate back to the previous screen
-    Navigator.pop(context);
+      Medication updatedMedication = Medication(
+        id: widget.medication.id,
+        name: name,
+        dosage: dosage,
+        additionalInfo: additionalInfo,
+        imageUrl: widget.medication.imageUrl,
+      );
+
+      Provider.of<MedicationProvider>(context, listen: false)
+          .updateMedication(updatedMedication);
+
+      Navigator.pop(context);
+    }
   }
 
   @override
@@ -66,60 +78,52 @@ class _EditMedicationPageState extends State<EditMedicationPage> {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              TextField(
-                controller: _nameController,
-                decoration: InputDecoration(
-                  labelText: 'Medication Name',
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(24)),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(24),
-                    borderSide: BorderSide(color: Colors.black, width: 2),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                TextFormField(
+                  controller: _nameController,
+                  decoration: _inputDecoration('Medication Name'),
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return 'Please enter a medication name';
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(height: 8),
+                TextFormField(
+                  controller: _dosageController,
+                  decoration: _inputDecoration('Dosage'),
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return 'Please enter a dosage';
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(height: 8),
+                TextFormField(
+                  controller: _additionalInfoController,
+                  decoration: _inputDecoration('Additional Info'),
+                  // No validation for Additional Info as it's optional
+                ),
+                SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: () => _saveMedication(context),
+                  child: Text('Save Medication'),
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(24)),
+                    foregroundColor: Colors.white,
+                    backgroundColor: Colors.black,
+                    minimumSize: const Size(double.infinity, 50),
                   ),
                 ),
-              ),
-              SizedBox(height: 8),
-              TextField(
-                controller: _dosageController,
-                decoration: InputDecoration(
-                  labelText: 'Dosage',
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(24)),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(24),
-                    borderSide: BorderSide(color: Colors.black, width: 2),
-                  ),
-                ),
-              ),
-              SizedBox(height: 8),
-              TextField(
-                controller: _additionalInfoController,
-                decoration: InputDecoration(
-                  labelText: 'Additional Info',
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(24)),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(24),
-                    borderSide: BorderSide(color: Colors.black, width: 2),
-                  ),
-                ),
-              ),
-              SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () => _saveMedication(context),
-                child: Text('Save Medication'),
-                style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(24)),
-                  foregroundColor: Colors.white,
-                  backgroundColor: Colors.black, // Text color
-                  minimumSize: const Size(double.infinity, 50), // Button size
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
