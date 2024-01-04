@@ -14,7 +14,7 @@ class DatabaseException implements Exception {
 
 class DatabaseHelper {
   static const _databaseName = "MedicationDatabase.db";
-  static const _databaseVersion = 1;
+  static const _databaseVersion = 2;
   static const table = 'medication_table';
 
   static const columnId = 'id';
@@ -34,18 +34,31 @@ class DatabaseHelper {
   Future<Database> _initDatabase() async {
     String path = join(await getDatabasesPath(), _databaseName);
     return await openDatabase(path,
-        version: _databaseVersion, onCreate: _onCreate);
+        version: _databaseVersion,
+        onCreate: _onCreate,
+        onUpgrade: _onUpgrade); // Handle upgrades
   }
 
   Future _onCreate(Database db, int version) async {
     await db.execute('''
       CREATE TABLE medication_table (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        id INTEGER PRIMARY KEY AUTOINCREMENT, 
         name TEXT NOT NULL,
         dosage TEXT NOT NULL,
-        additionalInfo TEXT NOT NULL
+        additionalInfo TEXT NOT NULL,
+        imageUrl TEXT // New column for image URL
       )
     ''');
+  }
+
+  // Handle database upgrades
+  Future _onUpgrade(Database db, int oldVersion, int newVersion) async {
+    if (oldVersion < 2) {
+      // Add imageUrl column and change id type in existing tables
+      await db.execute('ALTER TABLE medication_table ADD COLUMN imageUrl TEXT');
+      // Additional upgrade logic if needed
+    }
+    // Handle future upgrades by adding more conditions
   }
 
   // Helper methods

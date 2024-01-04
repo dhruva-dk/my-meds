@@ -60,7 +60,7 @@ class MedicationTile extends StatelessWidget {
             child: PopupMenuButton<String>(
               onSelected: (String result) {
                 if (result == 'delete') {
-                  _deleteMedication(context, medication.id!);
+                  _deleteMedication(context, medication.id! as int);
                 }
               },
               shape: RoundedRectangleBorder(

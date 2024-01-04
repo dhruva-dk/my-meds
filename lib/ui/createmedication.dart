@@ -45,10 +45,10 @@ class _CreateMedicationPageState extends State<CreateMedicationPage> {
 
     // Create a Medication object
     Medication newMedication = Medication(
-      name: name,
-      dosage: dosage,
-      additionalInfo: additionalInfo,
-    );
+        name: name,
+        dosage: dosage,
+        additionalInfo: additionalInfo,
+        imageUrl: "");
 
     // Save the medication using MedicationProvider
     try {

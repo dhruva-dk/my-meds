@@ -46,6 +46,7 @@ class _EditMedicationPageState extends State<EditMedicationPage> {
       name: name,
       dosage: dosage,
       additionalInfo: additionalInfo,
+      imageUrl: widget.medication.imageUrl,
     );
 
     // Update the medication in the provider
