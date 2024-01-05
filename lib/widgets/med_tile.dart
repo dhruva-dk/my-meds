@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:medication_tracker/model/medication_model.dart';
 import 'package:medication_tracker/providers/medication_provider.dart';
@@ -13,6 +15,7 @@ class MedicationTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool hasImage = medication.imageUrl.isNotEmpty;
     return Container(
       padding: const EdgeInsets.all(16),
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
@@ -55,12 +58,27 @@ class MedicationTile extends StatelessWidget {
               ],
             ),
           ),
+          if (hasImage) ...[
+            const SizedBox(width: 16), // Spacing between text and image
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Image.file(
+                File(medication.imageUrl),
+                width: 50,
+                height: 50,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return Icon(Icons.error, color: Colors.red);
+                },
+              ),
+            ),
+          ],
           Theme(
             data: Theme.of(context).copyWith(),
             child: PopupMenuButton<String>(
               onSelected: (String result) {
                 if (result == 'delete') {
-                  _deleteMedication(context, medication.id! as int);
+                  _deleteMedication(context, medication.id!);
                 }
               },
               shape: RoundedRectangleBorder(
