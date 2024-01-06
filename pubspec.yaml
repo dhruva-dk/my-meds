@@ -45,6 +45,7 @@ dependencies:
   shared_preferences: ^2.2.2
   image_picker: ^1.0.6
   path: ^1.8.3
+  permission_handler: ^11.0.1
   
 
 dev_dependencies:
