@@ -77,7 +77,7 @@ class _FDASearchPageState extends State<FDASearchPage> {
   void _createAndSaveMedication(String imagePath) {
     Medication newMedication = Medication(
       name: "Photo",
-      dosage: "Tap to edit details",
+      dosage: "Tap to view image and edit details",
       additionalInfo: "",
       imageUrl: imagePath,
     );

@@ -59,13 +59,13 @@ class MedicationTile extends StatelessWidget {
             ),
           ),
           if (hasImage) ...[
-            const SizedBox(width: 16), // Spacing between text and image
+            //const SizedBox(width: 0), // Spacing between text and image
             ClipRRect(
               borderRadius: BorderRadius.circular(8),
               child: Image.file(
                 File(medication.imageUrl),
-                width: 50,
-                height: 50,
+                width: 100,
+                height: 100,
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) {
                   return Icon(Icons.error, color: Colors.red);
