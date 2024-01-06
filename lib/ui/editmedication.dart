@@ -79,7 +79,12 @@ class _EditMedicationPageState extends State<EditMedicationPage> {
 
   @override
   Widget build(BuildContext context) {
-    bool hasImage = widget.medication.imageUrl.isNotEmpty;
+    //first medication with same id as widget.medication in provider
+    bool hasImage = Provider.of<MedicationProvider>(context)
+        .medications
+        .firstWhere((medication) => medication.id == widget.medication.id)
+        .imageUrl
+        .isNotEmpty;
 
     return Scaffold(
       appBar: AppBar(
@@ -123,14 +128,21 @@ class _EditMedicationPageState extends State<EditMedicationPage> {
                 if (hasImage) const SizedBox(height: 16),
                 if (hasImage)
                   ClipRRect(
-                    borderRadius: BorderRadius.circular(24),
-                    child: Image.file(
-                      File(widget.medication.imageUrl),
-                      fit: BoxFit.contain,
-                      width: double.infinity,
-                      height: 300,
-                    ),
-                  ),
+                      borderRadius: BorderRadius.circular(24),
+                      child: Consumer<MedicationProvider>(
+                        builder: (context, provider, child) {
+                          Medication updatedMedication = provider.medications
+                              .firstWhere((medication) =>
+                                  medication.id == widget.medication.id);
+                          return Image.file(
+                            File(updatedMedication.imageUrl ?? ''),
+                            // Rest of your image properties...
+                            fit: BoxFit.contain,
+                            width: double.infinity,
+                            height: 300,
+                          );
+                        },
+                      )),
                 SizedBox(height: 16),
                 ElevatedButton(
                   onPressed: () {
@@ -140,6 +152,7 @@ class _EditMedicationPageState extends State<EditMedicationPage> {
                         content: Text('Successfully added photo.'),
                       ),
                     );
+                    //rebuild widget
                   },
                   child: Text(hasImage ? 'Retake Photo' : 'Add Photo'),
                   style: ElevatedButton.styleFrom(
