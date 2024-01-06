@@ -38,7 +38,7 @@ class _FDASearchPageState extends State<FDASearchPage> {
   void _onSearchChanged() {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
     _debounce = Timer(const Duration(milliseconds: 500), () {
-      if (_searchController.text.length >= 3) {
+      if (_searchController.text.length >= 3 && context.mounted) {
         Provider.of<FDAAPIServiceProvider>(context, listen: false)
             .searchMedications(_searchController.text.toLowerCase());
       }

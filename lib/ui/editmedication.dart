@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:medication_tracker/local_service/image_service.dart';
 import 'package:medication_tracker/model/medication_model.dart';
 import 'package:medication_tracker/providers/medication_provider.dart';
+import 'package:medication_tracker/ui/full_screen_image.dart';
 import 'package:provider/provider.dart';
 
 class EditMedicationPage extends StatefulWidget {
@@ -125,24 +126,46 @@ class _EditMedicationPageState extends State<EditMedicationPage> {
                   decoration: _inputDecoration('Additional Info'),
                   // No validation for Additional Info as it's optional
                 ),
-                if (hasImage) const SizedBox(height: 16),
-                if (hasImage)
-                  ClipRRect(
-                      borderRadius: BorderRadius.circular(24),
-                      child: Consumer<MedicationProvider>(
-                        builder: (context, provider, child) {
-                          Medication updatedMedication = provider.medications
-                              .firstWhere((medication) =>
-                                  medication.id == widget.medication.id);
-                          return Image.file(
-                            File(updatedMedication.imageUrl ?? ''),
-                            // Rest of your image properties...
-                            fit: BoxFit.contain,
-                            width: double.infinity,
-                            height: 300,
+                if (hasImage) ...[
+                  const SizedBox(height: 16),
+                  Consumer<MedicationProvider>(
+                    builder: (context, provider, child) {
+                      Medication updatedMedication = provider.medications
+                          .firstWhere((medication) =>
+                              medication.id == widget.medication.id);
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => FullScreenImage(
+                                imagePath: updatedMedication
+                                    .imageUrl, // no need to check for null as the image is already known to exist.
+                              ),
+                            ),
                           );
                         },
-                      )),
+                        child: Image.file(
+                          File(updatedMedication.imageUrl ?? ''),
+                          // Rest of your image properties...
+                          fit: BoxFit.contain,
+                          width: double.infinity,
+                          height: 300,
+                        ),
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    "Tap on image to increase size and zoom.",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontFamily: 'OpenSans',
+                      fontSize: 14,
+                      color: Colors.grey[800],
+                    ),
+                  ),
+                ],
                 SizedBox(height: 16),
                 ElevatedButton(
                   onPressed: () {
