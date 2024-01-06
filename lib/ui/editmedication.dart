@@ -40,6 +40,27 @@ class _EditMedicationPageState extends State<EditMedicationPage> {
     super.dispose();
   }
 
+  Widget _buildPhotoButton(String text, VoidCallback onPressed) {
+    return Expanded(
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          foregroundColor: Colors.black,
+          backgroundColor: Colors.grey[100],
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(24),
+            side: const BorderSide(color: Colors.black),
+          ),
+          padding: const EdgeInsets.symmetric(vertical: 16),
+        ),
+        onPressed: onPressed,
+        child: Text(
+          text,
+          style: const TextStyle(fontSize: 14),
+        ),
+      ),
+    );
+  }
+
   InputDecoration _inputDecoration(String label) {
     return InputDecoration(
       labelText: label,
@@ -75,6 +96,11 @@ class _EditMedicationPageState extends State<EditMedicationPage> {
 
   void _handleTakePhoto() async {
     await ImageService.handleTakePhoto(context,
+        medication: widget.medication); //don't navigate back
+  }
+
+  void _handleUploadFromGallery() async {
+    await ImageService.handlePickFromGallery(context,
         medication: widget.medication); //don't navigate back
   }
 
@@ -167,26 +193,28 @@ class _EditMedicationPageState extends State<EditMedicationPage> {
                   ),
                 ],
                 SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: () {
-                    _handleTakePhoto(); // take photo and display snackbar to successfully update
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Successfully added photo.'),
-                      ),
-                    );
-                    //rebuild widget
-                  },
-                  child: Text(hasImage ? 'Retake Photo' : 'Add Photo'),
-                  style: ElevatedButton.styleFrom(
-                    side: BorderSide(color: Colors.black),
-                    backgroundColor: Colors.grey[100],
-                    foregroundColor: Colors.black,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(24),
-                    ),
-                    minimumSize: const Size(double.infinity, 50),
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    _buildPhotoButton('Take a Picture', () async {
+                      _handleTakePhoto();
+                      /*ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Successfully added photo.'),
+                        ),
+                      );*/
+                    }),
+                    const SizedBox(width: 8), // Spacing between buttons
+                    _buildPhotoButton('Upload from Gallery', () async {
+                      _handleUploadFromGallery();
+                      //don't navigate back
+                      /* ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Successfully added photo.'),
+                        ),
+                      );*/
+                    }),
+                  ],
                 ),
                 const SizedBox(height: 8),
                 ElevatedButton(

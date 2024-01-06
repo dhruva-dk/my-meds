@@ -16,7 +16,7 @@ class CameraHelper {
     return null;
   }
 
-  static Future<String> pickImageFromGallery() async {
+  static Future<String?> pickImageFromGallery() async {
     // returns path of gallery image
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
@@ -24,7 +24,7 @@ class CameraHelper {
     if (image != null) {
       return _saveImagePermanently(image);
     }
-    throw Exception('Error picking image from gallery');
+    return null;
   }
 
   static Future<String> _saveImagePermanently(XFile image) async {

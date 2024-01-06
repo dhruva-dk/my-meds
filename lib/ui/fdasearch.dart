@@ -49,7 +49,32 @@ class _FDASearchPageState extends State<FDASearchPage> {
   void _handleTakePhoto() async {
     await ImageService.handleTakePhoto(
       context,
-    ); //navigate back to start when done.
+    );
+  }
+
+  void _handleUploadFromGallery() async {
+    await ImageService.handlePickFromGallery(context);
+  }
+
+  Widget _buildPhotoButton(String text, VoidCallback onPressed) {
+    return Expanded(
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          foregroundColor: Colors.black,
+          backgroundColor: Colors.grey[100],
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(24),
+            side: const BorderSide(color: Colors.black),
+          ),
+          padding: const EdgeInsets.symmetric(vertical: 16),
+        ),
+        onPressed: onPressed,
+        child: Text(
+          text,
+          style: const TextStyle(fontSize: 14),
+        ),
+      ),
+    );
   }
 
   //ui build code
@@ -80,58 +105,40 @@ class _FDASearchPageState extends State<FDASearchPage> {
               ),
             ),
             const SizedBox(height: 8),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: Colors.black, // Black color for Manual Input
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(24),
+                ),
+                minimumSize: Size(double.infinity, 50),
+                padding: const EdgeInsets.symmetric(vertical: 16),
+              ),
+              onPressed: () {
+                // Navigate to create medication page with no initial drug
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const CreateMedicationPage(),
+                  ),
+                );
+              },
+              child: const Text(
+                'Manual Input',
+                style: TextStyle(fontSize: 14),
+              ),
+            ),
+            const SizedBox(
+              height: 8,
+            ),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Expanded(
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor:
-                          Colors.black, // Black color for Manual Input
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(24),
-                      ),
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                    ),
-                    onPressed: () {
-                      // Navigate to create medication page with no initial drug
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const CreateMedicationPage(),
-                        ),
-                      );
-                    },
-                    child: const Text(
-                      'Manual Input',
-                      style: TextStyle(fontSize: 14),
-                    ),
-                  ),
-                ),
+                _buildPhotoButton('Take a Picture', _handleTakePhoto),
                 const SizedBox(width: 8), // Spacing between buttons
-                Expanded(
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.black, // Text color
-                      backgroundColor:
-                          Colors.grey[100], // Button background color
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(24),
-                        side: BorderSide(color: Colors.black, width: 2),
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 16), // Increased padding
-                    ),
-                    onPressed: () {
-                      // Add your onPressed code here for taking a picture
-                      _handleTakePhoto();
-                    },
-                    child: const Text(
-                      'Take a Picture',
-                      style: TextStyle(fontSize: 14),
-                    ),
-                  ),
-                ),
+                _buildPhotoButton(
+                    'Upload from Gallery', _handleUploadFromGallery),
               ],
             ),
             const SizedBox(height: 16),
