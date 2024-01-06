@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:medication_tracker/local_service/camera_helper.dart';
+
 import 'package:medication_tracker/local_service/image_service.dart';
-import 'package:medication_tracker/model/medication_model.dart';
+
 import 'package:medication_tracker/providers/fda_api_provider.dart';
-import 'package:medication_tracker/providers/medication_provider.dart';
+
 import 'package:medication_tracker/ui/createmedication.dart';
 import 'package:provider/provider.dart';
 import 'package:medication_tracker/widgets/search_tile.dart';
 //permission handler
-import 'package:permission_handler/permission_handler.dart';
 
 //import async
 import 'dart:async';
@@ -48,7 +47,9 @@ class _FDASearchPageState extends State<FDASearchPage> {
 
   //methods for the image save:
   void _handleTakePhoto() async {
-    await ImageService.handleTakePhoto(context);
+    await ImageService.handleTakePhoto(
+      context,
+    ); //navigate back to start when done.
   }
 
   //ui build code

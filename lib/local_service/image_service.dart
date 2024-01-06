@@ -10,8 +10,10 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 class ImageService {
-  static Future<void> handleTakePhoto(BuildContext context,
-      {Medication? medication}) async {
+  static Future<void> handleTakePhoto(
+    BuildContext context, {
+    Medication? medication,
+  }) async {
     var status = await Permission.camera.status;
     if (!status.isGranted) {
       status = await Permission.camera.request();
@@ -45,6 +47,7 @@ class ImageService {
 
     Provider.of<MedicationProvider>(context, listen: false)
         .addMedication(newMedication);
+
     Navigator.popUntil(context, (Route<dynamic> route) => route.isFirst);
   }
 
@@ -54,7 +57,7 @@ class ImageService {
         imageUrl: imagePath); // Assuming copyWith method is implemented
     Provider.of<MedicationProvider>(context, listen: false)
         .updateMedication(updatedMedication);
-    Navigator.pop(context);
+    //Navigator.pop(context); // don't pop if updating image, as we want to stay on the page.
   }
 
   static void _showPermissionDeniedDialog(BuildContext context) {

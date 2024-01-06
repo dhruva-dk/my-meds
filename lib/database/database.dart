@@ -46,9 +46,9 @@ class DatabaseHelper {
         name TEXT NOT NULL,
         dosage TEXT NOT NULL,
         additionalInfo TEXT NOT NULL,
-        imageUrl TEXT // New column for image URL
+        imageUrl TEXT 
       )
-    ''');
+    '''); // New column for image URL
   }
 
   // Handle database upgrades

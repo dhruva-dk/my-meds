@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:medication_tracker/local_service/image_service.dart';
 import 'package:medication_tracker/model/medication_model.dart';
 import 'package:medication_tracker/providers/medication_provider.dart';
 import 'package:provider/provider.dart';
@@ -69,8 +72,15 @@ class _EditMedicationPageState extends State<EditMedicationPage> {
     }
   }
 
+  void _handleTakePhoto() async {
+    await ImageService.handleTakePhoto(context,
+        medication: widget.medication); //don't navigate back
+  }
+
   @override
   Widget build(BuildContext context) {
+    bool hasImage = widget.medication.imageUrl.isNotEmpty;
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Edit Medication'),
@@ -110,7 +120,39 @@ class _EditMedicationPageState extends State<EditMedicationPage> {
                   decoration: _inputDecoration('Additional Info'),
                   // No validation for Additional Info as it's optional
                 ),
+                if (hasImage) const SizedBox(height: 16),
+                if (hasImage)
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(24),
+                    child: Image.file(
+                      File(widget.medication.imageUrl),
+                      fit: BoxFit.contain,
+                      width: double.infinity,
+                      height: 300,
+                    ),
+                  ),
                 SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: () {
+                    _handleTakePhoto(); // take photo and display snackbar to successfully update
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Successfully added photo.'),
+                      ),
+                    );
+                  },
+                  child: Text(hasImage ? 'Retake Photo' : 'Add Photo'),
+                  style: ElevatedButton.styleFrom(
+                    side: BorderSide(color: Colors.black),
+                    backgroundColor: Colors.grey[100],
+                    foregroundColor: Colors.black,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(24),
+                    ),
+                    minimumSize: const Size(double.infinity, 50),
+                  ),
+                ),
+                const SizedBox(height: 8),
                 ElevatedButton(
                   onPressed: () => _saveMedication(context),
                   child: Text('Save Medication'),
