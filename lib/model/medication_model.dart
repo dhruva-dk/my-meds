@@ -32,4 +32,21 @@ class Medication {
       imageUrl: json['imageUrl'],
     );
   }
+
+  //copyWith method for updating medication
+  Medication copyWith({
+    int? id,
+    String? name,
+    String? dosage,
+    String? additionalInfo,
+    String? imageUrl,
+  }) {
+    return Medication(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      dosage: dosage ?? this.dosage,
+      additionalInfo: additionalInfo ?? this.additionalInfo,
+      imageUrl: imageUrl ?? this.imageUrl,
+    );
+  }
 }
