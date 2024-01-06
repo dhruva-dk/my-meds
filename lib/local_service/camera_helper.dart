@@ -6,6 +6,7 @@ import 'package:path/path.dart' as path;
 
 class CameraHelper {
   static Future<String?> captureAndSaveImage() async {
+    //returns path of camera image
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.camera);
 
@@ -16,6 +17,7 @@ class CameraHelper {
   }
 
   static Future<String> pickImageFromGallery() async {
+    // returns path of gallery image
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
 
