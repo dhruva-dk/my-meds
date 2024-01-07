@@ -7,6 +7,8 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class StartPage extends StatefulWidget {
+  const StartPage({super.key});
+
   @override
   _StartPageState createState() => _StartPageState();
 }
@@ -33,7 +35,7 @@ class _StartPageState extends State<StartPage> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Text('Welcome!',
+                  const Text('Welcome!',
                       style: TextStyle(
                           fontSize: 42,
                           fontWeight: FontWeight.bold,
@@ -89,11 +91,10 @@ class _StartPageState extends State<StartPage> {
                   const SizedBox(height: 32),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                        primary: Colors.black,
-                        onPrimary: Colors.white,
-                        minimumSize: Size(double.infinity, 50)),
+                        foregroundColor: Colors.white, backgroundColor: Colors.black,
+                        minimumSize: const Size(double.infinity, 50)),
                     onPressed: _submitForm,
-                    child: Text('Continue'),
+                    child: const Text('Continue'),
                   ),
                 ],
               ),
@@ -110,7 +111,7 @@ class _StartPageState extends State<StartPage> {
       border: OutlineInputBorder(borderRadius: BorderRadius.circular(24)),
       focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(24),
-          borderSide: BorderSide(color: Colors.black, width: 2)),
+          borderSide: const BorderSide(color: Colors.black, width: 2)),
     );
   }
 

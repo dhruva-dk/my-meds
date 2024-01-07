@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'package:medication_tracker/providers/medication_provider.dart';
 import 'package:medication_tracker/providers/profile_provider.dart';
-import 'package:medication_tracker/ui/createmedication.dart';
 import 'package:medication_tracker/ui/editmedication.dart';
 import 'package:medication_tracker/ui/editprofile.dart';
 import 'package:medication_tracker/ui/fdasearch.dart';

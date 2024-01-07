@@ -112,7 +112,7 @@ class _FDASearchPageState extends State<FDASearchPage> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(24),
                 ),
-                minimumSize: Size(double.infinity, 50),
+                minimumSize: const Size(double.infinity, 50),
                 padding: const EdgeInsets.symmetric(vertical: 16),
               ),
               onPressed: () {
