@@ -46,10 +46,22 @@ dependencies:
   image_picker: ^1.0.6
   path: ^1.8.3
   permission_handler: ^11.0.1
-  flutter_launcher_icons: ^0.13.1
+  icons_launcher: ^2.1.6
+
   
+  
+icons_launcher:
+  image_path: 'assets/icon/icon.png'
+  platforms:
+    android:
+      enable: true
+    ios:
+      enable: true
+
+
 
 dev_dependencies:
+  
   flutter_test:
     sdk: flutter
 
@@ -109,10 +121,5 @@ flutter:
         - asset: assets/fonts/OpenSans-Medium.ttf
           weight: 500
 
-flutter_launcher_icons:
-  android: "launcher_icon"
-  ios: true
-  remove_alpha_ios: true
-  image_path: "assets/icon/icon.png"
-  min_sdk_android: 21 # android min sdk min:16, default 21
+
   
