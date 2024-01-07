@@ -226,7 +226,7 @@ class _EditMedicationPageState extends State<EditMedicationPage> {
                     backgroundColor: Colors.black,
                     minimumSize: const Size(double.infinity, 50),
                   ),
-                  child: const Text('Save Medication'),
+                  child: const Text('Update Medication (Text)'),
                 ),
               ],
             ),

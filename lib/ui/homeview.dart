@@ -96,6 +96,23 @@ class HomeScreen extends StatelessWidget {
                       builder: (context, medicationProvider, child) {
                         final medicationList = medicationProvider.medications;
 
+                        if (medicationList.isEmpty) {
+                          return const Center(
+                            child: Padding(
+                              padding: EdgeInsets.all(16.0),
+                              child: Text(
+                                "No medications. Add by pressing the + button in the bottom right.",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontFamily: 'OpenSans',
+                                  fontSize: 16,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ),
+                          );
+                        }
+
                         return ListView.builder(
                           itemCount: medicationList.length,
                           itemBuilder: (context, index) {
