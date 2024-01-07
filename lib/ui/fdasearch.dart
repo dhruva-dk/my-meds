@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
+
+import 'package:medication_tracker/local_service/image_service.dart';
+
 import 'package:medication_tracker/providers/fda_api_provider.dart';
+
 import 'package:medication_tracker/ui/createmedication.dart';
 import 'package:provider/provider.dart';
 import 'package:medication_tracker/widgets/search_tile.dart';
+//permission handler
 
 //import async
 import 'dart:async';
 
 class FDASearchPage extends StatefulWidget {
+  const FDASearchPage({super.key});
+
   @override
   _FDASearchPageState createState() => _FDASearchPageState();
 }
@@ -31,21 +38,53 @@ class _FDASearchPageState extends State<FDASearchPage> {
   void _onSearchChanged() {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
     _debounce = Timer(const Duration(milliseconds: 500), () {
-      if (_searchController.text.length >= 3) {
+      if (_searchController.text.length >= 3 && context.mounted) {
         Provider.of<FDAAPIServiceProvider>(context, listen: false)
             .searchMedications(_searchController.text.toLowerCase());
       }
     });
   }
 
+  //methods for the image save:
+  void _handleTakePhoto() async {
+    await ImageService.handleTakePhoto(
+      context,
+    );
+  }
+
+  void _handleUploadFromGallery() async {
+    await ImageService.handlePickFromGallery(context);
+  }
+
+  Widget _buildPhotoButton(String text, VoidCallback onPressed) {
+    return Expanded(
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          foregroundColor: Colors.black,
+          backgroundColor: Colors.grey[100],
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(24),
+            side: const BorderSide(color: Colors.black),
+          ),
+          padding: const EdgeInsets.symmetric(vertical: 16),
+        ),
+        onPressed: onPressed,
+        child: Text(
+          text,
+          style: const TextStyle(fontSize: 14),
+        ),
+      ),
+    );
+  }
+
+  //ui build code
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('FDA Search'),
-        backgroundColor: Colors.grey[200],
+        title: const Text('FDA Search'),
       ),
-      backgroundColor: Colors.grey[200],
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -54,49 +93,55 @@ class _FDASearchPageState extends State<FDASearchPage> {
               controller: _searchController,
               // ... text field decoration ...
               decoration: InputDecoration(
-                hintText: 'Search (min 3 characters)',
-                prefixIcon: Icon(Icons.search),
+                hintText: 'Search',
+                prefixIcon: const Icon(Icons.search),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(24),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(24),
-                  borderSide: BorderSide(color: Colors.black, width: 2),
+                  borderSide: const BorderSide(color: Colors.black, width: 2),
                 ),
               ),
             ),
-            SizedBox(height: 8),
-
-            //button to skip to manual entry
+            const SizedBox(height: 8),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                primary: Colors.black, // Button color
-                onPrimary: Colors.white, // Text color
+                foregroundColor: Colors.white,
+                backgroundColor: Colors.black, // Black color for Manual Input
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(24), // Rounded corners
+                  borderRadius: BorderRadius.circular(24),
                 ),
-                padding: EdgeInsets.symmetric(horizontal: 32, vertical: 8),
-                minimumSize:
-                    Size(double.infinity, 45), // Maximum width and fixed height
+                minimumSize: Size(double.infinity, 50),
+                padding: const EdgeInsets.symmetric(vertical: 16),
               ),
               onPressed: () {
-                // Add your onPressed code here!
-                //navigate to create medication page with no initial drug
+                // Navigate to create medication page with no initial drug
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => CreateMedicationPage(),
+                    builder: (context) => const CreateMedicationPage(),
                   ),
                 );
               },
-              child: Text(
+              child: const Text(
                 'Manual Input',
                 style: TextStyle(fontSize: 14),
               ),
             ),
-
-            SizedBox(height: 16),
-
+            const SizedBox(
+              height: 8,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                _buildPhotoButton('Take a Picture', _handleTakePhoto),
+                const SizedBox(width: 8), // Spacing between buttons
+                _buildPhotoButton(
+                    'Upload from Gallery', _handleUploadFromGallery),
+              ],
+            ),
+            const SizedBox(height: 16),
             Expanded(
               child: Consumer<FDAAPIServiceProvider>(
                 builder: (context, provider, child) {

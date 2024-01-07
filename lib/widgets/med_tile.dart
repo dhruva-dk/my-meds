@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:medication_tracker/model/medication_model.dart';
 import 'package:medication_tracker/providers/medication_provider.dart';
@@ -6,14 +8,16 @@ import 'package:provider/provider.dart';
 class MedicationTile extends StatelessWidget {
   final Medication medication;
 
-  MedicationTile({
+  const MedicationTile({
+    super.key,
     required this.medication,
   });
 
   @override
   Widget build(BuildContext context) {
+    bool hasImage = medication.imageUrl.isNotEmpty;
     return Container(
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -23,7 +27,7 @@ class MedicationTile extends StatelessWidget {
             color: Colors.grey.withOpacity(0.2),
             spreadRadius: 1,
             blurRadius: 5,
-            offset: Offset(0, 1),
+            offset: const Offset(0, 1),
           ),
         ],
       ),
@@ -36,7 +40,7 @@ class MedicationTile extends StatelessWidget {
               children: <Widget>[
                 Text(
                   '${medication.name} - ${medication.dosage}',
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontFamily: 'OpenSans',
                     fontSize: 18,
                     fontWeight: FontWeight.w500,
@@ -54,6 +58,21 @@ class MedicationTile extends StatelessWidget {
               ],
             ),
           ),
+          if (hasImage) ...[
+            const SizedBox(width: 16), // Spacing between text and image
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Image.file(
+                File(medication.imageUrl),
+                width: 100,
+                height: 100,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return Icon(Icons.error, color: Colors.red);
+                },
+              ),
+            ),
+          ],
           Theme(
             data: Theme.of(context).copyWith(),
             child: PopupMenuButton<String>(

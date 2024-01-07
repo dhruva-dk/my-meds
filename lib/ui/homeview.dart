@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 import 'package:medication_tracker/providers/medication_provider.dart';
-import 'package:medication_tracker/ui/addtest.dart';
+import 'package:medication_tracker/providers/profile_provider.dart';
+import 'package:medication_tracker/ui/createmedication.dart';
+import 'package:medication_tracker/ui/editmedication.dart';
 import 'package:medication_tracker/ui/editprofile.dart';
 import 'package:medication_tracker/ui/fdasearch.dart';
 import 'package:medication_tracker/widgets/med_tile.dart';
@@ -11,20 +13,19 @@ import 'package:medication_tracker/widgets/med_tile.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
   @override
   Widget build(
     BuildContext context,
   ) {
     // Listening to the medicationListProvider
     /// placeholder medication data in medicationList
+    final profileProvider = Provider.of<ProfileProvider>(context);
 
     return Scaffold(
       backgroundColor: Colors.black,
       body: SafeArea(
-        top: true,
-        left: false,
-        right: false,
-        bottom: false,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -35,8 +36,8 @@ class HomeScreen extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(left: 16.0, top: 8.0),
                   child: Text(
-                    'John Doe',
-                    style: TextStyle(
+                    profileProvider.userProfile?.name ?? "Name not available",
+                    style: const TextStyle(
                       fontFamily: 'OpenSans',
                       fontSize: 30,
                       fontWeight: FontWeight.w500,
@@ -48,7 +49,7 @@ class HomeScreen extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(right: 16, top: 8.0),
                   child: IconButton(
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.account_circle,
                       color: Colors.white,
                       size: 30,
@@ -58,7 +59,7 @@ class HomeScreen extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => EditProfilePage()),
+                            builder: (context) => const EditProfilePage()),
                       );
                     },
                   ),
@@ -70,7 +71,7 @@ class HomeScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(left: 16.0),
               child: Text(
-                "Date of Birth: 01/01/2000",
+                "Date of Birth: ${profileProvider.userProfile?.dob ?? "No date of birth"}",
                 style: TextStyle(
                   fontFamily: 'OpenSans',
                   fontSize: 18,
@@ -85,7 +86,7 @@ class HomeScreen extends StatelessWidget {
               child: Container(
                 decoration: BoxDecoration(
                   color: Colors.grey[200],
-                  borderRadius: BorderRadius.only(
+                  borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(30.0),
                     topRight: Radius.circular(30.0),
                   ),
@@ -100,9 +101,17 @@ class HomeScreen extends StatelessWidget {
                           itemCount: medicationList.length,
                           itemBuilder: (context, index) {
                             final medication = medicationList[index];
-                            return MedicationTile(
-                                medication:
-                                    medication); // Using your custom MedicationTile widget
+                            return GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => EditMedicationPage(
+                                          medication: medication)),
+                                );
+                              },
+                              child: MedicationTile(medication: medication),
+                            ); // Using your custom MedicationTile widget
                           },
                         );
                       },
@@ -116,14 +125,14 @@ class HomeScreen extends StatelessWidget {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => FDASearchPage()),
+            MaterialPageRoute(builder: (context) => const FDASearchPage()),
           );
         },
         backgroundColor: Colors.black,
-        child: Icon(Icons.add, color: Colors.white, size: 20),
-        shape: CircleBorder(),
+        shape: const CircleBorder(),
         elevation: 3.0,
         materialTapTargetSize: MaterialTapTargetSize.padded,
+        child: const Icon(Icons.add, color: Colors.white, size: 20),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
