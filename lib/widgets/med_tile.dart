@@ -97,7 +97,13 @@ class MedicationTile extends StatelessWidget {
                   value: 'edit',
                   child: ListTile(
                     leading: Icon(Icons.edit, color: Colors.blue),
-                    title: Text('Edit'),
+                    title: Text('Edit',
+                        style: TextStyle(
+                          fontFamily: 'OpenSans',
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.white,
+                        )),
                   ),
                 ),
                 const PopupMenuItem<String>(
