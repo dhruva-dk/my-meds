@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:medication_tracker/model/medication_model.dart';
 import 'package:medication_tracker/providers/medication_provider.dart';
+import 'package:medication_tracker/ui/editmedication.dart';
 import 'package:provider/provider.dart';
 
 class MedicationTile extends StatelessWidget {
@@ -16,6 +17,10 @@ class MedicationTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool hasImage = medication.imageUrl.isNotEmpty;
+    String medicationText = medication.dosage.isNotEmpty
+        ? '${medication.name} - ${medication.dosage}'
+        : medication.name;
+
     return Container(
       padding: const EdgeInsets.all(16),
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
@@ -39,7 +44,7 @@ class MedicationTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  '${medication.name} - ${medication.dosage}',
+                  medicationText,
                   style: const TextStyle(
                     fontFamily: 'OpenSans',
                     fontSize: 18,
@@ -77,7 +82,9 @@ class MedicationTile extends StatelessWidget {
             data: Theme.of(context).copyWith(),
             child: PopupMenuButton<String>(
               onSelected: (String result) {
-                if (result == 'delete') {
+                if (result == 'edit') {
+                  _goEditMedication(context, medication);
+                } else if (result == 'delete') {
                   _deleteMedication(context, medication.id!);
                 }
               },
@@ -85,6 +92,14 @@ class MedicationTile extends StatelessWidget {
                 borderRadius: BorderRadius.circular(16.0),
               ),
               itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                // Add Edit menu item
+                const PopupMenuItem<String>(
+                  value: 'edit',
+                  child: ListTile(
+                    leading: Icon(Icons.edit, color: Colors.blue),
+                    title: Text('Edit'),
+                  ),
+                ),
                 const PopupMenuItem<String>(
                   value: 'delete',
                   child: ListTile(
@@ -103,6 +118,14 @@ class MedicationTile extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  void _goEditMedication(BuildContext context, Medication medication) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => EditMedicationPage(medication: medication)),
     );
   }
 
