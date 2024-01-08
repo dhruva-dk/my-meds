@@ -68,7 +68,7 @@ class _EditMedicationPageState extends State<EditMedicationPage> {
       border: OutlineInputBorder(borderRadius: BorderRadius.circular(24)),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(24),
-        borderSide: BorderSide(color: Colors.black, width: 2),
+        borderSide: const BorderSide(color: Colors.black, width: 2),
       ),
     );
   }
@@ -115,7 +115,7 @@ class _EditMedicationPageState extends State<EditMedicationPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Edit Medication'),
+        title: const Text('Edit Medication'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -135,7 +135,7 @@ class _EditMedicationPageState extends State<EditMedicationPage> {
                     return null;
                   },
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 TextFormField(
                   controller: _dosageController,
                   decoration: _inputDecoration('Dosage'),
@@ -146,7 +146,7 @@ class _EditMedicationPageState extends State<EditMedicationPage> {
                     return null;
                   },
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 TextFormField(
                   controller: _additionalInfoController,
                   decoration: _inputDecoration('Additional Info'),
@@ -192,7 +192,7 @@ class _EditMedicationPageState extends State<EditMedicationPage> {
                     ),
                   ),
                 ],
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -219,7 +219,6 @@ class _EditMedicationPageState extends State<EditMedicationPage> {
                 const SizedBox(height: 8),
                 ElevatedButton(
                   onPressed: () => _saveMedication(context),
-                  child: Text('Save Medication'),
                   style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(24)),
@@ -227,6 +226,7 @@ class _EditMedicationPageState extends State<EditMedicationPage> {
                     backgroundColor: Colors.black,
                     minimumSize: const Size(double.infinity, 50),
                   ),
+                  child: const Text('Update Medication (Text)'),
                 ),
               ],
             ),

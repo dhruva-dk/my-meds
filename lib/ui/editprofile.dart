@@ -64,7 +64,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
       // Show a Snackbar indicating profile successfully updated
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('Profile successfully updated'),
         ),
       );
@@ -138,11 +138,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
   InputDecoration _inputDecoration(String label) {
     return InputDecoration(
       labelText: label,
-      labelStyle: TextStyle(color: Colors.black),
+      labelStyle: const TextStyle(color: Colors.black),
       border: OutlineInputBorder(borderRadius: BorderRadius.circular(24)),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(24),
-        borderSide: BorderSide(color: Colors.black, width: 2),
+        borderSide: const BorderSide(color: Colors.black, width: 2),
       ),
     );
   }

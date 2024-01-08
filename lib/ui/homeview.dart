@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'package:medication_tracker/providers/medication_provider.dart';
 import 'package:medication_tracker/providers/profile_provider.dart';
-import 'package:medication_tracker/ui/createmedication.dart';
 import 'package:medication_tracker/ui/editmedication.dart';
 import 'package:medication_tracker/ui/editprofile.dart';
 import 'package:medication_tracker/ui/fdasearch.dart';
@@ -96,6 +95,23 @@ class HomeScreen extends StatelessWidget {
                     child: Consumer<MedicationProvider>(
                       builder: (context, medicationProvider, child) {
                         final medicationList = medicationProvider.medications;
+
+                        if (medicationList.isEmpty) {
+                          return const Center(
+                            child: Padding(
+                              padding: EdgeInsets.all(16.0),
+                              child: Text(
+                                "No medications. Add by pressing the + button in the bottom right.",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontFamily: 'OpenSans',
+                                  fontSize: 16,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ),
+                          );
+                        }
 
                         return ListView.builder(
                           itemCount: medicationList.length,

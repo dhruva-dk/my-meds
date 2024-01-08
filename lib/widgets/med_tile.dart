@@ -68,7 +68,7 @@ class MedicationTile extends StatelessWidget {
                 height: 100,
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) {
-                  return Icon(Icons.error, color: Colors.red);
+                  return const Icon(Icons.error, color: Colors.red);
                 },
               ),
             ),

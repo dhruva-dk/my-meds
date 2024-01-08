@@ -69,7 +69,7 @@ class _CreateMedicationPageState extends State<CreateMedicationPage> {
       border: OutlineInputBorder(borderRadius: BorderRadius.circular(24)),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(24),
-        borderSide: BorderSide(color: Colors.black, width: 2),
+        borderSide: const BorderSide(color: Colors.black, width: 2),
       ),
     );
   }

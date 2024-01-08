@@ -13,9 +13,9 @@ class FullScreenImage extends StatelessWidget {
       appBar: AppBar(
           //Add an AppBar for a better user experience
           backgroundColor: Colors.transparent,
-          toolbarTextStyle: TextStyle(color: Colors.white),
+          toolbarTextStyle: const TextStyle(color: Colors.white),
           elevation: 0,
-          iconTheme: IconThemeData(color: Colors.white)),
+          iconTheme: const IconThemeData(color: Colors.white)),
       backgroundColor: Colors.black, // To highlight the image
       body: Center(
         child: InteractiveViewer(

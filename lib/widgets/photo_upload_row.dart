@@ -20,17 +20,17 @@ class PhotoUploadRow extends StatelessWidget {
         Expanded(
           child: ElevatedButton(
             onPressed: onTakePhoto,
+            style: _buttonStyle,
             child: Text(hasImage ? 'Retake Photo' : 'Take Photo',
                 style: _buttonTextStyle),
-            style: _buttonStyle,
           ),
         ),
         const SizedBox(width: 8), // Spacing between buttons
         Expanded(
           child: ElevatedButton(
             onPressed: onUploadPhoto,
-            child: Text('Upload from Gallery', style: _buttonTextStyle),
             style: _buttonStyle,
+            child: Text('Upload from Gallery', style: _buttonTextStyle),
           ),
         ),
       ],
