@@ -64,6 +64,7 @@ class _EditMedicationPageState extends State<EditMedicationPage> {
   InputDecoration _inputDecoration(String label) {
     return InputDecoration(
       labelText: label,
+      //hintText: label,
       labelStyle: const TextStyle(color: Colors.black),
       border: OutlineInputBorder(borderRadius: BorderRadius.circular(24)),
       focusedBorder: OutlineInputBorder(
@@ -146,18 +147,13 @@ class _EditMedicationPageState extends State<EditMedicationPage> {
                 const SizedBox(height: 8),
                 TextFormField(
                   controller: _dosageController,
-                  decoration: _inputDecoration('Dosage'),
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return 'Please enter a dosage';
-                    }
-                    return null;
-                  },
+                  decoration: _inputDecoration('Dosage (optional)'),
+                  //no validation for dosage as it's optional
                 ),
                 const SizedBox(height: 8),
                 TextFormField(
                   controller: _additionalInfoController,
-                  decoration: _inputDecoration('Additional Info'),
+                  decoration: _inputDecoration('Additional Info (optional)'),
                   // No validation for Additional Info as it's optional
                 ),
                 if (hasImage) ...[
