@@ -117,17 +117,9 @@ class HomeScreen extends StatelessWidget {
                           itemCount: medicationList.length,
                           itemBuilder: (context, index) {
                             final medication = medicationList[index];
-                            return GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => EditMedicationPage(
-                                          medication: medication)),
-                                );
-                              },
-                              child: MedicationTile(medication: medication),
-                            ); // Using your custom MedicationTile widget
+                            return MedicationTile(
+                                medication:
+                                    medication); // Using your custom MedicationTile widget
                           },
                         );
                       },

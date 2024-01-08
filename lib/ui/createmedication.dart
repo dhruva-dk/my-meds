@@ -100,13 +100,8 @@ class _CreateMedicationPageState extends State<CreateMedicationPage> {
                 const SizedBox(height: 8),
                 TextFormField(
                   controller: _dosageController,
-                  decoration: _inputDecoration('Dosage'),
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return 'Please enter a dosage';
-                    }
-                    return null;
-                  },
+                  decoration: _inputDecoration('Dosage (optional)'),
+                  // No validation needed for dosage as it's optional
                 ),
                 const SizedBox(height: 8),
                 TextFormField(
