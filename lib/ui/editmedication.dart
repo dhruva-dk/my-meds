@@ -78,13 +78,21 @@ class _EditMedicationPageState extends State<EditMedicationPage> {
       final String name = _nameController.text;
       final String dosage = _dosageController.text;
       final String additionalInfo = _additionalInfoController.text;
+      // for imageurl, get imageurl from provider to avoid issues where the
+      // imageurl was not first defined when the user tapped on the medication to edit
+
+      final String imageUrl =
+          Provider.of<MedicationProvider>(context, listen: false)
+              .medications
+              .firstWhere((medication) => medication.id == widget.medication.id)
+              .imageUrl;
 
       Medication updatedMedication = Medication(
         id: widget.medication.id,
         name: name,
         dosage: dosage,
         additionalInfo: additionalInfo,
-        imageUrl: widget.medication.imageUrl,
+        imageUrl: imageUrl,
       );
 
       Provider.of<MedicationProvider>(context, listen: false)
@@ -226,7 +234,7 @@ class _EditMedicationPageState extends State<EditMedicationPage> {
                     backgroundColor: Colors.black,
                     minimumSize: const Size(double.infinity, 50),
                   ),
-                  child: const Text('Update Medication (Text)'),
+                  child: const Text('Update Medication'),
                 ),
               ],
             ),
