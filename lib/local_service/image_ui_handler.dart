@@ -87,7 +87,6 @@ class ImageService {
         imageUrl: imagePath); // Assuming copyWith method is implemented
     Provider.of<MedicationProvider>(context, listen: false)
         .updateMedication(updatedMedication);
-    //Navigator.pop(context); // don't pop if updating image, as we want to stay on the page.
   }
 
   static void _showPermissionDeniedDialog(BuildContext context) {
