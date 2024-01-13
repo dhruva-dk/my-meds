@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:medication_tracker/local_service/image_ui_handler.dart';
+import 'package:medication_tracker/camera/image_ui_handler.dart';
 import 'package:medication_tracker/model/medication_model.dart';
 import 'package:medication_tracker/providers/medication_provider.dart';
 import 'package:medication_tracker/ui/full_screen_image.dart';

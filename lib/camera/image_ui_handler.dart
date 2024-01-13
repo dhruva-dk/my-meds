@@ -3,9 +3,10 @@
 
 // image_service.dart
 import 'package:flutter/material.dart';
-import 'package:medication_tracker/local_service/camera_helper.dart';
+import 'package:medication_tracker/camera/camera_helper.dart';
 import 'package:medication_tracker/model/medication_model.dart';
 import 'package:medication_tracker/providers/medication_provider.dart';
+import 'package:medication_tracker/utils/dialog_util.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
@@ -90,56 +91,13 @@ class ImageService {
   }
 
   static void _showPermissionDeniedDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text("Camera Permission Needed"),
-          content: const Text(
-              "Camera access is required to take pictures of medications. Please enable camera access in your device settings."),
-          actions: <Widget>[
-            TextButton(
-              child: const Text("Cancel"),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-            TextButton(
-              child: const Text("Open Settings"),
-              onPressed: () {
-                openAppSettings();
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
+    DialogUtil.showPermissionDeniedDialog(context, "Camera Permission Needed",
+        "Camera access is required to take pictures of medications. Please enable camera access in your device settings.");
   }
 
   static void _showGalleryPermissionDeniedDialog(BuildContext context) {
-    // Similar dialog logic for permission denied as in the camera method
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text("Gallery Permission Needed"),
-          content: const Text(
-              "Gallery access is needed to upload photos. Please enable camera access in your device settings."),
-          actions: <Widget>[
-            TextButton(
-              child: const Text("Cancel"),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-            TextButton(
-              child: const Text("Open Settings"),
-              onPressed: () {
-                openAppSettings();
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
+    DialogUtil.showPermissionDeniedDialog(context, "Gallery Permission Needed",
+        "Gallery access is needed to upload photos. Please enable gallery access in your device settings.");
   }
 
   static void _showSnackbar(BuildContext context, String message) {
@@ -147,3 +105,5 @@ class ImageService {
         .showSnackBar(SnackBar(content: Text(message)));
   }
 }
+
+// write permission denied exception and error saving exception
