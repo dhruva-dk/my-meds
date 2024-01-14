@@ -6,17 +6,28 @@ class MedicationProvider with ChangeNotifier {
   final DatabaseHelper _databaseHelper = DatabaseHelper.instance;
 
   List<Medication> _medications = [];
+  bool _isLoading = false;
 
   List<Medication> get medications => _medications;
+  bool get isLoading => _isLoading;
 
   MedicationProvider() {
     loadMedications();
   }
 
-  Future<void> loadMedications() async {
-    _medications = await _databaseHelper.queryAllRows();
-    print(_medications);
+  void setLoading(bool loading) {
+    _isLoading = loading;
     notifyListeners();
+  }
+
+  Future<void> loadMedications() async {
+    setLoading(true);
+    try {
+      _medications = await _databaseHelper.queryAllRows();
+    } finally {
+      setLoading(false);
+      notifyListeners();
+    }
   }
 
   Future<void> addMedication(Medication medication) async {

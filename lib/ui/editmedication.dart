@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:medication_tracker/local_service/image_service.dart';
+import 'package:medication_tracker/camera_services/image_ui_handler.dart';
 import 'package:medication_tracker/model/medication_model.dart';
 import 'package:medication_tracker/providers/medication_provider.dart';
 import 'package:medication_tracker/ui/full_screen_image.dart';
@@ -202,21 +202,10 @@ class _EditMedicationPageState extends State<EditMedicationPage> {
                   children: [
                     _buildPhotoButton('Take a Picture', () async {
                       _handleTakePhoto();
-                      /*ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Successfully added photo.'),
-                        ),
-                      );*/
                     }),
                     const SizedBox(width: 8), // Spacing between buttons
                     _buildPhotoButton('Upload from Gallery', () async {
                       _handleUploadFromGallery();
-                      //don't navigate back
-                      /* ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Successfully added photo.'),
-                        ),
-                      );*/
                     }),
                   ],
                 ),

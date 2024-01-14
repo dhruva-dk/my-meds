@@ -95,8 +95,11 @@ class HomeScreen extends StatelessWidget {
                     child: Consumer<MedicationProvider>(
                       builder: (context, medicationProvider, child) {
                         final medicationList = medicationProvider.medications;
-
-                        if (medicationList.isEmpty) {
+                        if (medicationProvider.isLoading) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        } else if (medicationList.isEmpty) {
                           return const Center(
                             child: Padding(
                               padding: EdgeInsets.all(16.0),
@@ -112,6 +115,8 @@ class HomeScreen extends StatelessWidget {
                             ),
                           );
                         }
+
+                        //if is loading, return circular progress indicator
 
                         return ListView.builder(
                           itemCount: medicationList.length,
