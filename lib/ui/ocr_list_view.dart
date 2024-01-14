@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:medication_tracker/model/ocr_title.dart'; // Assuming this is the model
+import 'package:medication_tracker/model/ocr_title_model.dart'; // Assuming this is the model
 import 'package:medication_tracker/model/medication_model.dart';
+import 'package:medication_tracker/ui/confirm_ocr_view.dart';
 import 'package:medication_tracker/widgets/ocr_name_tile.dart'; // Or any other page you navigate to
 
 class AddNamePage extends StatefulWidget {
@@ -12,7 +13,7 @@ class AddNamePage extends StatefulWidget {
       : super(key: key);
 
   @override
-  _AddNamePageState createState() => _AddNamePageState();
+  State<AddNamePage> createState() => _AddNamePageState();
 }
 
 class _AddNamePageState extends State<AddNamePage> {
@@ -45,16 +46,33 @@ class _AddNamePageState extends State<AddNamePage> {
               ),
             ),
             const SizedBox(height: 16),
-            Expanded(
-              child: ListView.builder(
-                itemCount: widget.ocrTitles.length,
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                      onTap: () {},
-                      child: OCRTile(title: widget.ocrTitles[index]));
-                },
-              ),
-            ),
+            widget.ocrTitles.isEmpty
+                ? const Center(
+                    child: Text(
+                      'No medication names found',
+                      style: TextStyle(fontSize: 18, color: Colors.grey),
+                    ),
+                  )
+                : Expanded(
+                    child: ListView.builder(
+                      itemCount: widget.ocrTitles.length,
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                            onTap: () {
+                              // navigate to confirm_ocr_view
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ConfirmOcrView(
+                                    ocr: widget.ocrTitles[index],
+                                  ),
+                                ),
+                              );
+                            },
+                            child: OCRTile(title: widget.ocrTitles[index]));
+                      },
+                    ),
+                  ),
           ],
         ),
       ),

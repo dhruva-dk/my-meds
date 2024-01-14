@@ -4,7 +4,7 @@ import 'package:medication_tracker/camera_services/image_ui_handler.dart';
 
 import 'package:medication_tracker/providers/fda_api_provider.dart';
 
-import 'package:medication_tracker/ui/createmedication.dart';
+import 'package:medication_tracker/ui/create_medication_view.dart';
 import 'package:provider/provider.dart';
 import 'package:medication_tracker/widgets/search_tile.dart';
 //permission handler

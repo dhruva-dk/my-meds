@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 import 'package:medication_tracker/providers/medication_provider.dart';
 import 'package:medication_tracker/providers/profile_provider.dart';
-import 'package:medication_tracker/ui/editmedication.dart';
-import 'package:medication_tracker/ui/editprofile.dart';
-import 'package:medication_tracker/ui/fdasearch.dart';
+import 'package:medication_tracker/ui/edit_medication_view.dart';
+import 'package:medication_tracker/ui/edit_profile_view.dart';
+import 'package:medication_tracker/ui/fda_search_view.dart';
 import 'package:medication_tracker/widgets/med_tile.dart';
 // Import your medication provider
 

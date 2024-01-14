@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:medication_tracker/model/user_profile.dart';
+import 'package:medication_tracker/model/user_profile_model.dart';
 import 'package:medication_tracker/providers/profile_provider.dart';
 import 'package:provider/provider.dart';
 

@@ -12,7 +12,7 @@ class FDADrug {
     required this.ndc,
   });
 
-  factory FDADrug.fromJson(Map<String, dynamic> json) {
+  factory FDADrug.fromMap(Map<String, dynamic> json) {
     return FDADrug(
       brandName: json['brand_name'] ?? 'Unknown Brand Name',
       genericName: json['generic_name'] ?? 'Unknown Generic Name',

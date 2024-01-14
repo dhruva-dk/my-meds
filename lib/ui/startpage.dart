@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:medication_tracker/model/user_profile.dart';
+import 'package:medication_tracker/model/user_profile_model.dart';
 import 'package:medication_tracker/providers/profile_provider.dart';
-import 'package:medication_tracker/ui/homeview.dart';
+import 'package:medication_tracker/ui/home_view.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -91,7 +91,8 @@ class _StartPageState extends State<StartPage> {
                   const SizedBox(height: 32),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.white, backgroundColor: Colors.black,
+                        foregroundColor: Colors.white,
+                        backgroundColor: Colors.black,
                         minimumSize: const Size(double.infinity, 50)),
                     onPressed: _submitForm,
                     child: const Text('Continue'),
