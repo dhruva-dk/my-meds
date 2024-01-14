@@ -33,6 +33,8 @@ class CameraHelper {
     final String fileName = path.basename(image.path);
     final String localPath = path.join(appDocPath, fileName);
 
+    print("Saving image to $localPath");
+
     await File(image.path).copy(localPath);
     return localPath;
   }

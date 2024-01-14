@@ -93,7 +93,3 @@ class ImageService {
         .showSnackBar(SnackBar(content: Text(message)));
   }
 }
-
-
-
-// write permission denied exception and error saving exception
