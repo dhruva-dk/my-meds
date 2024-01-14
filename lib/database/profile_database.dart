@@ -1,6 +1,6 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
-import 'package:medication_tracker/model/user_profile.dart';
+import 'package:medication_tracker/model/user_profile_model.dart';
 
 class ProfileDatabaseHelper {
   static const _databaseName = "UserProfileDatabase.db";

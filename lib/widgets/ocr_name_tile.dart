@@ -1,7 +1,7 @@
 //similar to search tile but takes OCR_title model
 
 import 'package:flutter/material.dart';
-import 'package:medication_tracker/model/ocr_title.dart';
+import 'package:medication_tracker/model/ocr_title_model.dart';
 
 class OCRTile extends StatelessWidget {
   final OCRTitle title;

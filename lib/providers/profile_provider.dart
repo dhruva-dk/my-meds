@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:medication_tracker/database/profile_database.dart';
-import 'package:medication_tracker/model/user_profile.dart';
+import 'package:medication_tracker/model/user_profile_model.dart';
 
 class ProfileProvider with ChangeNotifier {
   final ProfileDatabaseHelper _dbHelper = ProfileDatabaseHelper.instance;

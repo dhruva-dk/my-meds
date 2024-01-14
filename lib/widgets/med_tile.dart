@@ -97,7 +97,7 @@ class MedicationTile extends StatelessWidget {
                   value: 'edit',
                   child: ListTile(
                     leading: Icon(Icons.edit, color: Colors.blue),
-                    title: Text('Edit',
+                    title: Text('View & Edit',
                         style: TextStyle(
                           fontFamily: 'OpenSans',
                           fontSize: 18,
