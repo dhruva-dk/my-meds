@@ -8,6 +8,7 @@ class DialogUtil {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog.adaptive(
+            backgroundColor: Colors.white,
             title: Text(
               title,
               textAlign: TextAlign.center,
