@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:medication_tracker/model/ocr_title_model.dart'; // Assuming this is the model
 import 'package:medication_tracker/model/medication_model.dart';
+import 'package:medication_tracker/ui/confirm_ocr_view.dart';
 import 'package:medication_tracker/widgets/ocr_name_tile.dart'; // Or any other page you navigate to
 
 class AddNamePage extends StatefulWidget {
@@ -57,7 +58,17 @@ class _AddNamePageState extends State<AddNamePage> {
                       itemCount: widget.ocrTitles.length,
                       itemBuilder: (context, index) {
                         return GestureDetector(
-                            onTap: () {},
+                            onTap: () {
+                              // navigate to confirm_ocr_view
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ConfirmOcrView(
+                                    ocr: widget.ocrTitles[index],
+                                  ),
+                                ),
+                              );
+                            },
                             child: OCRTile(title: widget.ocrTitles[index]));
                       },
                     ),

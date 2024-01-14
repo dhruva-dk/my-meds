@@ -63,6 +63,7 @@ class _ConfirmOcrViewState extends State<ConfirmOcrView> {
         await Provider.of<MedicationProvider>(context, listen: false)
             .addMedication(newMedication);
         if (!mounted) return;
+        // Navigate back to home screen
         Navigator.popUntil(context, (Route<dynamic> route) => route.isFirst);
       } catch (e) {
         if (!mounted) return;
