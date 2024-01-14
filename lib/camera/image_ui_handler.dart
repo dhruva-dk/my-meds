@@ -11,13 +11,10 @@ import 'package:medication_tracker/utils/dialog_util.dart';
 import 'package:provider/provider.dart';
 
 class ImageService {
-  final ImagePermissionService _imageProcessingService =
-      ImagePermissionService();
-
-  Future<void> handleTakePhoto(BuildContext context,
+  static Future<void> handleTakePhoto(BuildContext context,
       {Medication? medication}) async {
     try {
-      String? imagePath = await _imageProcessingService.takePhoto();
+      String? imagePath = await ImagePermissionService.takePhoto();
       if (context.mounted && imagePath != null) {
         _processImage(context, imagePath, medication);
       }
@@ -32,10 +29,10 @@ class ImageService {
     }
   }
 
-  Future<void> handlePickFromGallery(BuildContext context,
+  static Future<void> handlePickFromGallery(BuildContext context,
       {Medication? medication}) async {
     try {
-      String? imagePath = await _imageProcessingService.pickFromGallery();
+      String? imagePath = await ImagePermissionService.pickFromGallery();
       if (context.mounted && imagePath != null) {
         _processImage(context, imagePath, medication);
       }
@@ -50,7 +47,7 @@ class ImageService {
     }
   }
 
-  void _processImage(
+  static void _processImage(
       BuildContext context, String imagePath, Medication? medication) {
     if (medication != null) {
       _updateMedication(context, medication, imagePath);

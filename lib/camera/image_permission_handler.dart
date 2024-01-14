@@ -2,7 +2,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:medication_tracker/camera/camera_helper.dart';
 
 class ImagePermissionService {
-  Future<String?> takePhoto() async {
+  static Future<String?> takePhoto() async {
     var status = await Permission.camera.status;
     if (!status.isGranted) {
       status = await Permission.camera.request();
@@ -19,7 +19,7 @@ class ImagePermissionService {
     }
   }
 
-  Future<String?> pickFromGallery() async {
+  static Future<String?> pickFromGallery() async {
     var status = await Permission.photos.status;
     if (!status.isGranted) {
       status = await Permission.photos.request();
