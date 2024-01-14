@@ -68,6 +68,15 @@ class ImageService {
     }
   }
 
+  void _processImage(
+      BuildContext context, String imagePath, Medication? medication) {
+    if (medication != null) {
+      _updateMedication(context, medication, imagePath);
+    } else {
+      _createAndSaveMedication(context, imagePath);
+    }
+  }
+
   static void _createAndSaveMedication(BuildContext context, String imagePath) {
     Medication newMedication = Medication(
       name: "Photo",
