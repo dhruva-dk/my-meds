@@ -1,5 +1,5 @@
 import 'package:permission_handler/permission_handler.dart';
-import 'package:medication_tracker/camera/camera_helper.dart';
+import 'package:medication_tracker/camera_services/camera_helper.dart';
 
 class ImagePermissionService {
   static Future<String?> takePhoto() async {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:medication_tracker/camera/image_ui_handler.dart';
+import 'package:medication_tracker/camera_services/image_ui_handler.dart';
 
 import 'package:medication_tracker/providers/fda_api_provider.dart';
 
