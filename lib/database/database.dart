@@ -67,7 +67,7 @@ class DatabaseHelper {
   Future<int> insert(Medication medication) async {
     Database db = await instance.database;
     try {
-      return await db.insert(table, medication.toJson());
+      return await db.insert(table, medication.toMap());
     } catch (e) {
       throw DatabaseException('Failed to insert medication: $e');
     }
@@ -77,7 +77,7 @@ class DatabaseHelper {
   Future<int> update(Medication medication) async {
     Database db = await instance.database;
     try {
-      return await db.update(table, medication.toJson(),
+      return await db.update(table, medication.toMap(),
           where: '$columnId = ?', whereArgs: [medication.id]);
     } catch (e) {
       throw DatabaseException('Failed to update medication: $e');
@@ -100,7 +100,7 @@ class DatabaseHelper {
     try {
       var res = await db.query(table);
       return res.isNotEmpty
-          ? res.map((c) => Medication.fromJson(c)).toList()
+          ? res.map((c) => Medication.fromMap(c)).toList()
           : [];
     } catch (e) {
       throw DatabaseException('Failed to retrieve medications: $e');

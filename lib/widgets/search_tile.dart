@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:medication_tracker/model/fda_drug.dart';
+import 'package:medication_tracker/model/fda_drug_model.dart';
 
 class SearchTile extends StatelessWidget {
   final FDADrug drug;

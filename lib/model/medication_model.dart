@@ -13,7 +13,7 @@ class Medication {
     required this.imageUrl, // Marked as required
   });
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toMap() {
     return {
       'id': id,
       'name': name,
@@ -23,7 +23,7 @@ class Medication {
     };
   }
 
-  factory Medication.fromJson(Map<String, dynamic> json) {
+  factory Medication.fromMap(Map<String, dynamic> json) {
     return Medication(
       id: json['id'],
       name: json['name'],

@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:medication_tracker/model/fda_drug.dart';
+import 'package:medication_tracker/model/fda_drug_model.dart';
 
 class FDAAPIService {
   final String baseUrl =
@@ -18,7 +18,7 @@ class FDAAPIService {
         List<FDADrug> medications = [];
 
         for (var item in data['results']) {
-          medications.add(FDADrug.fromJson(item));
+          medications.add(FDADrug.fromMap(item));
         }
         return medications;
       } else {
