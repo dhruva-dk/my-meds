@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:medication_tracker/model/user_profile_model.dart';
 import 'package:medication_tracker/providers/profile_provider.dart';
 import 'package:medication_tracker/ui/home_view.dart';
+import 'package:medication_tracker/widgets/black_button.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
@@ -96,14 +97,7 @@ class _StartPageState extends State<StartPage> {
                     maxLines: 6,
                   ),
                   const SizedBox(height: 32),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.white,
-                        backgroundColor: Colors.black,
-                        minimumSize: const Size(double.infinity, 50)),
-                    onPressed: _submitForm,
-                    child: const Text('Continue'),
-                  ),
+                  BlackButton(title: "Continue", onTap: () => _submitForm()),
                 ],
               ),
             ),

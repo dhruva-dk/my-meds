@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:medication_tracker/camera_services/image_ui_handler.dart';
 import 'package:medication_tracker/model/medication_model.dart';
 import 'package:medication_tracker/providers/medication_provider.dart';
+import 'package:medication_tracker/widgets/black_button.dart';
 import 'package:medication_tracker/widgets/photo_upload_row.dart';
 import 'package:medication_tracker/widgets/zoomable_image.dart';
 import 'package:provider/provider.dart';
@@ -152,17 +153,9 @@ class _EditMedicationPageState extends State<EditMedicationPage> {
                   hasImage: hasImage,
                 ),
                 const SizedBox(height: 8),
-                ElevatedButton(
-                  onPressed: () => _saveMedication(context),
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(24)),
-                    foregroundColor: Colors.white,
-                    backgroundColor: Colors.black,
-                    minimumSize: const Size(double.infinity, 50),
-                  ),
-                  child: const Text('Update Medication'),
-                ),
+                BlackButton(
+                    title: "Update Medication",
+                    onTap: () => _saveMedication(context)),
               ],
             ),
           ),

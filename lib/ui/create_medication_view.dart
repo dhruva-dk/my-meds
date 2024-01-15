@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:medication_tracker/model/fda_drug_model.dart';
 import 'package:medication_tracker/model/medication_model.dart';
 import 'package:medication_tracker/providers/medication_provider.dart';
+import 'package:medication_tracker/widgets/black_button.dart';
 import 'package:provider/provider.dart';
 
 class CreateMedicationPage extends StatefulWidget {
@@ -113,15 +114,8 @@ class _CreateMedicationPageState extends State<CreateMedicationPage> {
                   // No validation needed for additional info as it's optional
                 ),
                 const SizedBox(height: 16),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: Colors.black,
-                    minimumSize: const Size(double.infinity, 50),
-                  ),
-                  onPressed: () => _accept(context),
-                  child: const Text('Add Medication'),
-                ),
+                BlackButton(
+                    title: "Add Medication", onTap: () => _accept(context)),
               ],
             ),
           ),

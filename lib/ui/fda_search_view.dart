@@ -5,6 +5,7 @@ import 'package:medication_tracker/camera_services/image_ui_handler.dart';
 import 'package:medication_tracker/providers/fda_api_provider.dart';
 
 import 'package:medication_tracker/ui/create_medication_view.dart';
+import 'package:medication_tracker/widgets/black_button.dart';
 import 'package:medication_tracker/widgets/photo_upload_row.dart';
 import 'package:provider/provider.dart';
 import 'package:medication_tracker/widgets/search_tile.dart';
@@ -85,30 +86,15 @@ class _FDASearchPageState extends State<FDASearchPage> {
               ),
             ),
             const SizedBox(height: 8),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.white,
-                backgroundColor: Colors.black, // Black color for Manual Input
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(24),
-                ),
-                minimumSize: const Size(double.infinity, 50),
-                padding: const EdgeInsets.symmetric(vertical: 16),
-              ),
-              onPressed: () {
-                // Navigate to create medication page with no initial drug
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const CreateMedicationPage(),
-                  ),
-                );
-              },
-              child: const Text(
-                'Manual Input',
-                style: TextStyle(fontSize: 14),
-              ),
-            ),
+            BlackButton(
+                title: "Manual Input",
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const CreateMedicationPage()),
+                  );
+                }),
             const SizedBox(
               height: 8,
             ),
