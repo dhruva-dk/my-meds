@@ -115,6 +115,8 @@ class _EditMedicationPageState extends State<EditMedicationPage> {
                 TextFormField(
                   controller: _nameController,
                   decoration: _inputDecoration('Medication Name'),
+                  keyboardType: TextInputType.multiline,
+                  maxLines: null,
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
                       return 'Please enter a medication name';

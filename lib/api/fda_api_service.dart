@@ -9,7 +9,7 @@ class FDAAPIService {
   Future<List<FDADrug>> searchMedications(String query) async {
     query = query.toLowerCase();
     final url = Uri.parse(
-        '$baseUrl?search=brand_name:$query+generic_name:$query&limit=5');
+        '$baseUrl?search=brand_name:$query+generic_name:$query&limit=10');
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
