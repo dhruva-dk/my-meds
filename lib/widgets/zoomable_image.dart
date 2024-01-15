@@ -11,7 +11,7 @@ class ZoomableImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const SizedBox(height: 16),
+        const SizedBox(height: 4),
         GestureDetector(
           onTap: () => _openFullScreenImage(context),
           child: Image.file(
@@ -21,7 +21,6 @@ class ZoomableImage extends StatelessWidget {
             height: 300,
           ),
         ),
-        const SizedBox(height: 4),
         Text(
           "Tap on image to increase size and zoom.",
           textAlign: TextAlign.center,
