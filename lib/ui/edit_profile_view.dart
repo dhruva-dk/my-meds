@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:medication_tracker/model/user_profile_model.dart';
 import 'package:medication_tracker/providers/profile_provider.dart';
 import 'package:provider/provider.dart';
@@ -19,6 +20,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
       TextEditingController();
   final TextEditingController _pharmacyController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  final MaskTextInputFormatter _phoneNumberFormatter = MaskTextInputFormatter(
+      mask: '(###) ###-####',
+      filter: {"#": RegExp(r'[0-9]')},
+      type: MaskAutoCompletionType.lazy);
 
   @override
   void initState() {
@@ -101,14 +107,17 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 const SizedBox(height: 8),
                 TextFormField(
                   controller: _pcpController,
-                  decoration: _inputDecoration(
-                      'Primary Care Physician / Phone number (optional)'),
+                  decoration:
+                      _inputDecoration('Primary Care Physician (optional)'),
                 ),
                 const SizedBox(height: 8),
                 TextFormField(
                   controller: _pharmacyController,
-                  decoration:
-                      _inputDecoration('Pharmacy / Phone number (optional)'),
+                  decoration: _inputDecoration('Pharmacy Phone (optional)'),
+                  keyboardType: TextInputType.phone,
+                  inputFormatters: [
+                    _phoneNumberFormatter
+                  ], // Apply the formatter here
                 ),
                 const SizedBox(height: 8),
                 TextFormField(

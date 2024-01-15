@@ -5,6 +5,7 @@ import 'package:medication_tracker/providers/profile_provider.dart';
 import 'package:medication_tracker/ui/home_view.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class StartPage extends StatefulWidget {
   const StartPage({super.key});
@@ -21,6 +22,12 @@ class _StartPageState extends State<StartPage> {
       TextEditingController();
   final TextEditingController _pharmacyController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  // Add MaskedTextInputFormatter for phone number
+  final MaskTextInputFormatter _phoneNumberFormatter = MaskTextInputFormatter(
+      mask: '(###) ###-####',
+      filter: {"#": RegExp(r'[0-9]')},
+      type: MaskAutoCompletionType.lazy);
 
   @override
   Widget build(BuildContext context) {
@@ -69,15 +76,15 @@ class _StartPageState extends State<StartPage> {
                   const SizedBox(height: 8),
                   TextFormField(
                     controller: _pcpController,
-                    decoration: _inputDecoration(
-                        'Primary Care Physician/Phone number (optional)'),
+                    decoration:
+                        _inputDecoration('Primary Care Physician (optional)'),
                   ),
                   const SizedBox(height: 8),
-                  //text field for Pharmacy/Phone number
                   TextFormField(
                     controller: _pharmacyController,
-                    decoration:
-                        _inputDecoration('Pharmacy/Phone number (optional)'),
+                    decoration: _inputDecoration('Pharmacy Phone (optional)'),
+                    inputFormatters: [_phoneNumberFormatter],
+                    keyboardType: TextInputType.phone,
                   ),
                   const SizedBox(height: 8),
                   TextFormField(

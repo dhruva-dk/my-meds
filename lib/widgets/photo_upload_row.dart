@@ -17,35 +17,54 @@ class PhotoUploadRow extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        Expanded(
-          child: ElevatedButton(
-            onPressed: onTakePhoto,
-            style: _buttonStyle,
-            child: Text(hasImage ? 'Retake Photo' : 'Take Photo',
-                style: _buttonTextStyle),
-          ),
+        _iconButton(
+          iconData: Icons.camera_alt,
+          label: hasImage ? 'Camera' : 'Camera',
+          onPressed: onTakePhoto,
         ),
         const SizedBox(width: 8), // Spacing between buttons
-        Expanded(
-          child: ElevatedButton(
-            onPressed: onUploadPhoto,
-            style: _buttonStyle,
-            child: Text('Upload from Gallery', style: _buttonTextStyle),
-          ),
+        _iconButton(
+          iconData: Icons.photo_library,
+          label: 'Gallery',
+          onPressed: onUploadPhoto,
         ),
       ],
     );
   }
 
-  final ButtonStyle _buttonStyle = ElevatedButton.styleFrom(
-    side: const BorderSide(color: Colors.black),
-    backgroundColor: Colors.grey[100],
-    foregroundColor: Colors.black,
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(24),
-    ),
-    padding: const EdgeInsets.symmetric(vertical: 16),
-  );
+  Widget _iconButton({
+    required IconData iconData,
+    required String label,
+    required VoidCallback onPressed,
+  }) {
+    return Expanded(
+      child: Ink(
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.black),
+          color: Colors.grey[100],
+          borderRadius: BorderRadius.circular(24),
+        ),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(24),
+          onTap: onPressed,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(iconData, color: Colors.black),
+                Text(
+                  label,
+                  style: _buttonTextStyle,
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 
   final TextStyle _buttonTextStyle =
       const TextStyle(fontSize: 14, fontFamily: "OpenSans");

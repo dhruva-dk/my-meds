@@ -1,10 +1,8 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:medication_tracker/camera_services/image_ui_handler.dart';
 import 'package:medication_tracker/model/medication_model.dart';
 import 'package:medication_tracker/providers/medication_provider.dart';
-import 'package:medication_tracker/ui/full_screen_image_view.dart';
+import 'package:medication_tracker/widgets/photo_upload_row.dart';
 import 'package:medication_tracker/widgets/zoomable_image.dart';
 import 'package:provider/provider.dart';
 
@@ -39,27 +37,6 @@ class _EditMedicationPageState extends State<EditMedicationPage> {
     _dosageController.dispose();
     _additionalInfoController.dispose();
     super.dispose();
-  }
-
-  Widget _buildPhotoButton(String text, VoidCallback onPressed) {
-    return Expanded(
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          foregroundColor: Colors.black,
-          backgroundColor: Colors.grey[100],
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(24),
-            side: const BorderSide(color: Colors.black),
-          ),
-          padding: const EdgeInsets.symmetric(vertical: 16),
-        ),
-        onPressed: onPressed,
-        child: Text(
-          text,
-          style: const TextStyle(fontSize: 14),
-        ),
-      ),
-    );
   }
 
   InputDecoration _inputDecoration(String label) {
@@ -158,7 +135,6 @@ class _EditMedicationPageState extends State<EditMedicationPage> {
                   // No validation for Additional Info as it's optional
                 ),
                 if (hasImage) ...[
-                  const SizedBox(height: 16),
                   Consumer<MedicationProvider>(
                       builder: (context, provider, child) {
                     Medication updatedMedication = provider.medications
@@ -168,17 +144,10 @@ class _EditMedicationPageState extends State<EditMedicationPage> {
                   }),
                 ],
                 const SizedBox(height: 16),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    _buildPhotoButton('Take a Picture', () async {
-                      _handleTakePhoto();
-                    }),
-                    const SizedBox(width: 8), // Spacing between buttons
-                    _buildPhotoButton('Upload from Gallery', () async {
-                      _handleUploadFromGallery();
-                    }),
-                  ],
+                PhotoUploadRow(
+                  onTakePhoto: _handleTakePhoto,
+                  onUploadPhoto: _handleUploadFromGallery,
+                  hasImage: hasImage,
                 ),
                 const SizedBox(height: 8),
                 ElevatedButton(
