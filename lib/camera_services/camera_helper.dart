@@ -35,7 +35,18 @@ class CameraHelper {
 
     print("Saving image to $localPath");
 
-    await File(image.path).copy(localPath);
+    await File(image.path).copy(
+        localPath); //copy image to doc directory, but only return file name (must relationally join file to doc directory
+    //as ios changes app name on each build)
+    return fileName;
+  }
+
+  // a method which takes the an image path and returns the documents directory path to the image
+  static Future<String> getImagePath(String imagePath) async {
+    final Directory appDocDir = await getApplicationDocumentsDirectory();
+    final String appDocPath = appDocDir.path;
+    final String fileName = path.basename(imagePath);
+    final String localPath = path.join(appDocPath, fileName);
     return localPath;
   }
 }
