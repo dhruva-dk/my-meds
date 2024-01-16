@@ -32,6 +32,7 @@ class _CreateMedicationPageState extends State<CreateMedicationPage> {
     _additionalInfoController = TextEditingController();
   }
 
+//sus
   @override
   void dispose() {
     _nameController.dispose();

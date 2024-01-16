@@ -103,7 +103,7 @@ class _EditMedicationPageState extends State<EditMedicationPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Edit Medication'),
+        title: const Text('View Medication'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -117,7 +117,7 @@ class _EditMedicationPageState extends State<EditMedicationPage> {
                   controller: _nameController,
                   decoration: _inputDecoration('Medication Name'),
                   keyboardType: TextInputType.multiline,
-                  maxLines: null,
+                  maxLines: 2,
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
                       return 'Please enter a medication name';
