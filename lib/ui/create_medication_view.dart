@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:medication_tracker/model/fda_drug_model.dart';
 import 'package:medication_tracker/model/medication_model.dart';
 import 'package:medication_tracker/providers/medication_provider.dart';
+import 'package:medication_tracker/widgets/black_button.dart';
 import 'package:provider/provider.dart';
 
 class CreateMedicationPage extends StatefulWidget {
@@ -24,7 +25,7 @@ class _CreateMedicationPageState extends State<CreateMedicationPage> {
     super.initState();
     _nameController = TextEditingController(
       text: widget.initialDrug != null
-          ? "${widget.initialDrug!.brandName} - ${widget.initialDrug!.genericName}"
+          ? "Brand: ${widget.initialDrug!.brandName} - Generic: ${widget.initialDrug!.genericName}"
           : '',
     );
     _dosageController = TextEditingController();
@@ -54,6 +55,7 @@ class _CreateMedicationPageState extends State<CreateMedicationPage> {
       try {
         await Provider.of<MedicationProvider>(context, listen: false)
             .addMedication(newMedication);
+        if (!context.mounted) return;
         Navigator.popUntil(context, (Route<dynamic> route) => route.isFirst);
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -90,6 +92,8 @@ class _CreateMedicationPageState extends State<CreateMedicationPage> {
                 TextFormField(
                   controller: _nameController,
                   decoration: _inputDecoration('Name'),
+                  keyboardType: TextInputType.multiline,
+                  maxLines: 2,
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
                       return 'Please enter a medication name';
@@ -110,15 +114,8 @@ class _CreateMedicationPageState extends State<CreateMedicationPage> {
                   // No validation needed for additional info as it's optional
                 ),
                 const SizedBox(height: 16),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: Colors.black,
-                    minimumSize: const Size(double.infinity, 50),
-                  ),
-                  onPressed: () => _accept(context),
-                  child: const Text('Add Medication'),
-                ),
+                BlackButton(
+                    title: "Add Medication", onTap: () => _accept(context)),
               ],
             ),
           ),

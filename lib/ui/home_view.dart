@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
 import 'package:medication_tracker/providers/medication_provider.dart';
@@ -28,19 +29,26 @@ class HomeScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            //padding only on left 16px and a header saying "Your Medications"
+            //padding only on laqeft 16px and a header saying "Your Medications"
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 16.0, top: 8.0),
-                  child: Text(
-                    profileProvider.userProfile?.name ?? "Name not available",
-                    style: const TextStyle(
-                      fontFamily: 'OpenSans',
-                      fontSize: 30,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.white,
+                Expanded(
+                  // Moved Expanded to wrap Padding
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 16.0, top: 8.0),
+                    child: AutoSizeText(
+                      profileProvider.userProfile?.name ?? "Name not available",
+                      style: const TextStyle(
+                        fontFamily: 'OpenSans',
+                        fontSize: 30,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.white,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                      minFontSize: 18,
+                      maxLines:
+                          1, // You might want to set a maximum number of lines
                     ),
                   ),
                 ),

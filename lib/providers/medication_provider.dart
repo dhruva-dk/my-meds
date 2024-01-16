@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:medication_tracker/camera_services/camera_helper.dart';
 import 'package:medication_tracker/database/database.dart';
 import 'package:medication_tracker/model/medication_model.dart';
 
@@ -23,7 +24,24 @@ class MedicationProvider with ChangeNotifier {
   Future<void> loadMedications() async {
     setLoading(true);
     try {
-      _medications = await _databaseHelper.queryAllRows();
+      List<Medication> loadedMedications = await _databaseHelper.queryAllRows();
+
+      // Adjust image paths for each medication
+      List<Future> imagePathAdjustments = [];
+      for (var medication in loadedMedications) {
+        if (medication.imageUrl.isNotEmpty) {
+          imagePathAdjustments.add(
+            CameraHelper.getImagePath(medication.imageUrl).then((path) {
+              medication.imageUrl = path ?? medication.imageUrl;
+            }),
+          );
+        }
+      }
+
+      // Wait for all image path adjustments to complete
+      await Future.wait(imagePathAdjustments);
+
+      _medications = loadedMedications;
     } finally {
       setLoading(false);
       notifyListeners();

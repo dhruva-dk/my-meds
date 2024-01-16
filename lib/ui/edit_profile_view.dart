@@ -93,6 +93,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 TextFormField(
                   controller: _nameController,
                   decoration: _inputDecoration('Name'),
+                  keyboardType: TextInputType.name,
                   validator: (value) =>
                       value!.isEmpty ? 'Please enter your name' : null,
                 ),
