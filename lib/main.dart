@@ -70,7 +70,7 @@ class MyApp extends StatelessWidget {
             backgroundColor: Colors.white,
           ),
         ),
-        home: isFirstLaunch ? const StartPage() : const HomeScreen(),
+        home: isFirstLaunch ? const StartPage() : HomeScreen(),
       ),
     );
   }

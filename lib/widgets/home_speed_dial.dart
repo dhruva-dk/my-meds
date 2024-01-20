@@ -1,11 +1,42 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:medication_tracker/export/pdf_save_service.dart';
+import 'package:medication_tracker/export/pdf_share_service.dart';
+import 'package:medication_tracker/providers/medication_provider.dart';
 import 'package:medication_tracker/ui/fda_search_view.dart';
+import 'package:provider/provider.dart';
 
 class HomeSpeedDial extends StatelessWidget {
   // add key construct
-  const HomeSpeedDial({Key? key}) : super(key: key);
+  HomeSpeedDial({Key? key}) : super(key: key);
+  final PDFShareService _pdfShareService = PDFShareService();
+
+  void _shareMedications(BuildContext context) async {
+    try {
+      await _pdfShareService.shareMedicationsPDF(
+          Provider.of<MedicationProvider>(context, listen: false).medications);
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Medications PDF shared successfully!')),
+      );
+    } on PDFSaveException catch (e) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: ${e.message}')),
+      );
+    } on PDFShareException catch (e) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: ${e.message}')),
+      );
+    } catch (e) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('An unknown error occurred')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,8 +50,6 @@ class HomeSpeedDial extends StatelessWidget {
       curve: Curves.bounceIn,
       overlayColor: Colors.black,
       overlayOpacity: 0.2,
-      onOpen: () => print('OPENING DIAL'),
-      onClose: () => print('DIAL CLOSED'),
       tooltip: 'Speed Dial',
       heroTag: 'speed-dial-hero-tag',
       elevation: 8.0,
@@ -48,7 +77,8 @@ class HomeSpeedDial extends StatelessWidget {
           labelStyle: const TextStyle(fontSize: 18.0, fontFamily: 'OpenSans'),
           onTap: () {
             // Implement your export logic
-            print('Export');
+            //print('Export');
+            _shareMedications(context);
           },
         ),
       ],

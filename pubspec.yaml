@@ -53,6 +53,7 @@ dependencies:
   auto_size_text: ^3.0.0
   flutter_speed_dial: ^7.0.0
   share_plus: ^7.2.1
+  pdf: ^3.10.7
 
   
   

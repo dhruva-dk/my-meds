@@ -1,11 +1,8 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-
 import 'package:medication_tracker/providers/medication_provider.dart';
 import 'package:medication_tracker/providers/profile_provider.dart';
-import 'package:medication_tracker/ui/edit_medication_view.dart';
 import 'package:medication_tracker/ui/edit_profile_view.dart';
-import 'package:medication_tracker/ui/fda_search_view.dart';
 import 'package:medication_tracker/widgets/home_speed_dial.dart';
 import 'package:medication_tracker/widgets/med_tile.dart';
 // Import your medication provider
@@ -14,7 +11,7 @@ import 'package:medication_tracker/widgets/med_tile.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  HomeScreen({super.key});
 
   @override
   Widget build(
@@ -143,7 +140,7 @@ class HomeScreen extends StatelessWidget {
           ],
         ),
       ),
-      floatingActionButton: const HomeSpeedDial(),
+      floatingActionButton: HomeSpeedDial(),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
