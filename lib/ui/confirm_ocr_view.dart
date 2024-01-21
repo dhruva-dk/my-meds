@@ -1,10 +1,7 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:medication_tracker/model/medication_model.dart';
 import 'package:medication_tracker/model/ocr_title_model.dart';
 import 'package:medication_tracker/providers/medication_provider.dart';
-import 'package:medication_tracker/ui/full_screen_image_view.dart';
 import 'package:medication_tracker/widgets/zoomable_image.dart';
 import 'package:provider/provider.dart';
 

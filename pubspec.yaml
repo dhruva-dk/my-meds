@@ -51,6 +51,9 @@ dependencies:
   google_mlkit_text_recognition: ^0.11.0
   mask_text_input_formatter: ^2.7.0
   auto_size_text: ^3.0.0
+  flutter_speed_dial: ^7.0.0
+  share_plus: ^7.2.1
+  pdf: ^3.10.7
 
   
   

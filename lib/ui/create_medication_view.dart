@@ -32,6 +32,7 @@ class _CreateMedicationPageState extends State<CreateMedicationPage> {
     _additionalInfoController = TextEditingController();
   }
 
+//sus
   @override
   void dispose() {
     _nameController.dispose();
@@ -92,8 +93,6 @@ class _CreateMedicationPageState extends State<CreateMedicationPage> {
                 TextFormField(
                   controller: _nameController,
                   decoration: _inputDecoration('Name'),
-                  keyboardType: TextInputType.multiline,
-                  maxLines: 2,
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
                       return 'Please enter a medication name';

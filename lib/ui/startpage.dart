@@ -158,7 +158,7 @@ class _StartPageState extends State<StartPage> {
       // Navigate to the HomeScreen
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const HomeScreen()),
+        MaterialPageRoute(builder: (context) => HomeScreen()),
       );
     }
   }

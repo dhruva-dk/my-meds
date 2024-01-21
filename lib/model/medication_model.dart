@@ -19,7 +19,9 @@ class Medication {
       'name': name,
       'dosage': dosage,
       'additionalInfo': additionalInfo,
-      'imageUrl': imageUrl, // Always present
+      'imageUrl': imageUrl, // Always present, if no image is empty string
+      //note that imageUrl is a bad name, should be imageFileName because images are local and stored in documents folder
+      //and path is added to it to get the full path
     };
   }
 
