@@ -13,28 +13,26 @@ class PDFSaveService {
       pw.MultiPage(
         build: (context) => [
           for (int i = 0; i < medications.length; i++) ...[
-            pw.Row(
-              mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+            pw.Column(
+              crossAxisAlignment: pw.CrossAxisAlignment.start,
               children: [
-                pw.Expanded(
-                  child: pw.Text(medications[i].name.isNotEmpty
-                      ? medications[i].name
-                      : 'N/A'),
+                pw.Text(
+                  "Name: ${medications[i].name.isNotEmpty ? medications[i].name : 'N/A'}",
+                  style: const pw.TextStyle(fontSize: 18),
                 ),
-                pw.Expanded(
-                  child: pw.Text(medications[i].dosage.isNotEmpty
-                      ? medications[i].dosage
-                      : 'N/A'),
+                pw.Text(
+                  "Dosage: ${medications[i].dosage.isNotEmpty ? medications[i].dosage : 'N/A'}",
+                  style: const pw.TextStyle(fontSize: 18),
                 ),
-                pw.Expanded(
-                  child: pw.Text(medications[i].additionalInfo.isNotEmpty
-                      ? medications[i].additionalInfo
-                      : 'N/A'),
+                pw.Text(
+                  "Additional Info: ${medications[i].additionalInfo.isNotEmpty ? medications[i].additionalInfo : 'N/A'}",
+                  style: const pw.TextStyle(fontSize: 18),
                 ),
-                if (medications[i].imageUrl.isNotEmpty &&
-                    images[i] != null) ...[
-                  pw.Image(images[i]!, height: 100, width: 100),
-                ],
+                if (medications[i].imageUrl.isNotEmpty && images[i] != null)
+                  pw.Padding(
+                    padding: const pw.EdgeInsets.only(top: 20),
+                    child: pw.Image(images[i]!, height: 300, width: 300),
+                  ),
               ],
             ),
             pw.Divider(),
@@ -50,7 +48,7 @@ class PDFSaveService {
       await file.writeAsBytes(await pdf.save());
       return path;
     } catch (e) {
-      throw PDFSaveException('Error generating PDF: $e');
+      throw PDFSaveException('${e.toString()}');
     }
   }
 

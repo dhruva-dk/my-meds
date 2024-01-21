@@ -16,6 +16,8 @@ class HomeSpeedDial extends StatelessWidget {
     try {
       await _pdfShareService.shareMedicationsPDF(
           Provider.of<MedicationProvider>(context, listen: false).medications);
+
+      // Show success message if no exception occurred
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Medications PDF shared successfully!')),
@@ -23,12 +25,12 @@ class HomeSpeedDial extends StatelessWidget {
     } on PDFSaveException catch (e) {
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: ${e.message}')),
+        SnackBar(content: Text('${e.message}')),
       );
     } on PDFShareException catch (e) {
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: ${e.message}')),
+        SnackBar(content: Text('${e.message}')),
       );
     } catch (e) {
       if (!context.mounted) return;

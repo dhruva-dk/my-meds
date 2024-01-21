@@ -20,13 +20,21 @@ class FDAAPIService {
         for (var item in data['results']) {
           medications.add(FDADrug.fromMap(item));
         }
-        return medications;
+        return _processMedications(medications);
       } else {
         throw Exception('No results found');
       }
     } else {
-      // Handle network error or invalid response
       throw Exception('No Results Found');
     }
+  }
+
+  List<FDADrug> _processMedications(List<FDADrug> medications) {
+    // Remove duplicates
+    var uniqueMedications = <String, FDADrug>{};
+    for (var medication in medications) {
+      uniqueMedications[medication.ndc] = medication;
+    }
+    return uniqueMedications.values.toList();
   }
 }

@@ -23,7 +23,7 @@ class PDFShareService {
       throw PDFSaveException(e.message);
     } catch (e) {
       // For any other type of error, throw a PDFShareException
-      throw PDFShareException('Failed to share PDF: ${e.toString()}');
+      throw PDFShareException('${e.toString()}');
     }
   }
 }
