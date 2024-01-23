@@ -46,9 +46,15 @@ class HomeSpeedDial extends StatelessWidget {
       // Provide an icon to display in the FAB
       icon: Icons.medication,
       activeIcon: Icons.close,
+
       backgroundColor: Colors.black,
       foregroundColor: Colors.white, // it's the FloatingActionButton size
       visible: true,
+      label: const Text(
+        "Add & Export",
+        style: TextStyle(
+            fontFamily: "OpenSans", color: Colors.white, fontSize: 16),
+      ),
       curve: Curves.bounceIn,
       overlayColor: Colors.black,
       overlayOpacity: 0.2,
@@ -71,7 +77,7 @@ class HomeSpeedDial extends StatelessWidget {
           ),
         ),
         SpeedDialChild(
-          child: const Icon(Icons.share),
+          child: const Icon(Icons.save),
           shape: const CircleBorder(),
           backgroundColor: Colors.black,
           foregroundColor: Colors.white,

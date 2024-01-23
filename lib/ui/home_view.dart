@@ -1,10 +1,15 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:medication_tracker/export/pdf_save_service.dart';
+import 'package:medication_tracker/export/pdf_share_service.dart';
 import 'package:medication_tracker/providers/medication_provider.dart';
 import 'package:medication_tracker/providers/profile_provider.dart';
+import 'package:medication_tracker/ui/edit_medication_view.dart';
 import 'package:medication_tracker/ui/edit_profile_view.dart';
+import 'package:medication_tracker/ui/fda_search_view.dart';
 import 'package:medication_tracker/widgets/home_speed_dial.dart';
 import 'package:medication_tracker/widgets/med_tile.dart';
+import 'package:medication_tracker/widgets/nav_bar.dart';
 // Import your medication provider
 
 //import provider
@@ -51,7 +56,7 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
                 //iconbutton to go to edit profile
-                Padding(
+                /*Padding(
                   padding: const EdgeInsets.only(right: 16, top: 8.0),
                   child: IconButton(
                     icon: const Icon(
@@ -68,7 +73,7 @@ class HomeScreen extends StatelessWidget {
                       );
                     },
                   ),
-                ),
+                ),*/
               ],
             ),
 
@@ -110,7 +115,7 @@ class HomeScreen extends StatelessWidget {
                             child: Padding(
                               padding: EdgeInsets.all(16.0),
                               child: Text(
-                                "No medications. Add by pressing the medication button in the bottom right.",
+                                "No medications. Add by pressing the + button below.",
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontFamily: 'OpenSans',
@@ -128,9 +133,17 @@ class HomeScreen extends StatelessWidget {
                           itemCount: medicationList.length,
                           itemBuilder: (context, index) {
                             final medication = medicationList[index];
-                            return MedicationTile(
-                                medication:
-                                    medication); // Using your custom MedicationTile widget
+                            return GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => EditMedicationPage(
+                                          medication: medication)),
+                                );
+                              },
+                              child: MedicationTile(medication: medication),
+                            ); // Using your custom MedicationTile widget
                           },
                         );
                       },
@@ -140,8 +153,34 @@ class HomeScreen extends StatelessWidget {
           ],
         ),
       ),
-      floatingActionButton: HomeSpeedDial(),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      //FAB code
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: Container(
+        margin: const EdgeInsets.only(top: 10),
+        height: 64,
+        width: 64,
+        child: FloatingActionButton(
+          backgroundColor: Colors.white,
+          elevation: 0,
+          onPressed: () {
+            // Navigate to the Add Medication page
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const FDASearchPage()),
+            );
+          },
+          shape: RoundedRectangleBorder(
+            side:
+                const BorderSide(width: 3, color: Colors.black), // Black border
+            borderRadius: BorderRadius.circular(100),
+          ),
+          child: const Icon(
+            Icons.add,
+            color: Colors.black, // Black icon
+          ),
+        ),
+      ),
+      bottomNavigationBar: NavBar(),
     );
   }
 }

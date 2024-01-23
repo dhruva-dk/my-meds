@@ -46,7 +46,7 @@ class MedicationTile extends StatelessWidget {
                   medicationText,
                   style: const TextStyle(
                     fontFamily: 'OpenSans',
-                    fontSize: 18,
+                    fontSize: 22,
                     fontWeight: FontWeight.w500,
                     color: Colors.black,
                   ),
