@@ -4,6 +4,7 @@ import 'package:medication_tracker/model/user_profile_model.dart';
 import 'package:medication_tracker/providers/profile_provider.dart';
 import 'package:medication_tracker/ui/home_view.dart';
 import 'package:medication_tracker/widgets/black_button.dart';
+import 'package:medication_tracker/widgets/privacy_policy_button.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
@@ -50,7 +51,7 @@ class _StartPageState extends State<StartPage> {
                           fontFamily: "OpenSans")),
                   //const SizedBox(height: 8),
                   Text(
-                    'To continue, please fill in the following information.',
+                    'Optionally, fill in the following information. We do not collect any personal information. This is for your reference only',
                     style: TextStyle(
                       fontSize: 18,
                       color: Colors.grey[800],
@@ -61,17 +62,17 @@ class _StartPageState extends State<StartPage> {
                   const SizedBox(height: 32),
                   TextFormField(
                     controller: _nameController,
-                    decoration: _inputDecoration('Name'),
-                    validator: (value) =>
-                        value!.isEmpty ? 'Please enter your name' : null,
+                    decoration: _inputDecoration('Name (optional)'),
+                    /*validator: (value) =>
+                        value!.isEmpty ? 'Please enter your name' : null, */
                   ),
                   const SizedBox(height: 8),
                   TextFormField(
                     controller: _dobController,
-                    decoration: _inputDecoration('Date of Birth'),
-                    validator: (value) => value!.isEmpty
+                    decoration: _inputDecoration('Date of Birth (optional)'),
+                    /*validator: (value) => value!.isEmpty
                         ? 'Please enter your date of birth'
-                        : null,
+                        : null, */
                     onTap: () => _selectDate(context),
                   ),
                   const SizedBox(height: 8),
@@ -96,7 +97,10 @@ class _StartPageState extends State<StartPage> {
                     minLines: 3,
                     maxLines: 6,
                   ),
-                  const SizedBox(height: 32),
+                  const SizedBox(height: 16),
+                  //WhiteOutlineButton(title: "Privacy Policy", onTap: () {}),
+                  const PrivacyPolicyButton(),
+                  const SizedBox(height: 8),
                   BlackButton(title: "Continue", onTap: () => _submitForm()),
                 ],
               ),

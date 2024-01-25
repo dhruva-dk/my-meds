@@ -3,6 +3,9 @@ import 'package:intl/intl.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:medication_tracker/model/user_profile_model.dart';
 import 'package:medication_tracker/providers/profile_provider.dart';
+import 'package:medication_tracker/widgets/black_button.dart';
+import 'package:medication_tracker/widgets/outline_button.dart';
+import 'package:medication_tracker/widgets/privacy_policy_button.dart';
 import 'package:provider/provider.dart';
 
 class EditProfilePage extends StatefulWidget {
@@ -92,17 +95,17 @@ class _EditProfilePageState extends State<EditProfilePage> {
               children: [
                 TextFormField(
                   controller: _nameController,
-                  decoration: _inputDecoration('Name'),
+                  decoration: _inputDecoration('Name (optional)'),
                   keyboardType: TextInputType.name,
-                  validator: (value) =>
-                      value!.isEmpty ? 'Please enter your name' : null,
+                  /*validator: (value) =>
+                      value!.isEmpty ? 'Please enter your name' : null,*/
                 ),
                 const SizedBox(height: 8),
                 TextFormField(
                   controller: _dobController,
-                  decoration: _inputDecoration('Date of Birth'),
-                  validator: (value) =>
-                      value!.isEmpty ? 'Please enter your date of birth' : null,
+                  decoration: _inputDecoration('Date of Birth (optional)'),
+                  /* validator: (value) =>
+                      value!.isEmpty ? 'Please enter your date of birth' : null,*/
                   onTap: () => _selectDate(context),
                 ),
                 const SizedBox(height: 8),
@@ -128,15 +131,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   maxLines: 6,
                 ),
                 const SizedBox(height: 16),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: Colors.black,
-                    minimumSize: const Size(double.infinity, 50),
-                  ),
-                  onPressed: _saveProfile,
-                  child: const Text('Save Profile'),
-                ),
+                //WhiteOutlineButton(title: "Privacy Policy", onTap: () {}),
+                const PrivacyPolicyButton(),
+                const SizedBox(height: 8),
+                BlackButton(title: "Save Profile", onTap: _saveProfile),
               ],
             ),
           ),
