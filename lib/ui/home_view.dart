@@ -18,6 +18,20 @@ import 'package:provider/provider.dart';
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
 
+  String NameOrNA(String? text) {
+    if (text == null || text.isEmpty) {
+      return "Name N/A";
+    }
+    return text;
+  }
+
+  String DOBOrNA(String? text) {
+    if (text == null || text.isEmpty) {
+      return "N/A";
+    }
+    return text;
+  }
+
   @override
   Widget build(
     BuildContext context,
@@ -41,7 +55,7 @@ class HomeScreen extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.only(left: 16.0, top: 8.0),
                     child: AutoSizeText(
-                      profileProvider.userProfile?.name ?? "Name not available",
+                      "${DOBOrNA(profileProvider.userProfile?.name)}",
                       style: const TextStyle(
                         fontFamily: 'OpenSans',
                         fontSize: 30,
@@ -81,7 +95,7 @@ class HomeScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(left: 16.0),
               child: Text(
-                "Date of Birth: ${profileProvider.userProfile?.dob ?? "No date of birth"}",
+                "Date of Birth: ${DOBOrNA(profileProvider.userProfile?.dob)}",
                 style: TextStyle(
                   fontFamily: 'OpenSans',
                   fontSize: 18,
