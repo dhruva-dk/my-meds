@@ -1,16 +1,15 @@
-# medication_tracker
+# My Meds
 
-A new Flutter project.
+A simple medication list app made to be easy to use and not send your data off-device
 
-## Getting Started
+## Features
 
-This project is a starting point for a Flutter application.
+- Feature 1
+- Feature 2
+- Feature 3
 
-A few resources to get you started if this is your first Flutter project:
+## Installation
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Install on the app store: https://apps.apple.com/us/app/my-meds-personal-meds-list/id6475703887
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Thank you!
