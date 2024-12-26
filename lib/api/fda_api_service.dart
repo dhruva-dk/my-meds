@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:medication_tracker/model/fda_drug_model.dart';
+import 'package:medication_tracker/domain/model/fda_drug_model.dart';
 
 class FDAAPIService {
   final String baseUrl =

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:medication_tracker/camera_services/image_ui_handler.dart';
-import 'package:medication_tracker/model/medication_model.dart';
+import 'package:medication_tracker/domain/model/medication_model.dart';
 import 'package:medication_tracker/providers/medication_provider.dart';
 import 'package:medication_tracker/ui/core/ui/black_button.dart';
 import 'package:medication_tracker/ui/core/ui/photo_upload_row.dart';

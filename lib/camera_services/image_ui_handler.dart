@@ -7,9 +7,9 @@
 import 'package:flutter/material.dart';
 
 import 'package:medication_tracker/camera_services/image_permission_handler.dart';
-import 'package:medication_tracker/model/medication_model.dart';
+import 'package:medication_tracker/domain/model/medication_model.dart';
 import 'package:medication_tracker/providers/medication_provider.dart';
-import 'package:medication_tracker/utils/dialog_util.dart';
+import 'package:medication_tracker/ui/core/ui/permission_denied_dialog.dart';
 import 'package:provider/provider.dart';
 
 class ImageService {
@@ -81,13 +81,29 @@ class ImageService {
   }
 
   static void _showPermissionDeniedDialog(BuildContext context) {
-    DialogUtil.showPermissionDeniedDialog(context, "Camera Permission Needed",
-        "Camera access is required to take pictures of medications. Please enable camera access in your device settings.");
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return const PermissionDeniedDialog(
+          title: "Camera Permission Needed",
+          description:
+              "Camera access is required to take pictures of medications. Please enable camera access in your device settings.",
+        );
+      },
+    );
   }
 
   static void _showGalleryPermissionDeniedDialog(BuildContext context) {
-    DialogUtil.showPermissionDeniedDialog(context, "Gallery Permission Needed",
-        "Gallery access is needed to upload photos. Please enable gallery access in your device settings.");
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return const PermissionDeniedDialog(
+          title: "Gallery Permission Needed",
+          description:
+              "Gallery access is needed to upload photos. Please enable gallery access in your device settings.",
+        );
+      },
+    );
   }
 
   static void _showSnackbar(BuildContext context, String message) {

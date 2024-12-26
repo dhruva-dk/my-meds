@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:medication_tracker/camera_services/camera_helper.dart';
 import 'package:medication_tracker/database/database.dart';
-import 'package:medication_tracker/model/medication_model.dart';
+import 'package:medication_tracker/domain/model/medication_model.dart';
 
 class MedicationProvider with ChangeNotifier {
   final DatabaseHelper _databaseHelper = DatabaseHelper.instance;

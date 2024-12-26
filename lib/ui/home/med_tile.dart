@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:medication_tracker/model/medication_model.dart';
+import 'package:medication_tracker/domain/model/medication_model.dart';
 import 'package:medication_tracker/providers/medication_provider.dart';
 import 'package:medication_tracker/ui/edit_medication/edit_medication_view.dart';
 import 'package:provider/provider.dart';

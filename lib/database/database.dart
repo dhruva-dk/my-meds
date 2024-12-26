@@ -1,4 +1,4 @@
-import 'package:medication_tracker/model/medication_model.dart';
+import 'package:medication_tracker/domain/model/medication_model.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
