@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:medication_tracker/domain/model/user_profile_model.dart';
-import 'package:medication_tracker/data/repositories/profile_provider.dart';
+import 'package:medication_tracker/data/repositories/profile_repository.dart';
 import 'package:medication_tracker/ui/home/home_view.dart';
 import 'package:medication_tracker/ui/core/ui/black_button.dart';
 import 'package:medication_tracker/ui/core/ui/privacy_policy_button.dart';

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:medication_tracker/utils/image_ui_handler.dart';
 
-import 'package:medication_tracker/data/repositories/fda_api_provider.dart';
+import 'package:medication_tracker/data/repositories/fda_api_repository.dart';
 
 import 'package:medication_tracker/ui/create_medication/create_medication_view.dart';
 import 'package:medication_tracker/ui/core/ui/black_button.dart';

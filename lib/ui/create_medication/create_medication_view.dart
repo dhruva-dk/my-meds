@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:medication_tracker/domain/model/fda_drug_model.dart';
 import 'package:medication_tracker/domain/model/medication_model.dart';
-import 'package:medication_tracker/data/repositories/medication_provider.dart';
+import 'package:medication_tracker/data/repositories/medication_repository.dart';
 import 'package:medication_tracker/ui/core/ui/black_button.dart';
 import 'package:provider/provider.dart';
 

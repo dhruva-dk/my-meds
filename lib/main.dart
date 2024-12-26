@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:medication_tracker/data/repositories/fda_api_provider.dart';
-import 'package:medication_tracker/data/repositories/medication_provider.dart';
-import 'package:medication_tracker/data/repositories/profile_provider.dart';
+import 'package:medication_tracker/data/repositories/fda_api_repository.dart';
+import 'package:medication_tracker/data/repositories/medication_repository.dart';
+import 'package:medication_tracker/data/repositories/profile_repository.dart';
 import 'package:medication_tracker/ui/home/home_view.dart'; // Import your StartPage
 import 'package:medication_tracker/ui/create_profile/startpage.dart';
 import 'package:provider/provider.dart';
