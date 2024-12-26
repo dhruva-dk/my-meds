@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:medication_tracker/api/fda_api_service.dart';
+import 'package:medication_tracker/data/services/fda_api_service.dart';
 import 'package:medication_tracker/domain/model/fda_drug_model.dart';
 
 class FDAAPIServiceProvider with ChangeNotifier {

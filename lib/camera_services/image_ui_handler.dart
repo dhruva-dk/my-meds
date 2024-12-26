@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 
 import 'package:medication_tracker/camera_services/image_permission_handler.dart';
 import 'package:medication_tracker/domain/model/medication_model.dart';
-import 'package:medication_tracker/providers/medication_provider.dart';
+import 'package:medication_tracker/data/repositories/medication_provider.dart';
 import 'package:medication_tracker/ui/core/ui/permission_denied_dialog.dart';
 import 'package:provider/provider.dart';
 

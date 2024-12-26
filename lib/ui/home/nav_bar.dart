@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:medication_tracker/export/pdf_save_service.dart';
-import 'package:medication_tracker/export/pdf_share_service.dart';
-import 'package:medication_tracker/providers/medication_provider.dart';
+import 'package:medication_tracker/data/services/pdf_share_service.dart';
+
+import 'package:medication_tracker/data/repositories/medication_provider.dart';
 import 'package:medication_tracker/ui/edit_profile/edit_profile_view.dart';
 import 'package:provider/provider.dart';
 

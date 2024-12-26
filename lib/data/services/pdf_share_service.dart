@@ -3,8 +3,9 @@ import 'dart:io';
 import 'package:medication_tracker/domain/model/medication_model.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/widgets.dart' as pw;
+import 'package:share_plus/share_plus.dart';
 
-class PDFSaveService {
+class PDFShareService {
   Future<String> exportPDF(List<Medication> medications) async {
     final pdf = pw.Document();
     final List<pw.ImageProvider?> images = await loadImages(medications);
@@ -48,7 +49,7 @@ class PDFSaveService {
       await file.writeAsBytes(await pdf.save());
       return path;
     } catch (e) {
-      throw PDFSaveException('${e.toString()}');
+      throw PDFSaveException(e.toString());
     }
   }
 
@@ -62,9 +63,38 @@ class PDFSaveService {
       return null;
     }));
   }
+
+  Future<void> shareMedicationsPDF(List<Medication> medications) async {
+    try {
+      String filePath = await exportPDF(medications);
+      //get xfile from path
+      XFile file = XFile(filePath);
+      //share file
+      final result =
+          await Share.shareXFiles([file], text: "Medication List PDF");
+
+      if (result.status == ShareResultStatus.dismissed) {
+        throw PDFShareException('Export cancelled');
+      }
+    } on PDFSaveException catch (e) {
+      // Rethrow the same exception for the UI to handle
+      throw PDFSaveException(e.message);
+    } catch (e) {
+      // For any other type of error, throw a PDFShareException
+      throw PDFShareException(e.toString());
+    }
+  }
 }
 
 class PDFSaveException implements Exception {
   final String message;
   PDFSaveException(this.message);
+}
+
+class PDFShareException implements Exception {
+  final String message;
+  PDFShareException(this.message);
+
+  @override
+  String toString() => 'PDFShareException: $message';
 }

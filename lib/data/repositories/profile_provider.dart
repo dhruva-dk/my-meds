@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:medication_tracker/database/profile_database.dart';
+import 'package:medication_tracker/data/services/profile_database_service.dart';
 import 'package:medication_tracker/domain/model/user_profile_model.dart';
 
 class ProfileProvider with ChangeNotifier {
