@@ -136,9 +136,7 @@ class _StartPageState extends State<StartPage> {
   }
 
   void _submitForm() async {
-    if (_formKey.currentState!.validate() &&
-        _dobController.text.isNotEmpty &&
-        _nameController.text.isNotEmpty) {
+    if (_formKey.currentState!.validate()) {
       // Save the profile details
       //...
 

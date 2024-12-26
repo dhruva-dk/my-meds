@@ -1,6 +1,8 @@
 // a file to handle all image picker concerns. We are trying to minimize repeat code of taking photos so that a button to redo
 // a medication's photo can easily be implemented anywhere.
 
+//split this folder into view, viewmodel, repository, and service
+
 // image_service.dart
 import 'package:flutter/material.dart';
 
