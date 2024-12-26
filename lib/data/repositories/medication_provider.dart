@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:medication_tracker/camera_services/camera_helper.dart';
+import 'package:medication_tracker/data/services/image_service.dart';
 import 'package:medication_tracker/data/services/database_service.dart';
 import 'package:medication_tracker/domain/model/medication_model.dart';
 
