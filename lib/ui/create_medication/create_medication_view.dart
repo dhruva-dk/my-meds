@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:medication_tracker/model/fda_drug_model.dart';
 import 'package:medication_tracker/model/medication_model.dart';
 import 'package:medication_tracker/providers/medication_provider.dart';
-import 'package:medication_tracker/widgets/black_button.dart';
+import 'package:medication_tracker/ui/core/ui/black_button.dart';
 import 'package:provider/provider.dart';
 
 class CreateMedicationPage extends StatefulWidget {

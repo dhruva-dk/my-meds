@@ -2,10 +2,10 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:medication_tracker/providers/medication_provider.dart';
 import 'package:medication_tracker/providers/profile_provider.dart';
-import 'package:medication_tracker/ui/edit_medication_view.dart';
-import 'package:medication_tracker/ui/fda_search_view.dart';
-import 'package:medication_tracker/ui/shared/med_tile.dart';
-import 'package:medication_tracker/ui/shared/nav_bar.dart';
+import 'package:medication_tracker/ui/edit_medication/edit_medication_view.dart';
+import 'package:medication_tracker/ui/search/fda_search_view.dart';
+import 'package:medication_tracker/ui/home/med_tile.dart';
+import 'package:medication_tracker/ui/home/nav_bar.dart';
 // Import your medication provider
 
 //import provider
