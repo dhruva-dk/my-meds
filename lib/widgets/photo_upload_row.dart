@@ -22,7 +22,7 @@ class PhotoUploadRow extends StatelessWidget {
           label: hasImage ? 'Camera' : 'Camera',
           onPressed: onTakePhoto,
         ),
-        const SizedBox(width: 8), // Spacing between buttons
+        const SizedBox(width: 9), // Spacing between buttons
         _iconButton(
           iconData: Icons.photo_library,
           label: 'Gallery',
@@ -42,7 +42,7 @@ class PhotoUploadRow extends StatelessWidget {
         decoration: BoxDecoration(
           border: Border.all(
               color: Colors.black, width: 2), // Border around the button
-          color: Colors.grey[100],
+          color: Colors.white,
           borderRadius: BorderRadius.circular(24),
         ),
         child: InkWell(
