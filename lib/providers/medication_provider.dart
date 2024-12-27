@@ -14,8 +14,10 @@ class MedicationProvider with ChangeNotifier {
   bool get isLoading => _isLoading;
 
   MedicationProvider(this._profileProvider) {
+    if (_profileProvider.selectedProfile != null) {
+      loadMedications();
+    }
     _profileProvider.addListener(_onProfileChanged);
-    loadMedications();
   }
 
   Future<void> loadMedications() async {

@@ -13,9 +13,15 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (context) => FDAAPIServiceProvider()),
         ChangeNotifierProvider(create: (context) => ProfileProvider()),
-        ProxyProvider<ProfileProvider, MedicationProvider>(
-          update: (context, profileProvider, previous) =>
-              MedicationProvider(profileProvider),
+        ChangeNotifierProxyProvider<ProfileProvider, MedicationProvider>(
+          create: (context) => MedicationProvider(
+            Provider.of<ProfileProvider>(context, listen: false),
+          ),
+          update: (context, profileProvider, previousMedicationProvider) {
+            // If there's a previous instance, you might want to preserve some state
+            return previousMedicationProvider ??
+                MedicationProvider(profileProvider);
+          },
         ),
       ],
       child: const MyApp(),
