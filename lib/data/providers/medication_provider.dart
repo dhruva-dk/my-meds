@@ -5,20 +5,22 @@ import 'package:medication_tracker/data/model/medication_model.dart';
 import 'package:medication_tracker/data/providers/profile_provider.dart';
 
 class MedicationProvider with ChangeNotifier {
-  final DatabaseService _db = DatabaseService.instance;
+  final DatabaseService _databaseService;
   final ProfileProvider _profileProvider;
   List<Medication> _medications = [];
   bool _isLoading = false;
 
-  List<Medication> get medications => _medications;
-  bool get isLoading => _isLoading;
-
-  MedicationProvider(this._profileProvider) {
+  MedicationProvider(this._profileProvider,
+      {required DatabaseService databaseService})
+      : _databaseService = databaseService {
     if (_profileProvider.selectedProfile != null) {
       loadMedications();
     }
     _profileProvider.addListener(_onProfileChanged);
   }
+
+  List<Medication> get medications => _medications;
+  bool get isLoading => _isLoading;
 
   Future<void> loadMedications() async {
     if (_profileProvider.selectedProfile == null) return;
@@ -27,7 +29,7 @@ class MedicationProvider with ChangeNotifier {
     notifyListeners();
 
     try {
-      _medications = await _db
+      _medications = await _databaseService
           .getMedicationsForProfile(_profileProvider.selectedProfile!.id!);
     } finally {
       _isLoading = false;
@@ -38,21 +40,19 @@ class MedicationProvider with ChangeNotifier {
   Future<void> addMedication(Medication medication) async {
     if (_profileProvider.selectedProfile == null) return;
 
-    // Ensure the medication is linked to the current profile
     medication =
         medication.copyWith(profileId: _profileProvider.selectedProfile!.id);
-
-    await _db.insertMedication(medication);
+    await _databaseService.insertMedication(medication);
     await loadMedications();
   }
 
   Future<void> updateMedication(Medication medication) async {
-    await _db.updateMedication(medication);
+    await _databaseService.updateMedication(medication);
     await loadMedications();
   }
 
   Future<void> deleteMedication(int id) async {
-    await _db.deleteMedication(id);
+    await _databaseService.deleteMedication(id);
     await loadMedications();
   }
 

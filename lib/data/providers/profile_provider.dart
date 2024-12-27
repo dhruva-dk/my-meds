@@ -3,23 +3,20 @@ import 'package:medication_tracker/data/database/database.dart';
 import 'package:medication_tracker/data/model/user_profile_model.dart';
 
 class ProfileProvider with ChangeNotifier {
-  final DatabaseService _db = DatabaseService.instance;
+  final DatabaseService _databaseService;
   List<UserProfile> _profiles = [];
   UserProfile? _selectedProfile;
+
+  ProfileProvider({required DatabaseService databaseService})
+      : _databaseService = databaseService {
+    loadProfiles();
+  }
 
   List<UserProfile> get profiles => _profiles;
   UserProfile? get selectedProfile => _selectedProfile;
 
-  ProfileProvider() {
-    loadProfiles();
-  }
-
   Future<void> loadProfiles() async {
-    _profiles = await _db.getAllProfiles();
-    //print all profiles
-    for (var profile in _profiles) {
-      print(profile);
-    }
+    _profiles = await _databaseService.getAllProfiles();
     if (_profiles.isNotEmpty && _selectedProfile == null) {
       _selectedProfile = _profiles.first;
     }
@@ -27,17 +24,17 @@ class ProfileProvider with ChangeNotifier {
   }
 
   Future<void> selectProfile(int profileId) async {
-    _selectedProfile = await _db.getProfile(profileId);
+    _selectedProfile = await _databaseService.getProfile(profileId);
     notifyListeners();
   }
 
   Future<void> addProfile(UserProfile profile) async {
-    await _db.insertProfile(profile);
+    await _databaseService.insertProfile(profile);
     await loadProfiles();
   }
 
   Future<void> updateProfile(UserProfile profile) async {
-    await _db.updateProfile(profile);
+    await _databaseService.updateProfile(profile);
     await loadProfiles();
     if (_selectedProfile?.id == profile.id) {
       _selectedProfile = _profiles.firstWhere((p) => p.id == profile.id);
@@ -46,7 +43,7 @@ class ProfileProvider with ChangeNotifier {
   }
 
   Future<void> deleteProfile(int id) async {
-    await _db.deleteProfile(id);
+    await _databaseService.deleteProfile(id);
     if (_selectedProfile?.id == id) {
       _selectedProfile = _profiles.isNotEmpty ? _profiles.first : null;
     }

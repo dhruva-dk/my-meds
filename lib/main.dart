@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:medication_tracker/data/api/fda_api_service.dart';
+import 'package:medication_tracker/data/database/database.dart';
 import 'package:medication_tracker/data/providers/fda_api_provider.dart';
 import 'package:medication_tracker/data/providers/medication_provider.dart';
 import 'package:medication_tracker/data/providers/profile_provider.dart';
@@ -14,15 +16,25 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => FDAAPIServiceProvider()),
-        ChangeNotifierProvider(create: (context) => ProfileProvider()),
+        Provider(create: (context) => FDAAPIService()),
+        ChangeNotifierProvider(
+          create: (context) => FDAAPIServiceProvider(
+            apiService: context.read<FDAAPIService>(),
+          ),
+        ),
+        ChangeNotifierProvider(
+            create: (context) => ProfileProvider(
+                  databaseService: context.read<DatabaseService>(),
+                )),
         ChangeNotifierProxyProvider<ProfileProvider, MedicationProvider>(
           create: (context) => MedicationProvider(
             Provider.of<ProfileProvider>(context, listen: false),
+            databaseService: context.read<DatabaseService>(),
           ),
           update: (context, profileProvider, previousMedicationProvider) {
             return previousMedicationProvider ??
-                MedicationProvider(profileProvider);
+                MedicationProvider(profileProvider,
+                    databaseService: context.read<DatabaseService>());
           },
         ),
         Provider(create: (context) => ImagePicker()), // Add ImagePicker
