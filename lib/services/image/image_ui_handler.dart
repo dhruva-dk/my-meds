@@ -4,14 +4,14 @@
 // image_service.dart
 import 'package:flutter/material.dart';
 
-import 'package:medication_tracker/services/image/image_permission_handler.dart';
+import 'package:medication_tracker/services/image/image_service.dart';
 import 'package:medication_tracker/data/model/medication_model.dart';
 import 'package:medication_tracker/data/providers/medication_provider.dart';
 import 'package:medication_tracker/data/providers/profile_provider.dart';
 import 'package:medication_tracker/utils/dialog_util.dart';
 import 'package:provider/provider.dart';
 
-class ImageService {
+class ImageHandler {
   static Future<void> handleTakePhoto(BuildContext context,
       {Medication? medication}) async {
     try {

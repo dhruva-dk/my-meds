@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:medication_tracker/data/providers/fda_api_provider.dart';
 import 'package:medication_tracker/data/providers/medication_provider.dart';
 import 'package:medication_tracker/data/providers/profile_provider.dart';
+import 'package:medication_tracker/services/export/pdf_service.dart';
+import 'package:medication_tracker/services/image/image_service.dart';
 import 'package:medication_tracker/ui/select_profile_view.dart';
 import 'package:provider/provider.dart';
 
@@ -22,6 +25,13 @@ void main() async {
                 MedicationProvider(profileProvider);
           },
         ),
+        Provider(create: (context) => ImagePicker()), // Add ImagePicker
+        Provider(
+          create: (context) => ImageService(
+            picker: context.read<ImagePicker>(),
+          ),
+        ),
+        Provider(create: (context) => PDFService()),
       ],
       child: const MyApp(),
     ),
