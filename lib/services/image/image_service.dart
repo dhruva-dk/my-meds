@@ -1,58 +1,38 @@
-import 'dart:io';
 import 'package:image_picker/image_picker.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:medication_tracker/services/permission/check_permission_service.dart';
+import 'package:medication_tracker/services/storage/local_storage_service.dart';
 import 'package:path/path.dart' as path;
 import 'package:permission_handler/permission_handler.dart';
 
 class ImageService {
-  static final ImageService _instance = ImageService._internal();
-  factory ImageService({ImagePicker? picker}) {
-    _instance._picker = picker ?? ImagePicker();
-    return _instance;
-  }
-  ImageService._internal();
+  final ImagePicker _picker;
+  final CheckPermissionService _permissionService;
+  final LocalStorageService _storage;
 
-  late final ImagePicker _picker;
+  static final ImageService _instance = ImageService._internal();
+  factory ImageService() => _instance;
+  ImageService._internal({
+    ImagePicker? picker,
+    CheckPermissionService? permissionService,
+    LocalStorageService? storage,
+  })  : _picker = picker ?? ImagePicker(),
+        _permissionService = permissionService ?? CheckPermissionService(),
+        _storage = storage ?? LocalStorageService();
 
   Future<String> takePhoto() async {
-    await _checkPermission(Permission.camera);
-    return await _captureImage(ImageSource.camera);
+    await _permissionService.checkPermission(Permission.camera);
+    return _captureImage(ImageSource.camera);
   }
 
   Future<String> pickFromGallery() async {
-    await _checkPermission(Permission.photos);
-    return await _captureImage(ImageSource.gallery);
-  }
-
-  Future<String> getImagePath(String imagePath) async {
-    final appDocDir = await getApplicationDocumentsDirectory();
-    return path.join(appDocDir.path, path.basename(imagePath));
-  }
-
-  Future<void> _checkPermission(Permission permission) async {
-    final status = await permission.status;
-    if (!status.isGranted) {
-      final result = await permission.request();
-      if (!result.isGranted) {
-        throw Exception('Access denied for ${permission.toString()}');
-      }
-    }
+    await _permissionService.checkPermission(Permission.photos);
+    return _captureImage(ImageSource.gallery);
   }
 
   Future<String> _captureImage(ImageSource source) async {
     final XFile? image = await _picker.pickImage(source: source);
-    if (image == null) {
-      throw Exception('No image selected');
-    }
-    return _saveImagePermanently(image);
-  }
+    if (image == null) throw Exception('No image selected');
 
-  Future<String> _saveImagePermanently(XFile image) async {
-    final appDocDir = await getApplicationDocumentsDirectory();
-    final fileName = path.basename(image.path);
-    final localPath = path.join(appDocDir.path, fileName);
-
-    await File(image.path).copy(localPath);
-    return fileName;
+    return _storage.saveFile(image.path, path.basename(image.path));
   }
 }

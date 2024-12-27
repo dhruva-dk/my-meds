@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:medication_tracker/services/image/image_ui_handler.dart';
 import 'package:medication_tracker/data/model/medication_model.dart';
 import 'package:medication_tracker/data/providers/medication_provider.dart';
+import 'package:medication_tracker/services/image/image_service.dart';
 import 'package:medication_tracker/widgets/black_button.dart';
 import 'package:medication_tracker/widgets/header.dart';
 import 'package:medication_tracker/widgets/photo_upload_row.dart';
@@ -81,12 +81,38 @@ class _EditMedicationPageState extends State<EditMedicationPage> {
   }
 
   void _handleTakePhoto() async {
-    await ImageService.handleTakePhoto(context, medication: widget.medication);
+    final imagePickerService =
+        Provider.of<ImageService>(context, listen: false);
+    try {
+      String imagePath = await imagePickerService.takePhoto();
+      _updateMedicationImage(imagePath);
+    } catch (e) {
+      _showErrorSnackbar(context, e.toString());
+    }
   }
 
   void _handleUploadFromGallery() async {
-    await ImageService.handlePickFromGallery(context,
-        medication: widget.medication);
+    final imagePickerService =
+        Provider.of<ImageService>(context, listen: false);
+    try {
+      String imagePath = await imagePickerService.pickFromGallery();
+      _updateMedicationImage(imagePath);
+    } catch (e) {
+      _showErrorSnackbar(context, e.toString());
+    }
+  }
+
+  void _updateMedicationImage(String imagePath) {
+    Medication updatedMedication =
+        widget.medication.copyWith(imageUrl: imagePath);
+    Provider.of<MedicationProvider>(context, listen: false)
+        .updateMedication(updatedMedication);
+  }
+
+  void _showErrorSnackbar(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
+    );
   }
 
   @override

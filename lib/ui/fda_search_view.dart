@@ -1,64 +1,135 @@
 import 'package:flutter/material.dart';
-import 'package:medication_tracker/services/image/image_ui_handler.dart';
-import 'package:medication_tracker/data/providers/fda_api_provider.dart';
-import 'package:medication_tracker/ui/create_medication_view.dart';
+import 'package:medication_tracker/data/model/medication_model.dart';
+import 'package:medication_tracker/data/providers/medication_provider.dart';
+import 'package:medication_tracker/services/image/image_service.dart';
 import 'package:medication_tracker/widgets/black_button.dart';
 import 'package:medication_tracker/widgets/header.dart';
 import 'package:medication_tracker/widgets/photo_upload_row.dart';
+import 'package:medication_tracker/widgets/zoomable_image.dart';
 import 'package:provider/provider.dart';
-import 'package:medication_tracker/widgets/search_tile.dart';
-import 'dart:async';
 
-class FDASearchPage extends StatefulWidget {
-  const FDASearchPage({super.key});
+class EditMedicationPage extends StatefulWidget {
+  final Medication medication;
+
+  const EditMedicationPage({Key? key, required this.medication})
+      : super(key: key);
 
   @override
-  _FDASearchPageState createState() => _FDASearchPageState();
+  _EditMedicationPageState createState() => _EditMedicationPageState();
 }
 
-class _FDASearchPageState extends State<FDASearchPage> {
-  final TextEditingController _searchController = TextEditingController();
-  Timer? _debounce;
+class _EditMedicationPageState extends State<EditMedicationPage> {
+  final _formKey = GlobalKey<FormState>();
+  late TextEditingController _nameController;
+  late TextEditingController _dosageController;
+  late TextEditingController _additionalInfoController;
 
   @override
   void initState() {
     super.initState();
-    _searchController.addListener(_onSearchChanged);
+    _nameController = TextEditingController(text: widget.medication.name);
+    _dosageController = TextEditingController(text: widget.medication.dosage);
+    _additionalInfoController =
+        TextEditingController(text: widget.medication.additionalInfo);
   }
 
   @override
   void dispose() {
-    _searchController.dispose();
+    _nameController.dispose();
+    _dosageController.dispose();
+    _additionalInfoController.dispose();
     super.dispose();
   }
 
-  void _onSearchChanged() {
-    if (_debounce?.isActive ?? false) _debounce!.cancel();
-    _debounce = Timer(const Duration(milliseconds: 500), () {
-      if (_searchController.text.length >= 3 && context.mounted) {
-        Provider.of<FDAAPIServiceProvider>(context, listen: false)
-            .searchMedications(_searchController.text.toLowerCase());
-      }
-    });
+  InputDecoration _inputDecoration(String label) {
+    return InputDecoration(
+      labelText: label,
+      labelStyle: const TextStyle(color: Colors.black),
+      border: OutlineInputBorder(borderRadius: BorderRadius.circular(24)),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(24),
+        borderSide: const BorderSide(color: Colors.black, width: 2),
+      ),
+    );
+  }
+
+  void _saveMedication(BuildContext context) {
+    if (_formKey.currentState!.validate()) {
+      final String name = _nameController.text;
+      final String dosage = _dosageController.text;
+      final String additionalInfo = _additionalInfoController.text;
+      final String imageUrl =
+          Provider.of<MedicationProvider>(context, listen: false)
+              .medications
+              .firstWhere((medication) => medication.id == widget.medication.id)
+              .imageUrl;
+
+      Medication updatedMedication = Medication(
+        id: widget.medication.id,
+        name: name,
+        dosage: dosage,
+        additionalInfo: additionalInfo,
+        imageUrl: imageUrl,
+        profileId: widget.medication.profileId,
+      );
+
+      Provider.of<MedicationProvider>(context, listen: false)
+          .updateMedication(updatedMedication);
+
+      Navigator.pop(context);
+    }
   }
 
   void _handleTakePhoto() async {
-    await ImageService.handleTakePhoto(context);
+    final imagePickerService =
+        Provider.of<ImageService>(context, listen: false);
+    try {
+      String imagePath = await imagePickerService.takePhoto();
+      _updateMedicationImage(imagePath);
+    } catch (e) {
+      _showErrorSnackbar(context, e.toString());
+    }
   }
 
   void _handleUploadFromGallery() async {
-    await ImageService.handlePickFromGallery(context);
+    final imagePickerService =
+        Provider.of<ImageService>(context, listen: false);
+    try {
+      String imagePath = await imagePickerService.pickFromGallery();
+      _updateMedicationImage(imagePath);
+    } catch (e) {
+      _showErrorSnackbar(context, e.toString());
+    }
+  }
+
+  void _updateMedicationImage(String imagePath) {
+    Medication updatedMedication =
+        widget.medication.copyWith(imageUrl: imagePath);
+    Provider.of<MedicationProvider>(context, listen: false)
+        .updateMedication(updatedMedication);
+  }
+
+  void _showErrorSnackbar(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    bool hasImage = Provider.of<MedicationProvider>(context)
+        .medications
+        .firstWhere((medication) => medication.id == widget.medication.id)
+        .imageUrl
+        .isNotEmpty;
+
     return Scaffold(
       backgroundColor: Colors.black,
       body: SafeArea(
         child: Column(
           children: [
             Header(
-              title: 'FDA Search',
+              title: 'View Medication',
               showBackButton: Navigator.canPop(context),
             ),
             Expanded(
@@ -66,83 +137,59 @@ class _FDASearchPageState extends State<FDASearchPage> {
                 color: Colors.white,
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    children: [
-                      TextField(
-                        controller: _searchController,
-                        decoration: InputDecoration(
-                          hintText: 'Search',
-                          prefixIcon: const Icon(Icons.search),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(24),
+                  child: SingleChildScrollView(
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          TextFormField(
+                            controller: _nameController,
+                            decoration: _inputDecoration('Medication Name'),
+                            validator: (value) {
+                              if (value == null || value.trim().isEmpty) {
+                                return 'Please enter a medication name';
+                              }
+                              return null;
+                            },
                           ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(24),
-                            borderSide:
-                                const BorderSide(color: Colors.black, width: 2),
+                          const SizedBox(height: 8),
+                          TextFormField(
+                            controller: _dosageController,
+                            decoration: _inputDecoration('Dosage (optional)'),
                           ),
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      BlackButton(
-                        title: "Manual Input",
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  const CreateMedicationPage(),
+                          const SizedBox(height: 8),
+                          TextFormField(
+                            controller: _additionalInfoController,
+                            decoration:
+                                _inputDecoration('Additional Info (optional)'),
+                          ),
+                          if (hasImage) ...[
+                            Consumer<MedicationProvider>(
+                              builder: (context, provider, child) {
+                                Medication updatedMedication = provider
+                                    .medications
+                                    .firstWhere((medication) =>
+                                        medication.id == widget.medication.id);
+                                return ZoomableImage(
+                                    imagePath: updatedMedication.imageUrl);
+                              },
                             ),
-                          );
-                        },
+                          ],
+                          const SizedBox(height: 16),
+                          PhotoUploadRow(
+                            onTakePhoto: _handleTakePhoto,
+                            onUploadPhoto: _handleUploadFromGallery,
+                            hasImage: hasImage,
+                          ),
+                          const SizedBox(height: 8),
+                          BlackButton(
+                            title: "Update Medication",
+                            onTap: () => _saveMedication(context),
+                          ),
+                        ],
                       ),
-                      const SizedBox(height: 8),
-                      PhotoUploadRow(
-                        onTakePhoto: _handleTakePhoto,
-                        onUploadPhoto: _handleUploadFromGallery,
-                        hasImage: false,
-                      ),
-                      const SizedBox(height: 16),
-                      Expanded(
-                        child: Consumer<FDAAPIServiceProvider>(
-                          builder: (context, provider, child) {
-                            try {
-                              if (provider.errorMessage.isNotEmpty) {
-                                return Center(
-                                    child: Text(provider.errorMessage));
-                              }
-                              if (provider.isLoading) {
-                                return const Center(
-                                    child: CircularProgressIndicator());
-                              }
-                              return ListView.builder(
-                                itemCount: provider.searchResults.length,
-                                itemBuilder: (context, index) {
-                                  return GestureDetector(
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              CreateMedicationPage(
-                                            initialDrug:
-                                                provider.searchResults[index],
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                    child: SearchTile(
-                                        drug: provider.searchResults[index]),
-                                  );
-                                },
-                              );
-                            } catch (e) {
-                              return Center(child: Text('Error: $e'));
-                            }
-                          },
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
                 ),
               ),
