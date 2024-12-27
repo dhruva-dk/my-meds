@@ -60,7 +60,18 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   void _saveProfile() {
     if (_formKey.currentState!.validate()) {
+      final currentProfile =
+          Provider.of<ProfileProvider>(context, listen: false).selectedProfile;
+      if (currentProfile?.id == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Error: No profile selected to update'),
+          ),
+        );
+        return;
+      }
       final profile = UserProfile(
+        id: currentProfile!.id,
         name: _nameController.text,
         dob: _dobController.text,
         pcp: _pcpController.text,
@@ -71,7 +82,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
           .updateProfile(profile);
       // Navigate back or show a success message
       // show snack bar: profile updated
-
+      print('Saved profile: ${profile.name}, selectedProfileId: ${profile.id}');
       // Show a Snackbar indicating profile successfully updated
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(

@@ -24,6 +24,8 @@ class SelectProfilePage extends StatelessWidget {
                 subtitle: Text('DOB: ${profile.dob}'),
                 onTap: () {
                   profileProvider.selectProfile(profile.id!);
+                  print(
+                      'Selected profile: ${profile.name}, selectedProfileId: ${profile.id}');
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(builder: (context) => HomeScreen()),

@@ -16,6 +16,10 @@ class ProfileProvider with ChangeNotifier {
 
   Future<void> loadProfiles() async {
     _profiles = await _db.getAllProfiles();
+    //print all profiles
+    for (var profile in _profiles) {
+      print(profile);
+    }
     if (_profiles.isNotEmpty && _selectedProfile == null) {
       _selectedProfile = _profiles.first;
     }
@@ -35,6 +39,10 @@ class ProfileProvider with ChangeNotifier {
   Future<void> updateProfile(UserProfile profile) async {
     await _db.updateProfile(profile);
     await loadProfiles();
+    if (_selectedProfile?.id == profile.id) {
+      _selectedProfile = _profiles.firstWhere((p) => p.id == profile.id);
+    }
+    notifyListeners();
   }
 
   Future<void> deleteProfile(int id) async {

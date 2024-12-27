@@ -18,7 +18,6 @@ void main() async {
             Provider.of<ProfileProvider>(context, listen: false),
           ),
           update: (context, profileProvider, previousMedicationProvider) {
-            // If there's a previous instance, you might want to preserve some state
             return previousMedicationProvider ??
                 MedicationProvider(profileProvider);
           },
