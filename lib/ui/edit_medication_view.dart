@@ -73,6 +73,7 @@ class _EditMedicationPageState extends State<EditMedicationPage> {
         dosage: dosage,
         additionalInfo: additionalInfo,
         imageUrl: imageUrl,
+        profileId: widget.medication.profileId,
       );
 
       Provider.of<MedicationProvider>(context, listen: false)

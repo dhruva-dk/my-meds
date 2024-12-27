@@ -55,7 +55,7 @@ class HomeScreen extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.only(left: 16.0, top: 8.0),
                     child: AutoSizeText(
-                      "${DOBOrNA(profileProvider.userProfile?.name)}",
+                      DOBOrNA(profileProvider.selectedProfile?.name),
                       style: const TextStyle(
                         fontFamily: 'OpenSans',
                         fontSize: 30,
@@ -95,7 +95,7 @@ class HomeScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(left: 16.0),
               child: Text(
-                "Date of Birth: ${DOBOrNA(profileProvider.userProfile?.dob)}",
+                "Date of Birth: ${DOBOrNA(profileProvider.selectedProfile?.dob)}",
                 style: TextStyle(
                   fontFamily: 'OpenSans',
                   fontSize: 18,

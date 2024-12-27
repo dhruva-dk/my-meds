@@ -1,43 +1,24 @@
 class Medication {
-  int? id; // Nullable for database reasons
-  String name;
-  String dosage;
-  String additionalInfo;
-  String imageUrl; // Required field, can be empty
+  final int? id;
+  final int profileId;
+  final String name;
+  final String dosage;
+  final String additionalInfo;
+  String imageUrl;
 
   Medication({
     this.id,
+    required this.profileId,
     required this.name,
     required this.dosage,
     required this.additionalInfo,
-    required this.imageUrl, // Marked as required
+    this.imageUrl = '',
   });
 
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'name': name,
-      'dosage': dosage,
-      'additionalInfo': additionalInfo,
-      'imageUrl': imageUrl, // Always present, if no image is empty string
-      //note that imageUrl is a bad name, should be imageFileName because images are local and stored in documents folder
-      //and path is added to it to get the full path
-    };
-  }
-
-  factory Medication.fromMap(Map<String, dynamic> json) {
-    return Medication(
-      id: json['id'],
-      name: json['name'],
-      dosage: json['dosage'],
-      additionalInfo: json['additionalInfo'],
-      imageUrl: json['imageUrl'],
-    );
-  }
-
-  //copyWith method for updating medication
+  // Add copyWith method for easy updates
   Medication copyWith({
     int? id,
+    int? profileId,
     String? name,
     String? dosage,
     String? additionalInfo,
@@ -45,10 +26,29 @@ class Medication {
   }) {
     return Medication(
       id: id ?? this.id,
+      profileId: profileId ?? this.profileId,
       name: name ?? this.name,
       dosage: dosage ?? this.dosage,
       additionalInfo: additionalInfo ?? this.additionalInfo,
       imageUrl: imageUrl ?? this.imageUrl,
     );
   }
+
+  Map<String, dynamic> toMap() => {
+        'id': id,
+        'profile_id': profileId,
+        'name': name,
+        'dosage': dosage,
+        'additionalInfo': additionalInfo,
+        'imageUrl': imageUrl,
+      };
+
+  static Medication fromMap(Map<String, dynamic> map) => Medication(
+        id: map['id'],
+        profileId: map['profile_id'],
+        name: map['name'],
+        dosage: map['dosage'],
+        additionalInfo: map['additionalInfo'],
+        imageUrl: map['imageUrl'] ?? '',
+      );
 }

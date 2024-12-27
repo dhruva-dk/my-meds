@@ -34,7 +34,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     super.initState();
     final profileProvider =
         Provider.of<ProfileProvider>(context, listen: false);
-    final profile = profileProvider.userProfile;
+    final profile = profileProvider.selectedProfile;
     if (profile != null) {
       _nameController.text = profile.name;
       _dobController.text = profile.dob;
@@ -67,7 +67,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
         healthConditions: _healthConditionsController.text,
         pharmacy: _pharmacyController.text,
       );
-      Provider.of<ProfileProvider>(context, listen: false).saveProfile(profile);
+      Provider.of<ProfileProvider>(context, listen: false)
+          .updateProfile(profile);
       // Navigate back or show a success message
       // show snack bar: profile updated
 

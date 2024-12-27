@@ -1,65 +1,66 @@
+// medication_provider.dart
 import 'package:flutter/material.dart';
-import 'package:medication_tracker/camera_services/camera_helper.dart';
 import 'package:medication_tracker/database/database.dart';
 import 'package:medication_tracker/model/medication_model.dart';
+import 'package:medication_tracker/providers/profile_provider.dart';
 
 class MedicationProvider with ChangeNotifier {
-  final DatabaseHelper _databaseHelper = DatabaseHelper.instance;
-
+  final DatabaseService _db = DatabaseService.instance;
+  final ProfileProvider _profileProvider;
   List<Medication> _medications = [];
   bool _isLoading = false;
 
   List<Medication> get medications => _medications;
   bool get isLoading => _isLoading;
 
-  MedicationProvider() {
+  MedicationProvider(this._profileProvider) {
+    _profileProvider.addListener(_onProfileChanged);
     loadMedications();
   }
 
-  void setLoading(bool loading) {
-    _isLoading = loading;
-    notifyListeners();
-  }
-
   Future<void> loadMedications() async {
-    setLoading(true);
+    if (_profileProvider.selectedProfile == null) return;
+
+    _isLoading = true;
+    notifyListeners();
+
     try {
-      List<Medication> loadedMedications = await _databaseHelper.queryAllRows();
-
-      // Adjust image paths for each medication
-      List<Future> imagePathAdjustments = [];
-      for (var medication in loadedMedications) {
-        if (medication.imageUrl.isNotEmpty) {
-          imagePathAdjustments.add(
-            CameraHelper.getImagePath(medication.imageUrl).then((path) {
-              medication.imageUrl = path ?? medication.imageUrl;
-            }),
-          );
-        }
-      }
-
-      // Wait for all image path adjustments to complete
-      await Future.wait(imagePathAdjustments);
-
-      _medications = loadedMedications;
+      _medications = await _db
+          .getMedicationsForProfile(_profileProvider.selectedProfile!.id!);
     } finally {
-      setLoading(false);
+      _isLoading = false;
       notifyListeners();
     }
   }
 
   Future<void> addMedication(Medication medication) async {
-    await _databaseHelper.insert(medication);
+    if (_profileProvider.selectedProfile == null) return;
+
+    // Ensure the medication is linked to the current profile
+    medication =
+        medication.copyWith(profileId: _profileProvider.selectedProfile!.id);
+
+    await _db.insertMedication(medication);
     await loadMedications();
   }
 
   Future<void> updateMedication(Medication medication) async {
-    await _databaseHelper.update(medication);
+    await _db.updateMedication(medication);
     await loadMedications();
   }
 
   Future<void> deleteMedication(int id) async {
-    await _databaseHelper.delete(id);
+    await _db.deleteMedication(id);
     await loadMedications();
+  }
+
+  void _onProfileChanged() {
+    loadMedications();
+  }
+
+  @override
+  void dispose() {
+    _profileProvider.removeListener(_onProfileChanged);
+    super.dispose();
   }
 }
