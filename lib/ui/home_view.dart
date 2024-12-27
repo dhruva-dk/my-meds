@@ -1,13 +1,9 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:medication_tracker/export/pdf_save_service.dart';
-import 'package:medication_tracker/export/pdf_share_service.dart';
 import 'package:medication_tracker/providers/medication_provider.dart';
 import 'package:medication_tracker/providers/profile_provider.dart';
 import 'package:medication_tracker/ui/edit_medication_view.dart';
-import 'package:medication_tracker/ui/edit_profile_view.dart';
 import 'package:medication_tracker/ui/fda_search_view.dart';
-import 'package:medication_tracker/widgets/home_speed_dial.dart';
 import 'package:medication_tracker/widgets/med_tile.dart';
 import 'package:medication_tracker/widgets/nav_bar.dart';
 // Import your medication provider

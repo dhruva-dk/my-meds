@@ -6,17 +6,16 @@ import 'package:medication_tracker/ui/home_view.dart';
 import 'package:medication_tracker/widgets/black_button.dart';
 import 'package:medication_tracker/widgets/privacy_policy_button.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
-class StartPage extends StatefulWidget {
-  const StartPage({super.key});
+class CreateProfilePage extends StatefulWidget {
+  const CreateProfilePage({super.key});
 
   @override
-  _StartPageState createState() => _StartPageState();
+  _CreateProfilePageState createState() => _CreateProfilePageState();
 }
 
-class _StartPageState extends State<StartPage> {
+class _CreateProfilePageState extends State<CreateProfilePage> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _dobController = TextEditingController();
   final TextEditingController _pcpController = TextEditingController();
@@ -25,7 +24,6 @@ class _StartPageState extends State<StartPage> {
   final TextEditingController _pharmacyController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  // Add MaskedTextInputFormatter for phone number
   final MaskTextInputFormatter _phoneNumberFormatter = MaskTextInputFormatter(
       mask: '(###) ###-####',
       filter: {"#": RegExp(r'[0-9]')},
@@ -44,12 +42,11 @@ class _StartPageState extends State<StartPage> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  const Text('Welcome!',
+                  const Text('Create Profile',
                       style: TextStyle(
                           fontSize: 42,
                           fontWeight: FontWeight.bold,
                           fontFamily: "OpenSans")),
-                  //const SizedBox(height: 8),
                   Text(
                     'Optionally, fill in the following information. We do not collect any personal information. This is for your reference only',
                     style: TextStyle(
@@ -63,16 +60,11 @@ class _StartPageState extends State<StartPage> {
                   TextFormField(
                     controller: _nameController,
                     decoration: _inputDecoration('Name (optional)'),
-                    /*validator: (value) =>
-                        value!.isEmpty ? 'Please enter your name' : null, */
                   ),
                   const SizedBox(height: 8),
                   TextFormField(
                     controller: _dobController,
                     decoration: _inputDecoration('Date of Birth (optional)'),
-                    /*validator: (value) => value!.isEmpty
-                        ? 'Please enter your date of birth'
-                        : null, */
                     onTap: () => _selectDate(context),
                   ),
                   const SizedBox(height: 8),
@@ -98,7 +90,6 @@ class _StartPageState extends State<StartPage> {
                     maxLines: 6,
                   ),
                   const SizedBox(height: 16),
-                  //WhiteOutlineButton(title: "Privacy Policy", onTap: () {}),
                   const PrivacyPolicyButton(),
                   const SizedBox(height: 8),
                   BlackButton(title: "Continue", onTap: () => _submitForm()),
@@ -139,9 +130,6 @@ class _StartPageState extends State<StartPage> {
     if (_formKey.currentState!.validate() &&
         _dobController.text.isNotEmpty &&
         _nameController.text.isNotEmpty) {
-      // Save the profile details
-      //...
-
       UserProfile profile = UserProfile(
         name: _nameController.text,
         dob: _dobController.text,
@@ -150,16 +138,10 @@ class _StartPageState extends State<StartPage> {
         pharmacy: _pharmacyController.text,
       );
 
-      // Save the profile to the database
-      Provider.of<ProfileProvider>(context, listen: false).saveProfile(profile);
-
-      // Update SharedPreferences to indicate the first launch is complete
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setBool('first_launch', false);
+      Provider.of<ProfileProvider>(context, listen: false).addProfile(profile);
 
       if (!mounted) return;
 
-      // Navigate to the HomeScreen
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => HomeScreen()),
