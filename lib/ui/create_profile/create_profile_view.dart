@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:medication_tracker/data/model/user_profile_model.dart';
 import 'package:medication_tracker/data/providers/profile_provider.dart';
+import 'package:medication_tracker/ui/home/home_view.dart';
 import 'package:medication_tracker/ui/core/black_button.dart';
 import 'package:medication_tracker/ui/core/header.dart';
 import 'package:medication_tracker/ui/core/privacy_policy_button.dart';
 import 'package:provider/provider.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
-class EditProfilePage extends StatefulWidget {
-  const EditProfilePage({super.key});
+class CreateProfilePage extends StatefulWidget {
+  const CreateProfilePage({super.key});
 
   @override
-  _EditProfilePageState createState() => _EditProfilePageState();
+  _CreateProfilePageState createState() => _CreateProfilePageState();
 }
 
-class _EditProfilePageState extends State<EditProfilePage> {
+class _CreateProfilePageState extends State<CreateProfilePage> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _dobController = TextEditingController();
   final TextEditingController _pcpController = TextEditingController();
@@ -30,71 +31,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
       type: MaskAutoCompletionType.lazy);
 
   @override
-  void initState() {
-    super.initState();
-    final profileProvider =
-        Provider.of<ProfileProvider>(context, listen: false);
-    final profile = profileProvider.selectedProfile;
-    if (profile != null) {
-      _nameController.text = profile.name;
-      _dobController.text = profile.dob;
-      _pcpController.text = profile.pcp;
-      _healthConditionsController.text = profile.healthConditions;
-      _pharmacyController.text = profile.pharmacy;
-    }
-  }
-
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(1900),
-      lastDate: DateTime.now(),
-    );
-    if (picked != null) {
-      setState(() {
-        _dobController.text = DateFormat('MM/dd/yyyy').format(picked);
-      });
-    }
-  }
-
-  void _saveProfile() {
-    if (_formKey.currentState!.validate()) {
-      final currentProfile =
-          Provider.of<ProfileProvider>(context, listen: false).selectedProfile;
-      if (currentProfile?.id == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Error: No profile selected to update'),
-          ),
-        );
-        return;
-      }
-      final profile = UserProfile(
-        id: currentProfile!.id,
-        name: _nameController.text,
-        dob: _dobController.text,
-        pcp: _pcpController.text,
-        healthConditions: _healthConditionsController.text,
-        pharmacy: _pharmacyController.text,
-      );
-      Provider.of<ProfileProvider>(context, listen: false)
-          .updateProfile(profile);
-      // Navigate back or show a success message
-      // show snack bar: profile updated
-      print('Saved profile: ${profile.name}, selectedProfileId: ${profile.id}');
-      // Show a Snackbar indicating profile successfully updated
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Profile successfully updated'),
-        ),
-      );
-    }
-  }
-
-// edit_profile_view.dart
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
@@ -103,23 +39,25 @@ class _EditProfilePageState extends State<EditProfilePage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Header(
-              title: 'Your Profile',
+              title: 'Create Profile',
               showBackButton: Navigator.canPop(context),
             ),
             Expanded(
               child: Container(
-                color: Colors.white,
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                ),
                 child: SingleChildScrollView(
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Form(
                       key: _formKey,
                       child: Column(
-                        children: [
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
                           TextFormField(
                             controller: _nameController,
                             decoration: _inputDecoration('Name (optional)'),
-                            keyboardType: TextInputType.name,
                           ),
                           const SizedBox(height: 8),
                           TextFormField(
@@ -139,8 +77,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             controller: _pharmacyController,
                             decoration:
                                 _inputDecoration('Pharmacy Phone (optional)'),
-                            keyboardType: TextInputType.phone,
                             inputFormatters: [_phoneNumberFormatter],
+                            keyboardType: TextInputType.phone,
                           ),
                           const SizedBox(height: 8),
                           TextFormField(
@@ -148,13 +86,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             decoration: _inputDecoration(
                                 'Health Conditions (optional)'),
                             keyboardType: TextInputType.multiline,
+                            minLines: 3,
                             maxLines: 6,
                           ),
                           const SizedBox(height: 16),
                           const PrivacyPolicyButton(),
                           const SizedBox(height: 8),
                           BlackButton(
-                              title: "Save Profile", onTap: _saveProfile),
+                              title: "Continue", onTap: () => _submitForm()),
                         ],
                       ),
                     ),
@@ -171,12 +110,47 @@ class _EditProfilePageState extends State<EditProfilePage> {
   InputDecoration _inputDecoration(String label) {
     return InputDecoration(
       labelText: label,
-      labelStyle: const TextStyle(color: Colors.black),
       border: OutlineInputBorder(borderRadius: BorderRadius.circular(24)),
       focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(24),
-        borderSide: const BorderSide(color: Colors.black, width: 2),
-      ),
+          borderRadius: BorderRadius.circular(24),
+          borderSide: const BorderSide(color: Colors.black, width: 2)),
     );
+  }
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(1900),
+      lastDate: DateTime.now(),
+    );
+    if (picked != null) {
+      setState(() {
+        _dobController.text = DateFormat('MM/dd/yyyy').format(picked);
+      });
+    }
+  }
+
+  void _submitForm() async {
+    if (_formKey.currentState!.validate() &&
+        _dobController.text.isNotEmpty &&
+        _nameController.text.isNotEmpty) {
+      UserProfile profile = UserProfile(
+        name: _nameController.text,
+        dob: _dobController.text,
+        pcp: _pcpController.text,
+        healthConditions: _healthConditionsController.text,
+        pharmacy: _pharmacyController.text,
+      );
+
+      Provider.of<ProfileProvider>(context, listen: false).addProfile(profile);
+
+      if (!mounted) return;
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomeScreen()),
+      );
+    }
   }
 }

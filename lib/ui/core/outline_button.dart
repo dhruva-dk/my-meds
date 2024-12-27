@@ -14,7 +14,7 @@ class WhiteOutlineButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return OutlinedButton(
       style: OutlinedButton.styleFrom(
-        backgroundColor: Colors.grey[200],
+        backgroundColor: Colors.white,
         foregroundColor: Colors.black, // Text Color
         side: const BorderSide(color: Colors.black, width: 2.0), // Border Color
         shape: RoundedRectangleBorder(
