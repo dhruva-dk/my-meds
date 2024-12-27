@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:medication_tracker/data/providers/profile_provider.dart';
 import 'package:medication_tracker/ui/create_profile_view.dart';
 import 'package:medication_tracker/ui/home_view.dart';
-import 'package:medication_tracker/widgets/black_button.dart';
+import 'package:medication_tracker/ui/core/black_button.dart';
 import 'package:medication_tracker/widgets/header.dart';
 import 'package:provider/provider.dart';
 
