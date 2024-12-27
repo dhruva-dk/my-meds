@@ -4,6 +4,7 @@ import 'package:medication_tracker/model/user_profile_model.dart';
 import 'package:medication_tracker/providers/profile_provider.dart';
 import 'package:medication_tracker/ui/home_view.dart';
 import 'package:medication_tracker/widgets/black_button.dart';
+import 'package:medication_tracker/widgets/header.dart';
 import 'package:medication_tracker/widgets/privacy_policy_button.dart';
 import 'package:provider/provider.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
@@ -32,71 +33,75 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: SingleChildScrollView(
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  const Text('Create Profile',
-                      style: TextStyle(
-                          fontSize: 42,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: "OpenSans")),
-                  Text(
-                    'Optionally, fill in the following information. We do not collect any personal information. This is for your reference only',
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.grey[800],
-                      fontFamily: "OpenSans",
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Header(
+              title: 'Create Profile',
+              showBackButton: Navigator.canPop(context),
+            ),
+            Expanded(
+              child: Container(
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                ),
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          TextFormField(
+                            controller: _nameController,
+                            decoration: _inputDecoration('Name (optional)'),
+                          ),
+                          const SizedBox(height: 8),
+                          TextFormField(
+                            controller: _dobController,
+                            decoration:
+                                _inputDecoration('Date of Birth (optional)'),
+                            onTap: () => _selectDate(context),
+                          ),
+                          const SizedBox(height: 8),
+                          TextFormField(
+                            controller: _pcpController,
+                            decoration: _inputDecoration(
+                                'Primary Care Physician (optional)'),
+                          ),
+                          const SizedBox(height: 8),
+                          TextFormField(
+                            controller: _pharmacyController,
+                            decoration:
+                                _inputDecoration('Pharmacy Phone (optional)'),
+                            inputFormatters: [_phoneNumberFormatter],
+                            keyboardType: TextInputType.phone,
+                          ),
+                          const SizedBox(height: 8),
+                          TextFormField(
+                            controller: _healthConditionsController,
+                            decoration: _inputDecoration(
+                                'Health Conditions (optional)'),
+                            keyboardType: TextInputType.multiline,
+                            minLines: 3,
+                            maxLines: 6,
+                          ),
+                          const SizedBox(height: 16),
+                          const PrivacyPolicyButton(),
+                          const SizedBox(height: 8),
+                          BlackButton(
+                              title: "Continue", onTap: () => _submitForm()),
+                        ],
+                      ),
                     ),
-                    textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: 32),
-                  TextFormField(
-                    controller: _nameController,
-                    decoration: _inputDecoration('Name (optional)'),
-                  ),
-                  const SizedBox(height: 8),
-                  TextFormField(
-                    controller: _dobController,
-                    decoration: _inputDecoration('Date of Birth (optional)'),
-                    onTap: () => _selectDate(context),
-                  ),
-                  const SizedBox(height: 8),
-                  TextFormField(
-                    controller: _pcpController,
-                    decoration:
-                        _inputDecoration('Primary Care Physician (optional)'),
-                  ),
-                  const SizedBox(height: 8),
-                  TextFormField(
-                    controller: _pharmacyController,
-                    decoration: _inputDecoration('Pharmacy Phone (optional)'),
-                    inputFormatters: [_phoneNumberFormatter],
-                    keyboardType: TextInputType.phone,
-                  ),
-                  const SizedBox(height: 8),
-                  TextFormField(
-                    controller: _healthConditionsController,
-                    decoration:
-                        _inputDecoration('Health Conditions (optional)'),
-                    keyboardType: TextInputType.multiline,
-                    minLines: 3,
-                    maxLines: 6,
-                  ),
-                  const SizedBox(height: 16),
-                  const PrivacyPolicyButton(),
-                  const SizedBox(height: 8),
-                  BlackButton(title: "Continue", onTap: () => _submitForm()),
-                ],
+                ),
               ),
             ),
-          ),
+          ],
         ),
       ),
     );

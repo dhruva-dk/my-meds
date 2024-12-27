@@ -27,9 +27,7 @@ class HomeScreen extends StatelessWidget {
   }
 
   @override
-  Widget build(
-    BuildContext context,
-  ) {
+  Widget build(BuildContext context) {
     final profileProvider = Provider.of<ProfileProvider>(context);
 
     return Scaffold(
@@ -38,111 +36,122 @@ class HomeScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 16.0, top: 8.0),
-                    child: AutoSizeText(
-                      DOBOrNA(profileProvider.selectedProfile?.name),
-                      style: const TextStyle(
-                        fontFamily: 'OpenSans',
-                        fontSize: 30,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.white,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                      minFontSize: 18,
-                      maxLines: 1,
+            // Profile header section
+            Container(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        AutoSizeText(
+                          DOBOrNA(profileProvider.selectedProfile?.name),
+                          style: const TextStyle(
+                            fontFamily: 'OpenSans',
+                            fontSize: 30,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.white,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                          minFontSize: 18,
+                          maxLines: 1,
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          "Date of Birth: ${DOBOrNA(profileProvider.selectedProfile?.dob)}",
+                          style: TextStyle(
+                            fontFamily: 'OpenSans',
+                            fontSize: 18,
+                            color: Colors.grey[300],
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 16, top: 8.0),
-                  child: IconButton(
-                    icon: const Icon(
-                      Icons.account_circle,
-                      color: Colors.white,
-                      size: 30,
-                    ),
+                  TextButton.icon(
                     onPressed: () {
-                      // Navigate to the Select Profile page
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => const SelectProfilePage()),
                       );
                     },
+                    icon: const Icon(
+                      Icons
+                          .switch_account, // Changed icon to be more descriptive
+                      color: Colors.white,
+                      size: 24,
+                    ),
+                    label: const Text(
+                      'Switch\nProfile', // Added label for clarity
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                      ),
+                    ),
                   ),
-                ),
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 16.0),
-              child: Text(
-                "Date of Birth: ${DOBOrNA(profileProvider.selectedProfile?.dob)}",
-                style: TextStyle(
-                  fontFamily: 'OpenSans',
-                  fontSize: 18,
-                  color: Colors.grey[300],
-                ),
+                ],
               ),
             ),
-            const SizedBox(height: 16),
+
+            // Medication list section
             Expanded(
               child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.grey[200],
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(30.0),
-                    topRight: Radius.circular(30.0),
-                  ),
+                decoration: const BoxDecoration(
+                  color: Colors.white, // Changed to white for better contrast
+                  // Removed border radius for cleaner look
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 12.0),
-                  child: Consumer<MedicationProvider>(
-                    builder: (context, medicationProvider, child) {
-                      final medicationList = medicationProvider.medications;
-                      if (medicationProvider.isLoading) {
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      } else if (medicationList.isEmpty) {
-                        return const Center(
-                          child: Padding(
-                            padding: EdgeInsets.all(16.0),
-                            child: Text(
-                              "No medications. Add by pressing the + button below.",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontFamily: 'OpenSans',
-                                fontSize: 16,
-                                color: Colors.black,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Consumer<MedicationProvider>(
+                        builder: (context, medicationProvider, child) {
+                          if (medicationProvider.isLoading) {
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          } else if (medicationProvider.medications.isEmpty) {
+                            return const Center(
+                              child: Padding(
+                                padding: EdgeInsets.all(16.0),
+                                child: Text(
+                                  "No medications. Add by pressing the + button below.",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontFamily: 'OpenSans',
+                                    fontSize: 16,
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
-                        );
-                      }
-                      return ListView.builder(
-                        itemCount: medicationList.length,
-                        itemBuilder: (context, index) {
-                          final medication = medicationList[index];
-                          return GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => EditMedicationPage(
-                                        medication: medication)),
+                            );
+                          }
+                          return ListView.builder(
+                            itemCount: medicationProvider.medications.length,
+                            itemBuilder: (context, index) {
+                              final medication =
+                                  medicationProvider.medications[index];
+                              return GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => EditMedicationPage(
+                                          medication: medication),
+                                    ),
+                                  );
+                                },
+                                child: MedicationTile(medication: medication),
                               );
                             },
-                            child: MedicationTile(medication: medication),
                           );
                         },
-                      );
-                    },
-                  ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),

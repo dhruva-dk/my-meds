@@ -40,7 +40,8 @@ class PhotoUploadRow extends StatelessWidget {
     return Expanded(
       child: Ink(
         decoration: BoxDecoration(
-          border: Border.all(color: Colors.black),
+          border: Border.all(
+              color: Colors.black, width: 2), // Border around the button
           color: Colors.grey[100],
           borderRadius: BorderRadius.circular(24),
         ),

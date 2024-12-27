@@ -4,7 +4,7 @@ import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:medication_tracker/model/user_profile_model.dart';
 import 'package:medication_tracker/providers/profile_provider.dart';
 import 'package:medication_tracker/widgets/black_button.dart';
-import 'package:medication_tracker/widgets/outline_button.dart';
+import 'package:medication_tracker/widgets/header.dart';
 import 'package:medication_tracker/widgets/privacy_policy_button.dart';
 import 'package:provider/provider.dart';
 
@@ -92,64 +92,77 @@ class _EditProfilePageState extends State<EditProfilePage> {
     }
   }
 
+// edit_profile_view.dart
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Your Profile'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                TextFormField(
-                  controller: _nameController,
-                  decoration: _inputDecoration('Name (optional)'),
-                  keyboardType: TextInputType.name,
-                  /*validator: (value) =>
-                      value!.isEmpty ? 'Please enter your name' : null,*/
-                ),
-                const SizedBox(height: 8),
-                TextFormField(
-                  controller: _dobController,
-                  decoration: _inputDecoration('Date of Birth (optional)'),
-                  /* validator: (value) =>
-                      value!.isEmpty ? 'Please enter your date of birth' : null,*/
-                  onTap: () => _selectDate(context),
-                ),
-                const SizedBox(height: 8),
-                TextFormField(
-                  controller: _pcpController,
-                  decoration:
-                      _inputDecoration('Primary Care Physician (optional)'),
-                ),
-                const SizedBox(height: 8),
-                TextFormField(
-                  controller: _pharmacyController,
-                  decoration: _inputDecoration('Pharmacy Phone (optional)'),
-                  keyboardType: TextInputType.phone,
-                  inputFormatters: [
-                    _phoneNumberFormatter
-                  ], // Apply the formatter here
-                ),
-                const SizedBox(height: 8),
-                TextFormField(
-                  controller: _healthConditionsController,
-                  decoration: _inputDecoration('Health Conditions (optional)'),
-                  keyboardType: TextInputType.multiline,
-                  maxLines: 6,
-                ),
-                const SizedBox(height: 16),
-                //WhiteOutlineButton(title: "Privacy Policy", onTap: () {}),
-                const PrivacyPolicyButton(),
-                const SizedBox(height: 8),
-                BlackButton(title: "Save Profile", onTap: _saveProfile),
-              ],
+      backgroundColor: Colors.black,
+      body: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Header(
+              title: 'Your Profile',
+              showBackButton: Navigator.canPop(context),
             ),
-          ),
+            Expanded(
+              child: Container(
+                color: Colors.white,
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        children: [
+                          TextFormField(
+                            controller: _nameController,
+                            decoration: _inputDecoration('Name (optional)'),
+                            keyboardType: TextInputType.name,
+                          ),
+                          const SizedBox(height: 8),
+                          TextFormField(
+                            controller: _dobController,
+                            decoration:
+                                _inputDecoration('Date of Birth (optional)'),
+                            onTap: () => _selectDate(context),
+                          ),
+                          const SizedBox(height: 8),
+                          TextFormField(
+                            controller: _pcpController,
+                            decoration: _inputDecoration(
+                                'Primary Care Physician (optional)'),
+                          ),
+                          const SizedBox(height: 8),
+                          TextFormField(
+                            controller: _pharmacyController,
+                            decoration:
+                                _inputDecoration('Pharmacy Phone (optional)'),
+                            keyboardType: TextInputType.phone,
+                            inputFormatters: [_phoneNumberFormatter],
+                          ),
+                          const SizedBox(height: 8),
+                          TextFormField(
+                            controller: _healthConditionsController,
+                            decoration: _inputDecoration(
+                                'Health Conditions (optional)'),
+                            keyboardType: TextInputType.multiline,
+                            maxLines: 6,
+                          ),
+                          const SizedBox(height: 16),
+                          const PrivacyPolicyButton(),
+                          const SizedBox(height: 8),
+                          BlackButton(
+                              title: "Save Profile", onTap: _saveProfile),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

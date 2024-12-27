@@ -4,6 +4,7 @@ import 'package:medication_tracker/model/medication_model.dart';
 import 'package:medication_tracker/providers/medication_provider.dart';
 import 'package:medication_tracker/providers/profile_provider.dart';
 import 'package:medication_tracker/widgets/black_button.dart';
+import 'package:medication_tracker/widgets/header.dart';
 import 'package:provider/provider.dart';
 
 class CreateMedicationPage extends StatefulWidget {
@@ -33,7 +34,6 @@ class _CreateMedicationPageState extends State<CreateMedicationPage> {
     _additionalInfoController = TextEditingController();
   }
 
-//sus
   @override
   void dispose() {
     _nameController.dispose();
@@ -49,11 +49,12 @@ class _CreateMedicationPageState extends State<CreateMedicationPage> {
       final String additionalInfo = _additionalInfoController.text;
 
       Medication newMedication = Medication(
-          name: name,
-          dosage: dosage,
-          additionalInfo: additionalInfo,
-          profileId: context.read<ProfileProvider>().selectedProfile!.id!,
-          imageUrl: "");
+        name: name,
+        dosage: dosage,
+        additionalInfo: additionalInfo,
+        profileId: context.read<ProfileProvider>().selectedProfile!.id!,
+        imageUrl: "",
+      );
 
       try {
         await Provider.of<MedicationProvider>(context, listen: false)
@@ -62,7 +63,8 @@ class _CreateMedicationPageState extends State<CreateMedicationPage> {
         Navigator.popUntil(context, (Route<dynamic> route) => route.isFirst);
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Error saving medication')));
+          const SnackBar(content: Text('Error saving medication')),
+        );
       }
     }
   }
@@ -82,44 +84,60 @@ class _CreateMedicationPageState extends State<CreateMedicationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Create Medication'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                TextFormField(
-                  controller: _nameController,
-                  decoration: _inputDecoration('Name'),
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return 'Please enter a medication name';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 8),
-                TextFormField(
-                  controller: _dosageController,
-                  decoration: _inputDecoration('Dosage (optional)'),
-                  // No validation needed for dosage as it's optional
-                ),
-                const SizedBox(height: 8),
-                TextFormField(
-                  controller: _additionalInfoController,
-                  decoration: _inputDecoration('Additional Info (optional)'),
-                  // No validation needed for additional info as it's optional
-                ),
-                const SizedBox(height: 16),
-                BlackButton(
-                    title: "Add Medication", onTap: () => _accept(context)),
-              ],
+      backgroundColor: Colors.black,
+      body: SafeArea(
+        child: Column(
+          children: [
+            Header(
+              title: 'Add Medication',
+              showBackButton: Navigator.canPop(context),
             ),
-          ),
+            Expanded(
+              child: Container(
+                color: Colors.white,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: SingleChildScrollView(
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        children: [
+                          TextFormField(
+                            controller: _nameController,
+                            decoration: _inputDecoration('Name'),
+                            validator: (value) {
+                              if (value == null || value.trim().isEmpty) {
+                                return 'Please enter a medication name';
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 8),
+                          TextFormField(
+                            controller: _dosageController,
+                            decoration: _inputDecoration('Dosage (optional)'),
+                            // No validation needed for dosage as it's optional
+                          ),
+                          const SizedBox(height: 8),
+                          TextFormField(
+                            controller: _additionalInfoController,
+                            decoration:
+                                _inputDecoration('Additional Info (optional)'),
+                            // No validation needed for additional info as it's optional
+                          ),
+                          const SizedBox(height: 16),
+                          BlackButton(
+                            title: "Add Medication",
+                            onTap: () => _accept(context),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

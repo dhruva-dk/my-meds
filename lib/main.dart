@@ -54,8 +54,7 @@ class MyApp extends StatelessWidget {
               onSurface: Colors.black, // Color of text and icons on the picker
             ),
             useMaterial3: true,
-            scaffoldBackgroundColor:
-                Colors.grey[200], // Default background color
+            scaffoldBackgroundColor: Colors.white, // Default background color
             appBarTheme: AppBarTheme(
               color: Colors.grey[200], // AppBar background color
               iconTheme:
