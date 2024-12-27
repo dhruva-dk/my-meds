@@ -1,6 +1,6 @@
 // database_service.dart
-import 'package:medication_tracker/model/medication_model.dart';
-import 'package:medication_tracker/model/user_profile_model.dart';
+import 'package:medication_tracker/data/model/medication_model.dart';
+import 'package:medication_tracker/data/model/user_profile_model.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 

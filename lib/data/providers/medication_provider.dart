@@ -1,8 +1,8 @@
 // medication_provider.dart
 import 'package:flutter/material.dart';
-import 'package:medication_tracker/database/database.dart';
-import 'package:medication_tracker/model/medication_model.dart';
-import 'package:medication_tracker/providers/profile_provider.dart';
+import 'package:medication_tracker/data/database/database.dart';
+import 'package:medication_tracker/data/model/medication_model.dart';
+import 'package:medication_tracker/data/providers/profile_provider.dart';
 
 class MedicationProvider with ChangeNotifier {
   final DatabaseService _db = DatabaseService.instance;

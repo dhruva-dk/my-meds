@@ -1,7 +1,7 @@
 //PDF share service
 import 'package:share_plus/share_plus.dart';
 import 'pdf_save_service.dart'; // Import PdfSaveService
-import 'package:medication_tracker/model/medication_model.dart'; // Import your Medication model
+import 'package:medication_tracker/data/model/medication_model.dart'; // Import your Medication model
 
 class PDFShareService {
   final PDFSaveService _pdfSaveService = PDFSaveService();

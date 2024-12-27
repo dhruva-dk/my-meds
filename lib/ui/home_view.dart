@@ -1,7 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:medication_tracker/providers/medication_provider.dart';
-import 'package:medication_tracker/providers/profile_provider.dart';
+import 'package:medication_tracker/data/providers/medication_provider.dart';
+import 'package:medication_tracker/data/providers/profile_provider.dart';
 import 'package:medication_tracker/ui/edit_medication_view.dart';
 import 'package:medication_tracker/ui/fda_search_view.dart';
 import 'package:medication_tracker/ui/select_profile_view.dart';

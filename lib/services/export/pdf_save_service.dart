@@ -1,6 +1,6 @@
 //file which generates pdf and returns file name in documents directory
 import 'dart:io';
-import 'package:medication_tracker/model/medication_model.dart';
+import 'package:medication_tracker/data/model/medication_model.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/widgets.dart' as pw;
 
