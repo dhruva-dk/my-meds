@@ -3,10 +3,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
 
 class LocalStorageService {
-  static final LocalStorageService _instance = LocalStorageService._internal();
-  factory LocalStorageService() => _instance;
-  LocalStorageService._internal();
-
   Future<String> getAppDocPath() async {
     final appDocDir = await getApplicationDocumentsDirectory();
     return appDocDir.path;

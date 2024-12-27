@@ -9,15 +9,13 @@ class ImageService {
   final CheckPermissionService _permissionService;
   final LocalStorageService _storage;
 
-  static final ImageService _instance = ImageService._internal();
-  factory ImageService() => _instance;
-  ImageService._internal({
-    ImagePicker? picker,
-    CheckPermissionService? permissionService,
-    LocalStorageService? storage,
-  })  : _picker = picker ?? ImagePicker(),
-        _permissionService = permissionService ?? CheckPermissionService(),
-        _storage = storage ?? LocalStorageService();
+  ImageService({
+    required ImagePicker picker,
+    required CheckPermissionService permissionService,
+    required LocalStorageService storage,
+  })  : _picker = picker,
+        _permissionService = permissionService,
+        _storage = storage;
 
   Future<String> takePhoto() async {
     await _permissionService.checkPermission(Permission.camera);

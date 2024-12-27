@@ -9,7 +9,7 @@ import 'package:medication_tracker/services/export/pdf_service.dart';
 import 'package:medication_tracker/services/image/image_service.dart';
 import 'package:medication_tracker/services/permission/check_permission_service.dart';
 import 'package:medication_tracker/services/storage/local_storage_service.dart';
-import 'package:medication_tracker/ui/select_profile_view.dart';
+import 'package:medication_tracker/ui/select_profile/select_profile_view.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -40,16 +40,12 @@ void main() async {
           },
         ),
         Provider(create: (context) => ImagePicker()), // Add ImagePicker
-        Provider(
-          create: (context) => ImageService(
-            picker: context.read<ImagePicker>(),
-          ),
-        ),
         Provider(create: (context) => PDFService()),
         Provider(create: (context) => CheckPermissionService()),
         Provider(create: (context) => LocalStorageService()),
         Provider(
           create: (context) => ImageService(
+            picker: Provider.of<ImagePicker>(context, listen: false),
             permissionService:
                 Provider.of<CheckPermissionService>(context, listen: false),
             storage: Provider.of<LocalStorageService>(context, listen: false),
