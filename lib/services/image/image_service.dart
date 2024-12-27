@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:medication_tracker/services/permission/check_permission_service.dart';
 import 'package:medication_tracker/services/storage/local_storage_service.dart';
@@ -29,8 +30,18 @@ class ImageService {
 
   Future<String> _captureImage(ImageSource source) async {
     final XFile? image = await _picker.pickImage(source: source);
-    if (image == null) throw Exception('No image selected');
+    if (image == null) {
+      print('No image selected');
+      throw Exception('No image selected');
+    }
 
-    return _storage.saveFile(image.path, path.basename(image.path));
+    final file = File(image.path);
+    if (await file.exists()) {
+      print('File exists: ${image.path}');
+      return _storage.saveFile(image.path, path.basename(image.path));
+    } else {
+      print('File does not exist: ${image.path}');
+      throw Exception('File does not exist');
+    }
   }
 }

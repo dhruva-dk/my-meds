@@ -24,6 +24,7 @@ void main() async {
             apiService: context.read<FDAAPIService>(),
           ),
         ),
+        Provider(create: (context) => DatabaseService()),
         ChangeNotifierProvider(
             create: (context) => ProfileProvider(
                   databaseService: context.read<DatabaseService>(),

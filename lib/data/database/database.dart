@@ -11,12 +11,13 @@ class DatabaseService {
   static const medicationTable = 'medication_table';
   static const profileTable = 'profiles';
 
-  // Make this a singleton
-  DatabaseService._privateConstructor();
-  static final DatabaseService instance = DatabaseService._privateConstructor();
-
-  static Database? _database;
-  Future<Database> get database async => _database ??= await _initDatabase();
+  DatabaseService();
+  Database? _database;
+  Future<Database> get database async {
+    if (_database != null) return _database!;
+    _database = await _initDatabase();
+    return _database!;
+  }
 
   Future<Database> _initDatabase() async {
     String path = join(await getDatabasesPath(), _databaseName);
