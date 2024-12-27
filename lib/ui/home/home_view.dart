@@ -2,11 +2,11 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:medication_tracker/data/providers/medication_provider.dart';
 import 'package:medication_tracker/data/providers/profile_provider.dart';
-import 'package:medication_tracker/ui/edit_medication_view.dart';
-import 'package:medication_tracker/ui/fda_search_view.dart';
+import 'package:medication_tracker/ui/edit_medication/edit_medication_view.dart';
+import 'package:medication_tracker/ui/search/fda_search_view.dart';
 import 'package:medication_tracker/ui/select_profile_view.dart';
-import 'package:medication_tracker/widgets/med_tile.dart';
-import 'package:medication_tracker/widgets/nav_bar.dart';
+import 'package:medication_tracker/ui/home/med_tile.dart';
+import 'package:medication_tracker/ui/home/nav_bar.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatelessWidget {

@@ -3,9 +3,9 @@ import 'package:medication_tracker/data/model/medication_model.dart';
 import 'package:medication_tracker/data/providers/medication_provider.dart';
 import 'package:medication_tracker/services/image/image_service.dart';
 import 'package:medication_tracker/ui/core/black_button.dart';
-import 'package:medication_tracker/widgets/header.dart';
-import 'package:medication_tracker/widgets/photo_upload_row.dart';
-import 'package:medication_tracker/widgets/zoomable_image.dart';
+import 'package:medication_tracker/ui/core/header.dart';
+import 'package:medication_tracker/ui/core/photo_upload_row.dart';
+import 'package:medication_tracker/ui/edit_medication/zoomable_image.dart';
 import 'package:provider/provider.dart';
 
 class EditMedicationPage extends StatefulWidget {

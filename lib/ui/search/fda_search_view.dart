@@ -3,10 +3,10 @@ import 'package:medication_tracker/data/providers/fda_api_provider.dart';
 import 'package:medication_tracker/services/image/image_service.dart';
 import 'package:medication_tracker/ui/core/black_button.dart';
 import 'package:medication_tracker/ui/create_medication_view.dart';
-import 'package:medication_tracker/widgets/header.dart';
-import 'package:medication_tracker/widgets/photo_upload_row.dart';
+import 'package:medication_tracker/ui/core/header.dart';
+import 'package:medication_tracker/ui/core/photo_upload_row.dart';
 import 'package:provider/provider.dart';
-import 'package:medication_tracker/widgets/search_tile.dart';
+import 'package:medication_tracker/ui/search/search_tile.dart';
 import 'dart:async';
 
 class FDASearchPage extends StatefulWidget {
