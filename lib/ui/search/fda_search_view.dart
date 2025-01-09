@@ -46,7 +46,17 @@ class _FDASearchPageState extends State<FDASearchPage> {
     final imagePickerService =
         Provider.of<ImageService>(context, listen: false);
     try {
-      await imagePickerService.takePhoto();
+      String imageFileName = await imagePickerService.takePhoto();
+      if (!context.mounted) return;
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => CreateMedicationPage(
+            imageFileName: imageFileName,
+          ),
+        ),
+      );
     } catch (e) {
       _showErrorSnackbar(context, e.toString());
     }
@@ -56,7 +66,17 @@ class _FDASearchPageState extends State<FDASearchPage> {
     final imagePickerService =
         Provider.of<ImageService>(context, listen: false);
     try {
-      await imagePickerService.pickFromGallery();
+      String imageFileName = await imagePickerService.pickFromGallery();
+      if (!context.mounted) return;
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => CreateMedicationPage(
+            imageFileName: imageFileName,
+          ),
+        ),
+      );
     } catch (e) {
       _showErrorSnackbar(context, e.toString());
     }

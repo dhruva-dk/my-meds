@@ -3,15 +3,20 @@ import 'package:medication_tracker/data/model/fda_drug_model.dart';
 import 'package:medication_tracker/data/model/medication_model.dart';
 import 'package:medication_tracker/data/providers/medication_provider.dart';
 import 'package:medication_tracker/data/providers/profile_provider.dart';
+import 'package:medication_tracker/services/image/image_service.dart';
+import 'package:medication_tracker/services/storage/local_storage_service.dart';
 import 'package:medication_tracker/ui/core/black_button.dart';
 import 'package:medication_tracker/ui/core/header.dart';
+import 'package:medication_tracker/ui/core/photo_upload_row.dart';
+import 'package:medication_tracker/ui/edit_medication/zoomable_image.dart';
 import 'package:medication_tracker/ui/home/home_view.dart';
 import 'package:provider/provider.dart';
 
 class CreateMedicationPage extends StatefulWidget {
   final FDADrug? initialDrug;
+  final String? imageFileName;
 
-  const CreateMedicationPage({super.key, this.initialDrug});
+  const CreateMedicationPage({super.key, this.initialDrug, this.imageFileName});
 
   @override
   _CreateMedicationPageState createState() => _CreateMedicationPageState();
@@ -22,14 +27,18 @@ class _CreateMedicationPageState extends State<CreateMedicationPage> {
   late TextEditingController _nameController;
   late TextEditingController _dosageController;
   late TextEditingController _additionalInfoController;
+  String _imageFileName = '';
 
   @override
   void initState() {
     super.initState();
+    _imageFileName = widget.imageFileName ?? '';
     _nameController = TextEditingController(
       text: widget.initialDrug != null
           ? "Brand: ${widget.initialDrug!.brandName} - Generic: ${widget.initialDrug!.genericName}"
-          : '',
+          : widget.imageFileName != null
+              ? "Image"
+              : '',
     );
     _dosageController = TextEditingController();
     _additionalInfoController = TextEditingController();
@@ -43,6 +52,34 @@ class _CreateMedicationPageState extends State<CreateMedicationPage> {
     super.dispose();
   }
 
+  void _handleTakePhoto() async {
+    final imagePickerService =
+        Provider.of<ImageService>(context, listen: false);
+    try {
+      String imageFileName = await imagePickerService.takePhoto();
+      setState(() => _imageFileName = imageFileName);
+    } catch (e) {
+      _showErrorSnackbar(context, e.toString());
+    }
+  }
+
+  void _handleUploadFromGallery() async {
+    final imagePickerService =
+        Provider.of<ImageService>(context, listen: false);
+    try {
+      String imageFileName = await imagePickerService.pickFromGallery();
+      setState(() => _imageFileName = imageFileName);
+    } catch (e) {
+      _showErrorSnackbar(context, e.toString());
+    }
+  }
+
+  void _showErrorSnackbar(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
+    );
+  }
+
   void _accept(BuildContext context) async {
     if (_formKey.currentState!.validate()) {
       final String name = _nameController.text;
@@ -54,7 +91,7 @@ class _CreateMedicationPageState extends State<CreateMedicationPage> {
         dosage: dosage,
         additionalInfo: additionalInfo,
         profileId: context.read<ProfileProvider>().selectedProfile!.id!,
-        imageUrl: "",
+        imageUrl: _imageFileName,
       );
 
       try {
@@ -88,6 +125,8 @@ class _CreateMedicationPageState extends State<CreateMedicationPage> {
 
   @override
   Widget build(BuildContext context) {
+    bool hasImage = _imageFileName.isNotEmpty;
+
     return Scaffold(
       backgroundColor: Colors.black,
       body: SafeArea(
@@ -106,6 +145,7 @@ class _CreateMedicationPageState extends State<CreateMedicationPage> {
                     child: Form(
                       key: _formKey,
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           TextFormField(
                             controller: _nameController,
@@ -121,14 +161,34 @@ class _CreateMedicationPageState extends State<CreateMedicationPage> {
                           TextFormField(
                             controller: _dosageController,
                             decoration: _inputDecoration('Dosage (optional)'),
-                            // No validation needed for dosage as it's optional
                           ),
                           const SizedBox(height: 8),
                           TextFormField(
                             controller: _additionalInfoController,
                             decoration:
                                 _inputDecoration('Additional Info (optional)'),
-                            // No validation needed for additional info as it's optional
+                          ),
+                          if (hasImage) ...[
+                            const SizedBox(height: 16),
+                            FutureBuilder<String>(
+                              future: Provider.of<LocalStorageService>(context,
+                                      listen: false)
+                                  .getFilePath(_imageFileName),
+                              builder: (context, snapshot) {
+                                if (snapshot.hasData) {
+                                  return ZoomableImage(
+                                      imagePath: snapshot.data!);
+                                }
+                                return const Center(
+                                    child: CircularProgressIndicator());
+                              },
+                            ),
+                          ],
+                          const SizedBox(height: 16),
+                          PhotoUploadRow(
+                            onTakePhoto: _handleTakePhoto,
+                            onUploadPhoto: _handleUploadFromGallery,
+                            hasImage: hasImage,
                           ),
                           const SizedBox(height: 16),
                           BlackButton(
