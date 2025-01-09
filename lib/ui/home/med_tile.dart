@@ -21,7 +21,7 @@ class MedicationTile extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-        // Handle tap event (e.g., navigate to details page)
+        _goEditMedication(context, medication);
       },
       child: Container(
         padding: const EdgeInsets.all(16),
@@ -136,17 +136,11 @@ class MedicationTile extends StatelessWidget {
 
             // Menu Button
             PopupMenuButton<String>(
-              icon: Icon(
-                Icons.more_vert,
-                color: Colors.grey[400],
-              ),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
               ),
               onSelected: (String result) {
-                if (result == 'edit') {
-                  _goEditMedication(context, medication);
-                } else if (result == 'delete') {
+                if (result == 'delete') {
                   _deleteMedication(context, medication.id!);
                 }
               },
