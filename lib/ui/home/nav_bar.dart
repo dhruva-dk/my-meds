@@ -24,36 +24,32 @@ class NavBar extends StatelessWidget {
     } catch (e) {
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('An error occurred: ${e.toString()}')),
+        SnackBar(content: Text(e.toString())),
       );
     }
   }
 
-  @override
-  @override
   Widget build(BuildContext context) {
     return Padding(
-      padding:
-          const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 40.0, top: 8),
+      padding: const EdgeInsets.only(bottom: 28), // Reduced bottom padding
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.black,
-          borderRadius: BorderRadius.circular(30),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.3),
-              blurRadius: 10,
-              offset: const Offset(0, 5),
+          color: Colors.black, // iOS style background
+          border: Border(
+            top: BorderSide(
+              color: Colors.grey.withOpacity(0.3),
+              width: 0.5,
             ),
-          ],
+          ),
         ),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
               _navItem(
                 icon: Icons.account_circle,
+                label: 'Profile',
                 onTap: () {
                   Navigator.push(
                     context,
@@ -64,12 +60,14 @@ class NavBar extends StatelessWidget {
               ),
               _navItem(
                 icon: Icons.save,
+                label: 'Export',
                 onTap: () {
                   _shareMedications(context);
                 },
               ),
               _navItem(
                 icon: Icons.switch_account,
+                label: 'Switch',
                 onTap: () {
                   Navigator.push(
                     context,
@@ -87,6 +85,7 @@ class NavBar extends StatelessWidget {
 
   Widget _navItem({
     required IconData icon,
+    required String label,
     required VoidCallback onTap,
   }) {
     return InkWell(
@@ -94,7 +93,19 @@ class NavBar extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Icon(icon, color: Colors.white),
+          Icon(
+            icon,
+            color: Colors.white, // iOS blue color
+            size: 28,
+          ),
+          const SizedBox(height: 4),
+          Text(
+            label,
+            style: TextStyle(
+              color: Colors.white, // iOS blue color
+              fontSize: 12,
+            ),
+          ),
         ],
       ),
     );

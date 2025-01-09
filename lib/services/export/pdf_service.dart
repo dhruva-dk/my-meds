@@ -21,7 +21,7 @@ class PDFService {
         throw Exception('PDF sharing was cancelled');
       }
     } catch (e) {
-      throw Exception('Failed to share PDF: ${e.toString()}');
+      throw Exception('Failed to share PDF');
     }
   }
 
