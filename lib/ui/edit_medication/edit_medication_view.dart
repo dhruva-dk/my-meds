@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:medication_tracker/data/model/medication_model.dart';
 import 'package:medication_tracker/data/providers/medication_provider.dart';
 import 'package:medication_tracker/services/image/image_service.dart';
+import 'package:medication_tracker/services/storage/local_storage_service.dart';
 import 'package:medication_tracker/ui/core/black_button.dart';
 import 'package:medication_tracker/ui/core/header.dart';
 import 'package:medication_tracker/ui/core/photo_upload_row.dart';
@@ -175,8 +176,20 @@ class _EditMedicationPageState extends State<EditMedicationPage> {
                                     .medications
                                     .firstWhere((medication) =>
                                         medication.id == widget.medication.id);
-                                return ZoomableImage(
-                                    imagePath: updatedMedication.imageUrl);
+                                return FutureBuilder<String>(
+                                  future: Provider.of<LocalStorageService>(
+                                          context,
+                                          listen: false)
+                                      .getFilePath(updatedMedication.imageUrl),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.hasData) {
+                                      return ZoomableImage(
+                                          imagePath: snapshot.data!);
+                                    }
+                                    return const Center(
+                                        child: CircularProgressIndicator());
+                                  },
+                                );
                               },
                             ),
                           ],

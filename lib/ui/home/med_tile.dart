@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:medication_tracker/data/model/medication_model.dart';
 import 'package:medication_tracker/data/providers/medication_provider.dart';
+import 'package:medication_tracker/services/storage/local_storage_service.dart';
 import 'package:medication_tracker/ui/edit_medication/edit_medication_view.dart';
 import 'package:provider/provider.dart';
 
@@ -66,13 +67,22 @@ class MedicationTile extends StatelessWidget {
             const SizedBox(width: 16), // Spacing between text and image
             ClipRRect(
               borderRadius: BorderRadius.circular(8),
-              child: Image.file(
-                File(medication.imageUrl),
-                width: 100,
-                height: 100,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return const Icon(Icons.error, color: Colors.red);
+              child: FutureBuilder<String>(
+                future: Provider.of<LocalStorageService>(context, listen: false)
+                    .getFilePath(medication.imageUrl),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return Image.file(
+                      File(snapshot.data!),
+                      width: 100,
+                      height: 100,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return const Icon(Icons.error, color: Colors.red);
+                      },
+                    );
+                  }
+                  return const CircularProgressIndicator();
                 },
               ),
             ),

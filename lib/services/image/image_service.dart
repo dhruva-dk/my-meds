@@ -38,7 +38,9 @@ class ImageService {
     final file = File(image.path);
     if (await file.exists()) {
       print('File exists: ${image.path}');
-      return _storage.saveFile(image.path, path.basename(image.path));
+      await _storage.saveFile(image.path, path.basename(image.path));
+      return path.basename(image
+          .path); //return only the image's file name. The UI layer joins this image file name with the documents directory. The base file name wouldn't change regardless of its path.
     } else {
       print('File does not exist: ${image.path}');
       throw Exception('File does not exist');

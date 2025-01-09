@@ -4,7 +4,8 @@ class Medication {
   final String name;
   final String dosage;
   final String additionalInfo;
-  String imageUrl;
+  String
+      imageUrl; //just stores the image's file name. the documents directory should be added dynamically.
 
   Medication({
     this.id,
