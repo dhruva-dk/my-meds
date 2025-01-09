@@ -17,6 +17,7 @@ class PhotoUploadButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return OutlineButton(
       title: hasImage ? 'Change Photo' : 'Upload Photo',
+      icon: const Icon(Icons.camera_alt, size: 20),
       onTap: () => _showPhotoSourceDialog(context),
     );
   }
@@ -25,7 +26,7 @@ class PhotoUploadButton extends StatelessWidget {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
+        return AlertDialog.adaptive(
           title: const Text('Upload Photo'),
           content: const Text('Choose a photo source'),
           actions: [

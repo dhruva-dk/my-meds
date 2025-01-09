@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 class OutlineButton extends StatelessWidget {
   final String title;
   final VoidCallback onTap;
+  final Icon? icon; // Add icon parameter
 
   const OutlineButton({
     Key? key,
     required this.title,
     required this.onTap,
+    this.icon,
   }) : super(key: key);
 
   @override
@@ -16,7 +18,7 @@ class OutlineButton extends StatelessWidget {
       style: OutlinedButton.styleFrom(
         backgroundColor: Colors.white,
         foregroundColor: Colors.black, // Text Color
-        side: const BorderSide(color: Colors.black, width: 2.0), // Border Color
+        side: const BorderSide(color: Colors.black, width: 1), // Border Color
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(24),
         ),
@@ -24,9 +26,18 @@ class OutlineButton extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 16),
       ),
       onPressed: onTap,
-      child: Text(
-        title,
-        style: const TextStyle(fontSize: 16),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          if (icon != null) ...[
+            icon!,
+            const SizedBox(width: 8),
+          ],
+          Text(
+            title,
+            style: const TextStyle(fontSize: 16),
+          ),
+        ],
       ),
     );
   }
