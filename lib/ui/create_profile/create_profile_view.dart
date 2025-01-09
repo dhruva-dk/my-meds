@@ -99,8 +99,7 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
                             decoration: _inputDecoration(
                                 'Health Conditions (optional)'),
                             keyboardType: TextInputType.multiline,
-                            minLines: 3,
-                            maxLines: 6,
+                            maxLines: null,
                           ),
                           const SizedBox(height: 16),
                           const PrivacyPolicyButton(),

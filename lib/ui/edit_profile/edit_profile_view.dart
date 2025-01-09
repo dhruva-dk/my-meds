@@ -160,7 +160,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             decoration: _inputDecoration(
                                 'Health Conditions (optional)'),
                             keyboardType: TextInputType.multiline,
-                            maxLines: 6,
+                            maxLines: null,
                           ),
                           const SizedBox(height: 16),
                           const PrivacyPolicyButton(),

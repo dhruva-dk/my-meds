@@ -239,7 +239,7 @@ class _EditMedicationPageState extends State<EditMedicationPage> {
                             controller: _additionalInfoController,
                             decoration:
                                 _inputDecoration('Additional Info (optional)'),
-                            maxLines: null, // Allows the field to expand
+                            maxLines: null,
                           ),
                           if (hasImage) ...[
                             const SizedBox(height: 16),
