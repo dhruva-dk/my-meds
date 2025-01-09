@@ -5,6 +5,7 @@ import 'package:medication_tracker/data/providers/medication_provider.dart';
 import 'package:medication_tracker/data/providers/profile_provider.dart';
 import 'package:medication_tracker/ui/core/black_button.dart';
 import 'package:medication_tracker/ui/core/header.dart';
+import 'package:medication_tracker/ui/home/home_view.dart';
 import 'package:provider/provider.dart';
 
 class CreateMedicationPage extends StatefulWidget {
@@ -60,7 +61,11 @@ class _CreateMedicationPageState extends State<CreateMedicationPage> {
         await Provider.of<MedicationProvider>(context, listen: false)
             .addMedication(newMedication);
         if (!context.mounted) return;
-        Navigator.popUntil(context, (Route<dynamic> route) => route.isFirst);
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomeScreen()),
+        );
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Error saving medication')),

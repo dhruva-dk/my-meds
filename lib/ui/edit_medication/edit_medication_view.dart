@@ -6,6 +6,7 @@ import 'package:medication_tracker/ui/core/black_button.dart';
 import 'package:medication_tracker/ui/core/header.dart';
 import 'package:medication_tracker/ui/core/photo_upload_row.dart';
 import 'package:medication_tracker/ui/edit_medication/zoomable_image.dart';
+import 'package:medication_tracker/ui/home/home_view.dart';
 import 'package:provider/provider.dart';
 
 class EditMedicationPage extends StatefulWidget {
@@ -76,7 +77,10 @@ class _EditMedicationPageState extends State<EditMedicationPage> {
       Provider.of<MedicationProvider>(context, listen: false)
           .updateMedication(updatedMedication);
 
-      Navigator.pop(context);
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomeScreen()),
+      );
     }
   }
 
