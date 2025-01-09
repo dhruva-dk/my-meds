@@ -34,7 +34,6 @@ class SelectProfilePage extends StatelessWidget {
                             "No profiles added yet. Add your first profile by pressing the button below.",
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              fontFamily: 'OpenSans',
                               fontSize: 16,
                               color: Colors.black,
                             ),
@@ -85,7 +84,6 @@ class SelectProfilePage extends StatelessWidget {
                                       Text(
                                         profile.name,
                                         style: const TextStyle(
-                                          fontFamily: 'OpenSans',
                                           fontSize: 22,
                                           fontWeight: FontWeight.w500,
                                           color: Colors.black,
@@ -94,7 +92,6 @@ class SelectProfilePage extends StatelessWidget {
                                       Text(
                                         'Date of Birth: ${profile.dob}',
                                         style: TextStyle(
-                                          fontFamily: 'OpenSans',
                                           fontSize: 14,
                                           color: Colors.grey[600],
                                         ),
@@ -150,7 +147,6 @@ class SelectProfilePage extends StatelessWidget {
                                               color: Colors.red),
                                           title: Text('Delete',
                                               style: TextStyle(
-                                                fontFamily: 'OpenSans',
                                                 fontSize: 18,
                                                 fontWeight: FontWeight.w500,
                                                 color: Colors.white,

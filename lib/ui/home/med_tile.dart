@@ -46,7 +46,6 @@ class MedicationTile extends StatelessWidget {
                 Text(
                   medicationText,
                   style: const TextStyle(
-                    fontFamily: 'OpenSans',
                     fontSize: 22,
                     fontWeight: FontWeight.w500,
                     color: Colors.black,
@@ -55,7 +54,6 @@ class MedicationTile extends StatelessWidget {
                 Text(
                   medication.additionalInfo,
                   style: TextStyle(
-                    fontFamily: 'OpenSans',
                     fontSize: 14,
                     color: Colors.grey[600],
                   ),
@@ -108,7 +106,6 @@ class MedicationTile extends StatelessWidget {
                     leading: Icon(Icons.edit, color: Colors.blue),
                     title: Text('View & Edit',
                         style: TextStyle(
-                          fontFamily: 'OpenSans',
                           fontSize: 18,
                           fontWeight: FontWeight.w500,
                           color: Colors.white,
@@ -121,7 +118,6 @@ class MedicationTile extends StatelessWidget {
                     leading: Icon(Icons.delete, color: Colors.red),
                     title: Text('Delete',
                         style: TextStyle(
-                          fontFamily: 'OpenSans',
                           fontSize: 18,
                           fontWeight: FontWeight.w500,
                           color: Colors.white,

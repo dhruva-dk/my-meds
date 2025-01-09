@@ -126,6 +126,9 @@ flutter:
         #opensans medium weight 500
         - asset: assets/fonts/OpenSans-Medium.ttf
           weight: 500
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/Inter.ttf
 
 
   

@@ -49,7 +49,6 @@ class HomeScreen extends StatelessWidget {
                         AutoSizeText(
                           DOBOrNA(profileProvider.selectedProfile?.name),
                           style: const TextStyle(
-                            fontFamily: 'OpenSans',
                             fontSize: 30,
                             fontWeight: FontWeight.w500,
                             color: Colors.white,
@@ -62,7 +61,6 @@ class HomeScreen extends StatelessWidget {
                         Text(
                           "Date of Birth: ${DOBOrNA(profileProvider.selectedProfile?.dob)}",
                           style: TextStyle(
-                            fontFamily: 'OpenSans',
                             fontSize: 18,
                             color: Colors.grey[300],
                           ),
@@ -122,7 +120,6 @@ class HomeScreen extends StatelessWidget {
                                   "No medications. Add by pressing the + button below.",
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
-                                    fontFamily: 'OpenSans',
                                     fontSize: 16,
                                   ),
                                 ),

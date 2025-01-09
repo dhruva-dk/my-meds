@@ -26,7 +26,7 @@ class WhiteOutlineButton extends StatelessWidget {
       onPressed: onTap,
       child: Text(
         title,
-        style: const TextStyle(fontSize: 16, fontFamily: "OpenSans"),
+        style: const TextStyle(fontSize: 16),
       ),
     );
   }

@@ -26,7 +26,6 @@ class ZoomableImage extends StatelessWidget {
           "Tap on image to increase size and zoom.",
           textAlign: TextAlign.center,
           style: TextStyle(
-            fontFamily: 'OpenSans',
             fontSize: 14,
             color: Colors.grey[800],
           ),

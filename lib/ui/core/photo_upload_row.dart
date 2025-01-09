@@ -67,6 +67,5 @@ class PhotoUploadRow extends StatelessWidget {
     );
   }
 
-  final TextStyle _buttonTextStyle =
-      const TextStyle(fontSize: 16, fontFamily: "OpenSans");
+  final TextStyle _buttonTextStyle = const TextStyle(fontSize: 16);
 }

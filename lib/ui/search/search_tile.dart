@@ -29,7 +29,6 @@ class SearchTile extends StatelessWidget {
             child: Text(
               'Brand: ${drug.brandName} - Generic: ${drug.genericName}',
               style: const TextStyle(
-                fontFamily: 'OpenSans',
                 fontSize: 18,
                 fontWeight: FontWeight.w500,
                 color: Colors.black,
