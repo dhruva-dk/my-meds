@@ -119,15 +119,26 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         children: [
                           TextFormField(
                             controller: _nameController,
-                            decoration: _inputDecoration('Name (optional)'),
+                            decoration: _inputDecoration('Name'),
                             keyboardType: TextInputType.name,
+                            validator: (value) {
+                              if (value == null || value.trim().isEmpty) {
+                                return 'Name is required';
+                              }
+                              return null;
+                            },
                           ),
                           const SizedBox(height: 8),
                           TextFormField(
                             controller: _dobController,
-                            decoration:
-                                _inputDecoration('Date of Birth (optional)'),
+                            decoration: _inputDecoration('Date of Birth'),
                             onTap: () => _selectDate(context),
+                            validator: (value) {
+                              if (value == null || value.trim().isEmpty) {
+                                return 'Date of Birth is required';
+                              }
+                              return null;
+                            },
                           ),
                           const SizedBox(height: 8),
                           TextFormField(
