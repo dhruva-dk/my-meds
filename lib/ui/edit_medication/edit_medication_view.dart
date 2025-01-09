@@ -131,6 +131,7 @@ class _EditMedicationPageState extends State<EditMedicationPage> {
     return Scaffold(
       backgroundColor: Colors.black,
       body: SafeArea(
+        bottom: false,
         child: Column(
           children: [
             Header(

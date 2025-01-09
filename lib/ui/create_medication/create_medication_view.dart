@@ -130,6 +130,7 @@ class _CreateMedicationPageState extends State<CreateMedicationPage> {
     return Scaffold(
       backgroundColor: Colors.black,
       body: SafeArea(
+        bottom: false,
         child: Column(
           children: [
             Header(

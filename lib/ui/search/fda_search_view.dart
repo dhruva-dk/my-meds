@@ -93,6 +93,7 @@ class _FDASearchPageState extends State<FDASearchPage> {
     return Scaffold(
       backgroundColor: Colors.black,
       body: SafeArea(
+        bottom: false,
         child: Column(
           children: [
             Header(

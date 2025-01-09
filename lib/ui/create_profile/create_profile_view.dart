@@ -36,6 +36,7 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
     return Scaffold(
       backgroundColor: Colors.black,
       body: SafeArea(
+        bottom: false,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

@@ -33,6 +33,7 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.black,
       body: SafeArea(
+        bottom: false,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -59,7 +60,7 @@ class HomeScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          "Date of Birth: ${DOBOrNA(profileProvider.selectedProfile?.dob)}",
+                          "${DOBOrNA(profileProvider.selectedProfile?.dob)}",
                           style: TextStyle(
                             fontSize: 18,
                             color: Colors.grey[300],
