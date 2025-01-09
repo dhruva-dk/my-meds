@@ -89,8 +89,8 @@ class _EditMedicationPageState extends State<EditMedicationPage> {
     final imagePickerService =
         Provider.of<ImageService>(context, listen: false);
     try {
-      String imagePath = await imagePickerService.takePhoto();
-      _updateMedicationImage(imagePath);
+      String imageFileName = await imagePickerService.takePhoto();
+      _updateMedicationImage(imageFileName);
     } catch (e) {
       _showErrorSnackbar(context, e.toString());
     }
@@ -100,16 +100,16 @@ class _EditMedicationPageState extends State<EditMedicationPage> {
     final imagePickerService =
         Provider.of<ImageService>(context, listen: false);
     try {
-      String imagePath = await imagePickerService.pickFromGallery();
-      _updateMedicationImage(imagePath);
+      String imageFileName = await imagePickerService.pickFromGallery();
+      _updateMedicationImage(imageFileName);
     } catch (e) {
       _showErrorSnackbar(context, e.toString());
     }
   }
 
-  void _updateMedicationImage(String imagePath) {
+  void _updateMedicationImage(String imageFileName) {
     Medication updatedMedication =
-        widget.medication.copyWith(imageUrl: imagePath);
+        widget.medication.copyWith(imageUrl: imageFileName);
     Provider.of<MedicationProvider>(context, listen: false)
         .updateMedication(updatedMedication);
   }
