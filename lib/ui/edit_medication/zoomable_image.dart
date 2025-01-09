@@ -11,23 +11,13 @@ class ZoomableImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const SizedBox(height: 16),
         GestureDetector(
           onTap: () => _openFullScreenImage(context),
           child: Image.file(
             File(imagePath),
-            fit: BoxFit.contain,
+            fit: BoxFit.cover,
             width: double.infinity,
-            height: 200,
-          ),
-        ),
-        const SizedBox(height: 8),
-        Text(
-          "Tap on image to increase size and zoom.",
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 14,
-            color: Colors.grey[800],
+            height: 150,
           ),
         ),
       ],
