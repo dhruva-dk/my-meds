@@ -97,7 +97,6 @@ class DatabaseService {
             print('Created/migrated profile with ID: $defaultProfileId');
 
             await oldProfileDb.close();
-            await deleteDatabase(oldProfilePath);
           } else {
             print('No old profile database found, creating default profile');
             defaultProfileId = await _createDefaultProfile(txn);
@@ -112,19 +111,21 @@ class DatabaseService {
           if (await databaseExists(oldMedsPath)) {
             print('Opening old medications database...');
             Database oldMedsDb = await openDatabase(oldMedsPath);
-            List<Map<String, dynamic>> oldMedications =
+            List<Map<String, dynamic>> oldMedicationsRead =
                 await oldMedsDb.query('medication_table');
 
-            print('Found ${oldMedications.length} medications to migrate');
+            print('Found ${oldMedicationsRead.length} medications to migrate');
 
-            for (var medication in oldMedications) {
+            for (var medicationRead in oldMedicationsRead) {
+              // Create modifiable copy
+              Map<String, dynamic> medication =
+                  Map<String, dynamic>.from(medicationRead);
               medication['profile_id'] = defaultProfileId;
               int medId = await txn.insert(medicationTable, medication);
               print('Migrated medication ID: $medId');
             }
 
             await oldMedsDb.close();
-            await deleteDatabase(oldMedsPath);
           } else {
             print('No old medications database found');
           }
