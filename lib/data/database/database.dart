@@ -63,55 +63,92 @@ class DatabaseService {
   }
 
   Future<void> _migrateData(Database db) async {
-    await db.transaction((txn) async {
-      // 1. Import existing profile or create default
-      String oldProfilePath =
-          join(await getDatabasesPath(), "UserProfileDatabase.db");
-      int defaultProfileId;
+    try {
+      await db.transaction((txn) async {
+        print('Starting database migration...');
 
-      if (await databaseExists(oldProfilePath)) {
-        Database oldProfileDb = await openDatabase(oldProfilePath);
-        List<Map<String, dynamic>> oldProfiles =
-            await oldProfileDb.query('profile_table');
+        // 1. Check and log old database paths
+        String oldProfilePath =
+            join(await getDatabasesPath(), "UserProfileDatabase.db");
+        String oldMedsPath =
+            join(await getDatabasesPath(), "MedicationDatabase.db");
 
-        defaultProfileId = oldProfiles.isNotEmpty
-            ? await txn.insert(profileTable, oldProfiles[0])
-            : await txn.insert(profileTable, {
-                'name': 'Default Profile',
-                'dob': DateTime.now().toIso8601String(),
-                'pcp': '',
-                'healthConditions': '',
-                'pharmacy': ''
-              });
+        print('Old Profile DB path: $oldProfilePath');
+        print('Old Meds DB path: $oldMedsPath');
+        print('Profile DB exists: ${await databaseExists(oldProfilePath)}');
+        print('Meds DB exists: ${await databaseExists(oldMedsPath)}');
 
-        await oldProfileDb.close();
-        await deleteDatabase(oldProfilePath);
-      } else {
-        defaultProfileId = await txn.insert(profileTable, {
-          'name': 'Default Profile',
-          'dob': DateTime.now().toIso8601String(),
-          'pcp': '',
-          'healthConditions': '',
-          'pharmacy': ''
-        });
-      }
+        int defaultProfileId;
 
-      // 2. Migrate medications and link to profile
-      String oldMedsPath =
-          join(await getDatabasesPath(), "MedicationDatabase.db");
-      if (await databaseExists(oldMedsPath)) {
-        Database oldMedsDb = await openDatabase(oldMedsPath);
-        List<Map<String, dynamic>> oldMedications =
-            await oldMedsDb.query('medication_table');
+        // Profile migration
+        try {
+          if (await databaseExists(oldProfilePath)) {
+            print('Opening old profile database...');
+            Database oldProfileDb = await openDatabase(oldProfilePath);
+            List<Map<String, dynamic>> oldProfiles =
+                await oldProfileDb.query('profile_table');
 
-        for (var medication in oldMedications) {
-          medication['profile_id'] = defaultProfileId;
-          await txn.insert(medicationTable, medication);
+            print('Found ${oldProfiles.length} profiles to migrate');
+
+            defaultProfileId = oldProfiles.isNotEmpty
+                ? await txn.insert(profileTable, oldProfiles[0])
+                : await _createDefaultProfile(txn);
+
+            print('Created/migrated profile with ID: $defaultProfileId');
+
+            await oldProfileDb.close();
+            await deleteDatabase(oldProfilePath);
+          } else {
+            print('No old profile database found, creating default profile');
+            defaultProfileId = await _createDefaultProfile(txn);
+          }
+        } catch (e) {
+          print('Error during profile migration: $e');
+          rethrow;
         }
 
-        await oldMedsDb.close();
-        await deleteDatabase(oldMedsPath);
-      }
+        // Medication migration
+        try {
+          if (await databaseExists(oldMedsPath)) {
+            print('Opening old medications database...');
+            Database oldMedsDb = await openDatabase(oldMedsPath);
+            List<Map<String, dynamic>> oldMedications =
+                await oldMedsDb.query('medication_table');
+
+            print('Found ${oldMedications.length} medications to migrate');
+
+            for (var medication in oldMedications) {
+              medication['profile_id'] = defaultProfileId;
+              int medId = await txn.insert(medicationTable, medication);
+              print('Migrated medication ID: $medId');
+            }
+
+            await oldMedsDb.close();
+            await deleteDatabase(oldMedsPath);
+          } else {
+            print('No old medications database found');
+          }
+        } catch (e) {
+          print('Error during medication migration: $e');
+          rethrow;
+        }
+
+        print('Migration completed successfully');
+      });
+    } catch (e, stackTrace) {
+      print('Fatal migration error: $e');
+      print('Stack trace: $stackTrace');
+      throw Exception('Migration failed: $e');
+    }
+  }
+
+  Future<int> _createDefaultProfile(Transaction txn) async {
+    return await txn.insert(profileTable, {
+      'name': 'Default Profile',
+      'dob': DateTime.now().toIso8601String(),
+      'pcp': '',
+      'healthConditions': '',
+      'pharmacy': ''
     });
   }
 
