@@ -77,85 +77,102 @@ class SelectProfilePage extends StatelessWidget {
                             },
                             child: Row(
                               children: [
+                                // Profile Icon
+                                const Icon(Icons.person,
+                                    size: 32, color: Colors.grey),
+                                const SizedBox(width: 16),
+
+                                // Profile Details
                                 Expanded(
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
+                                      // Profile Name
                                       Text(
                                         profile.name,
                                         style: const TextStyle(
                                           fontSize: 22,
-                                          fontWeight: FontWeight.w500,
+                                          fontWeight: FontWeight.bold,
                                           color: Colors.black,
                                         ),
                                       ),
-                                      Text(
-                                        'Date of Birth: ${profile.dob}',
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          color: Colors.grey[600],
-                                        ),
+                                      const SizedBox(height: 4),
+
+                                      // Date of Birth
+                                      Row(
+                                        children: [
+                                          const Icon(Icons.cake,
+                                              size: 16, color: Colors.grey),
+                                          const SizedBox(width: 8),
+                                          Text(
+                                            '${profile.dob}',
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.grey[600],
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
                                 ),
-                                Theme(
-                                  data: Theme.of(context).copyWith(),
-                                  child: PopupMenuButton<String>(
-                                    onSelected: (String result) {
-                                      if (result == 'delete') {
-                                        // Show confirmation dialog before deleting
-                                        showDialog(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return AlertDialog(
-                                              title:
-                                                  const Text('Delete Profile'),
-                                              content: const Text(
-                                                  'Are you sure you want to delete this profile? This action cannot be undone.'),
-                                              actions: <Widget>[
-                                                TextButton(
-                                                  child: const Text('Cancel'),
-                                                  onPressed: () {
-                                                    Navigator.of(context).pop();
-                                                  },
-                                                ),
-                                                TextButton(
-                                                  child: const Text('Delete'),
-                                                  onPressed: () {
-                                                    profileProvider
-                                                        .deleteProfile(
-                                                            profile.id!);
-                                                    Navigator.of(context).pop();
-                                                  },
-                                                ),
-                                              ],
-                                            );
-                                          },
-                                        );
-                                      }
-                                    },
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(16.0),
-                                    ),
-                                    itemBuilder: (BuildContext context) =>
-                                        <PopupMenuEntry<String>>[
-                                      const PopupMenuItem<String>(
-                                        value: 'delete',
-                                        child: ListTile(
-                                          leading: Icon(Icons.delete,
-                                              color: Colors.red),
-                                          title: Text('Delete',
-                                              style: TextStyle(
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.w500,
-                                                color: Colors.white,
-                                              )),
-                                        ),
-                                      ),
-                                    ],
+
+                                // Menu Button
+                                PopupMenuButton<String>(
+                                  onSelected: (String result) {
+                                    if (result == 'delete') {
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog.adaptive(
+                                            title: const Text('Delete Profile'),
+                                            content: const Text(
+                                                'Are you sure you want to delete this profile? This action cannot be undone.'),
+                                            actions: <Widget>[
+                                              TextButton(
+                                                child: const Text('Cancel'),
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                              ),
+                                              TextButton(
+                                                child: const Text('Delete'),
+                                                onPressed: () {
+                                                  profileProvider.deleteProfile(
+                                                      profile.id!);
+                                                  Navigator.of(context).pop();
+                                                },
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    }
+                                  },
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(16.0),
                                   ),
+                                  itemBuilder: (BuildContext context) => [
+                                    const PopupMenuItem<String>(
+                                      value: 'delete',
+                                      child: Row(
+                                        children: [
+                                          Icon(Icons.delete,
+                                              color: Colors.red, size: 20),
+                                          SizedBox(width: 12),
+                                          Text(
+                                            'Delete',
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w500,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),

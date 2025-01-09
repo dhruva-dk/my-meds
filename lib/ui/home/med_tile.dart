@@ -19,136 +19,159 @@ class MedicationTile extends StatelessWidget {
     bool hasImage = medication.imageUrl.isNotEmpty;
     const double imageSize = 64.0;
 
-    return Container(
-      padding: const EdgeInsets.all(16),
-      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
-            spreadRadius: 0,
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          if (hasImage) ...[
-            ClipRRect(
-              borderRadius: BorderRadius.circular(12),
-              child: FutureBuilder<String>(
-                future: Provider.of<LocalStorageService>(context, listen: false)
-                    .getFilePath(medication.imageUrl),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return Image.file(
-                      File(snapshot.data!),
+    return GestureDetector(
+      onTap: () {
+        // Handle tap event (e.g., navigate to details page)
+      },
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(24),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.1),
+              spreadRadius: 0,
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            // Image (if available)
+            if (hasImage) ...[
+              ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: FutureBuilder<String>(
+                  future:
+                      Provider.of<LocalStorageService>(context, listen: false)
+                          .getFilePath(medication.imageUrl),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return Image.file(
+                        File(snapshot.data!),
+                        width: imageSize,
+                        height: imageSize,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return const Icon(Icons.error, color: Colors.red);
+                        },
+                      );
+                    }
+                    return const SizedBox(
                       width: imageSize,
                       height: imageSize,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return const Icon(Icons.error, color: Colors.red);
-                      },
+                      child: CircularProgressIndicator(),
                     );
-                  }
-                  return const SizedBox(
-                    width: imageSize,
-                    height: imageSize,
-                    child: CircularProgressIndicator(),
-                  );
-                },
-              ),
-            ),
-          ],
-          if (hasImage) ...[
-            const SizedBox(width: 16),
-          ],
-
-          // Middle - Text Content
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  medication.name,
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.black,
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+                  },
                 ),
-                if (medication.dosage.isNotEmpty) ...[
-                  const SizedBox(height: 8),
-                  Text(
-                    medication.dosage,
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.grey[700],
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ],
-                if (medication.additionalInfo.isNotEmpty) ...[
-                  const SizedBox(height: 2),
-                  Text(
-                    medication.additionalInfo,
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey[600],
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ],
-              ],
-            ),
-          ),
+              ),
+              const SizedBox(width: 16),
+            ],
 
-          // Right side - Menu
-          PopupMenuButton<String>(
-            icon: Icon(
-              Icons.more_vert,
-              color: Colors.grey[400],
-            ),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
-            ),
-            onSelected: (String result) {
-              if (result == 'edit') {
-                _goEditMedication(context, medication);
-              } else if (result == 'delete') {
-                _deleteMedication(context, medication.id!);
-              }
-            },
-            itemBuilder: (BuildContext context) => [
-              const PopupMenuItem<String>(
-                value: 'delete',
-                child: Row(
-                  children: [
-                    Icon(Icons.delete, color: Colors.red, size: 20),
-                    SizedBox(width: 12),
-                    Text(
-                      'Delete',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.white,
-                      ),
+            // Text Content
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Medication Name
+                  Text(
+                    medication.name,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 8),
+
+                  // Dosage
+                  if (medication.dosage.isNotEmpty) ...[
+                    Row(
+                      children: [
+                        const Icon(Icons.medical_services,
+                            size: 16, color: Colors.grey),
+                        const SizedBox(width: 8),
+                        Text(
+                          medication.dosage,
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.grey[700],
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 4),
+                  ],
+
+                  // Additional Info
+                  if (medication.additionalInfo.isNotEmpty) ...[
+                    Row(
+                      children: [
+                        const Icon(Icons.info_outline,
+                            size: 16, color: Colors.grey),
+                        const SizedBox(width: 8),
+                        Text(
+                          medication.additionalInfo,
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.grey[700],
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
                     ),
                   ],
-                ),
+                ],
               ),
-            ],
-          ),
-        ],
+            ),
+
+            // Menu Button
+            PopupMenuButton<String>(
+              icon: Icon(
+                Icons.more_vert,
+                color: Colors.grey[400],
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              onSelected: (String result) {
+                if (result == 'edit') {
+                  _goEditMedication(context, medication);
+                } else if (result == 'delete') {
+                  _deleteMedication(context, medication.id!);
+                }
+              },
+              itemBuilder: (BuildContext context) => [
+                const PopupMenuItem<String>(
+                  value: 'delete',
+                  child: Row(
+                    children: [
+                      Icon(Icons.delete, color: Colors.red, size: 20),
+                      SizedBox(width: 12),
+                      Text(
+                        'Delete',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
