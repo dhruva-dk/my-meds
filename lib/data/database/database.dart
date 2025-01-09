@@ -1,14 +1,13 @@
-// database_service.dart
 import 'package:medication_tracker/data/model/medication_model.dart';
 import 'package:medication_tracker/data/model/user_profile_model.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
 class DatabaseService {
-  static const _databaseName = "MedicationDatabase.db";
-  static const _databaseVersion = 3;
+  static const _databaseName = "CombinedDatabase.db";
+  static const _databaseVersion = 1;
 
-  static const medicationTable = 'medication_table';
+  static const medicationTable = 'medications';
   static const profileTable = 'profiles';
 
   DatabaseService();
@@ -54,67 +53,69 @@ class DatabaseService {
         FOREIGN KEY (profile_id) REFERENCES $profileTable (id) ON DELETE CASCADE
       )
     ''');
+
+    // Migrate data from old databases
+    await _migrateData(db);
   }
 
   Future _onUpgrade(Database db, int oldVersion, int newVersion) async {
+    // No upgrade yet.
+  }
+
+  Future<void> _migrateData(Database db) async {
     await db.transaction((txn) async {
-      if (oldVersion < 3) {
-        // 1. Create profiles table
-        await txn.execute('''
-          CREATE TABLE $profileTable (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL,
-            dob TEXT NOT NULL,
-            pcp TEXT,
-            healthConditions TEXT,
-            pharmacy TEXT
-          )
-        ''');
+      // 1. Import existing profile or create default
+      String oldProfilePath =
+          join(await getDatabasesPath(), "UserProfileDatabase.db");
+      int defaultProfileId;
 
-        // 2. Add profile_id to existing medications table
-        await txn.execute(
-            'ALTER TABLE $medicationTable ADD COLUMN profile_id INTEGER REFERENCES $profileTable(id)');
+      if (await databaseExists(oldProfilePath)) {
+        Database oldProfileDb = await openDatabase(oldProfilePath);
+        List<Map<String, dynamic>> oldProfiles =
+            await oldProfileDb.query('profile_table');
 
-        // 3. Import existing profile or create default
-        String oldProfilePath =
-            join(await getDatabasesPath(), "UserProfileDatabase.db");
-        int defaultProfileId;
+        defaultProfileId = oldProfiles.isNotEmpty
+            ? await txn.insert(profileTable, oldProfiles[0])
+            : await txn.insert(profileTable, {
+                'name': 'Default Profile',
+                'dob': DateTime.now().toIso8601String(),
+                'pcp': '',
+                'healthConditions': '',
+                'pharmacy': ''
+              });
 
-        if (await databaseExists(oldProfilePath)) {
-          Database oldProfileDb = await openDatabase(oldProfilePath);
-          List<Map<String, dynamic>> oldProfiles =
-              await oldProfileDb.query('profile_table');
+        await oldProfileDb.close();
+        await deleteDatabase(oldProfilePath);
+      } else {
+        defaultProfileId = await txn.insert(profileTable, {
+          'name': 'Default Profile',
+          'dob': DateTime.now().toIso8601String(),
+          'pcp': '',
+          'healthConditions': '',
+          'pharmacy': ''
+        });
+      }
 
-          defaultProfileId = oldProfiles.isNotEmpty
-              ? await txn.insert(profileTable, oldProfiles[0])
-              : await txn.insert(profileTable, {
-                  'name': 'Default Profile',
-                  'dob': DateTime.now().toIso8601String(),
-                  'pcp': '',
-                  'healthConditions': '',
-                  'pharmacy': ''
-                });
+      // 2. Migrate medications and link to profile
+      String oldMedsPath =
+          join(await getDatabasesPath(), "MedicationDatabase.db");
+      if (await databaseExists(oldMedsPath)) {
+        Database oldMedsDb = await openDatabase(oldMedsPath);
+        List<Map<String, dynamic>> oldMedications =
+            await oldMedsDb.query('medication_table');
 
-          await oldProfileDb.close();
-          await deleteDatabase(oldProfilePath);
-        } else {
-          defaultProfileId = await txn.insert(profileTable, {
-            'name': 'Default Profile',
-            'dob': DateTime.now().toIso8601String(),
-            'pcp': '',
-            'healthConditions': '',
-            'pharmacy': ''
-          });
+        for (var medication in oldMedications) {
+          medication['profile_id'] = defaultProfileId;
+          await txn.insert(medicationTable, medication);
         }
 
-        // 4. Link existing medications to the profile
-        await txn.execute(
-            'UPDATE $medicationTable SET profile_id = ?', [defaultProfileId]);
+        await oldMedsDb.close();
+        await deleteDatabase(oldMedsPath);
       }
     });
   }
 
-  // Profile Methods
+  // Add methods for CRUD operations on profiles and medications
   Future<List<UserProfile>> getAllProfiles() async {
     Database db = await database;
     final List<Map<String, dynamic>> maps = await db.query(profileTable);
@@ -156,7 +157,6 @@ class DatabaseService {
     );
   }
 
-  // Medication Methods
   Future<List<Medication>> getMedicationsForProfile(int profileId) async {
     Database db = await database;
     final List<Map<String, dynamic>> maps = await db.query(
