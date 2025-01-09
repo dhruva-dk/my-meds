@@ -17,54 +17,29 @@ class MedicationTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool hasImage = medication.imageUrl.isNotEmpty;
-    String medicationText = medication.dosage.isNotEmpty
-        ? '${medication.name} - ${medication.dosage}'
-        : medication.name;
+    const double imageSize = 64.0;
 
     return Container(
       padding: const EdgeInsets.all(16),
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
-            spreadRadius: 1,
-            blurRadius: 5,
-            offset: const Offset(0, 1),
+            color: Colors.grey.withOpacity(0.1),
+            spreadRadius: 0,
+            blurRadius: 8,
+            offset: const Offset(0, 2),
           ),
         ],
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  medicationText,
-                  style: const TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.black,
-                  ),
-                ),
-                Text(
-                  medication.additionalInfo,
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey[600],
-                  ),
-                ),
-              ],
-            ),
-          ),
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
           if (hasImage) ...[
-            const SizedBox(width: 16), // Spacing between text and image
             ClipRRect(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(12),
               child: FutureBuilder<String>(
                 future: Provider.of<LocalStorageService>(context, listen: false)
                     .getFilePath(medication.imageUrl),
@@ -72,60 +47,106 @@ class MedicationTile extends StatelessWidget {
                   if (snapshot.hasData) {
                     return Image.file(
                       File(snapshot.data!),
-                      width: 100,
-                      height: 100,
+                      width: imageSize,
+                      height: imageSize,
                       fit: BoxFit.cover,
                       errorBuilder: (context, error, stackTrace) {
                         return const Icon(Icons.error, color: Colors.red);
                       },
                     );
                   }
-                  return const CircularProgressIndicator();
+                  return const SizedBox(
+                    width: imageSize,
+                    height: imageSize,
+                    child: CircularProgressIndicator(),
+                  );
                 },
               ),
             ),
           ],
-          Theme(
-            data: Theme.of(context).copyWith(),
-            child: PopupMenuButton<String>(
-              onSelected: (String result) {
-                if (result == 'edit') {
-                  _goEditMedication(context, medication);
-                } else if (result == 'delete') {
-                  _deleteMedication(context, medication.id!);
-                }
-              },
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16.0),
-              ),
-              itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                // Add Edit menu item
-                const PopupMenuItem<String>(
-                  value: 'edit',
-                  child: ListTile(
-                    leading: Icon(Icons.edit, color: Colors.blue),
-                    title: Text('View & Edit',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.white,
-                        )),
+          if (hasImage) ...[
+            const SizedBox(width: 16),
+          ],
+
+          // Middle - Text Content
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  medication.name,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black,
                   ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
-                const PopupMenuItem<String>(
-                  value: 'delete',
-                  child: ListTile(
-                    leading: Icon(Icons.delete, color: Colors.red),
-                    title: Text('Delete',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.white,
-                        )),
+                if (medication.dosage.isNotEmpty) ...[
+                  const SizedBox(height: 8),
+                  Text(
+                    medication.dosage,
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.grey[700],
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                ),
+                ],
+                if (medication.additionalInfo.isNotEmpty) ...[
+                  const SizedBox(height: 2),
+                  Text(
+                    medication.additionalInfo,
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey[600],
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
               ],
             ),
+          ),
+
+          // Right side - Menu
+          PopupMenuButton<String>(
+            icon: Icon(
+              Icons.more_vert,
+              color: Colors.grey[400],
+            ),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            onSelected: (String result) {
+              if (result == 'edit') {
+                _goEditMedication(context, medication);
+              } else if (result == 'delete') {
+                _deleteMedication(context, medication.id!);
+              }
+            },
+            itemBuilder: (BuildContext context) => [
+              const PopupMenuItem<String>(
+                value: 'delete',
+                child: Row(
+                  children: [
+                    Icon(Icons.delete, color: Colors.red, size: 20),
+                    SizedBox(width: 12),
+                    Text(
+                      'Delete',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -136,12 +157,12 @@ class MedicationTile extends StatelessWidget {
     Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) => EditMedicationPage(medication: medication)),
+        builder: (context) => EditMedicationPage(medication: medication),
+      ),
     );
   }
 
   void _deleteMedication(BuildContext context, int id) {
-    // Call the delete method from MedicationProvider
     Provider.of<MedicationProvider>(context, listen: false)
         .deleteMedication(id);
   }
