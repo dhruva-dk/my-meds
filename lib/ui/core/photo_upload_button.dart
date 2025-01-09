@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:medication_tracker/ui/core/outline_button.dart';
 
-class PhotoUploadRow extends StatelessWidget {
+class PhotoUploadButton extends StatelessWidget {
   final VoidCallback onTakePhoto;
   final VoidCallback onUploadPhoto;
   final bool hasImage;
 
-  PhotoUploadRow({
+  const PhotoUploadButton({
     Key? key,
     required this.onTakePhoto,
     required this.onUploadPhoto,
@@ -14,58 +15,37 @@ class PhotoUploadRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        _iconButton(
-          iconData: Icons.camera_alt,
-          label: hasImage ? 'Camera' : 'Camera',
-          onPressed: onTakePhoto,
-        ),
-        const SizedBox(width: 9), // Spacing between buttons
-        _iconButton(
-          iconData: Icons.photo_library,
-          label: 'Gallery',
-          onPressed: onUploadPhoto,
-        ),
-      ],
+    return OutlineButton(
+      title: hasImage ? 'Change Photo' : 'Upload Photo',
+      onTap: () => _showPhotoSourceDialog(context),
     );
   }
 
-  Widget _iconButton({
-    required IconData iconData,
-    required String label,
-    required VoidCallback onPressed,
-  }) {
-    return Expanded(
-      child: Ink(
-        decoration: BoxDecoration(
-          border: Border.all(
-              color: Colors.black, width: 2), // Border around the button
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(24),
-        ),
-        child: InkWell(
-          borderRadius: BorderRadius.circular(24),
-          onTap: onPressed,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(iconData, color: Colors.black),
-                Text(
-                  label,
-                  style: _buttonTextStyle,
-                  textAlign: TextAlign.center,
-                ),
-              ],
+  void _showPhotoSourceDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Upload Photo'),
+          content: const Text('Choose a photo source'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context); // Close the dialog
+                onTakePhoto(); // Trigger camera action
+              },
+              child: const Text('Camera'),
             ),
-          ),
-        ),
-      ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context); // Close the dialog
+                onUploadPhoto(); // Trigger gallery action
+              },
+              child: const Text('Gallery'),
+            ),
+          ],
+        );
+      },
     );
   }
-
-  final TextStyle _buttonTextStyle = const TextStyle(fontSize: 16);
 }

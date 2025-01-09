@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-class WhiteOutlineButton extends StatelessWidget {
+class OutlineButton extends StatelessWidget {
   final String title;
   final VoidCallback onTap;
 
-  const WhiteOutlineButton({
+  const OutlineButton({
     Key? key,
     required this.title,
     required this.onTap,

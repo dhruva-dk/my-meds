@@ -7,7 +7,7 @@ import 'package:medication_tracker/services/image/image_service.dart';
 import 'package:medication_tracker/services/storage/local_storage_service.dart';
 import 'package:medication_tracker/ui/core/black_button.dart';
 import 'package:medication_tracker/ui/core/header.dart';
-import 'package:medication_tracker/ui/core/photo_upload_row.dart';
+import 'package:medication_tracker/ui/core/photo_upload_button.dart';
 import 'package:medication_tracker/ui/edit_medication/zoomable_image.dart';
 import 'package:medication_tracker/ui/home/home_view.dart';
 import 'package:provider/provider.dart';
@@ -186,7 +186,7 @@ class _CreateMedicationPageState extends State<CreateMedicationPage> {
                             ),
                           ],
                           const SizedBox(height: 16),
-                          PhotoUploadRow(
+                          PhotoUploadButton(
                             onTakePhoto: _handleTakePhoto,
                             onUploadPhoto: _handleUploadFromGallery,
                             hasImage: hasImage,

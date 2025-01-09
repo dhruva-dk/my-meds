@@ -4,7 +4,7 @@ import 'package:medication_tracker/services/image/image_service.dart';
 import 'package:medication_tracker/ui/core/black_button.dart';
 import 'package:medication_tracker/ui/create_medication/create_medication_view.dart';
 import 'package:medication_tracker/ui/core/header.dart';
-import 'package:medication_tracker/ui/core/photo_upload_row.dart';
+import 'package:medication_tracker/ui/core/photo_upload_button.dart';
 import 'package:provider/provider.dart';
 import 'package:medication_tracker/ui/search/search_tile.dart';
 import 'dart:async';
@@ -136,7 +136,7 @@ class _FDASearchPageState extends State<FDASearchPage> {
                         },
                       ),
                       const SizedBox(height: 8),
-                      PhotoUploadRow(
+                      PhotoUploadButton(
                         onTakePhoto: _handleTakePhoto,
                         onUploadPhoto: _handleUploadFromGallery,
                         hasImage: false,
