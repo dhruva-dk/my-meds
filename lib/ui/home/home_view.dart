@@ -69,29 +69,6 @@ class HomeScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                  TextButton.icon(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const SelectProfilePage()),
-                      );
-                    },
-                    icon: const Icon(
-                      Icons
-                          .switch_account, // Changed icon to be more descriptive
-                      color: Colors.white,
-                      size: 24,
-                    ),
-                    label: const Text(
-                      'Switch\nProfile', // Added label for clarity
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 12,
-                      ),
-                    ),
-                  ),
                 ],
               ),
             ),
@@ -156,28 +133,28 @@ class HomeScreen extends StatelessWidget {
           ],
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: Container(
-        margin: const EdgeInsets.only(top: 10),
-        height: 64,
-        width: 64,
-        child: FloatingActionButton(
-          backgroundColor: Colors.white,
-          elevation: 0,
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const FDASearchPage()),
-            );
-          },
-          shape: RoundedRectangleBorder(
-            side: const BorderSide(width: 3, color: Colors.black),
-            borderRadius: BorderRadius.circular(100),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const FDASearchPage()),
+          );
+        },
+        backgroundColor: Colors.black,
+        elevation: 6,
+        shape: const StadiumBorder(),
+        label: const Text(
+          'Add',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
           ),
-          child: const Icon(
-            Icons.add,
-            color: Colors.black,
-          ),
+        ),
+        icon: const Icon(
+          Icons.add,
+          color: Colors.white,
         ),
       ),
       bottomNavigationBar: NavBar(),

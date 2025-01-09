@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:medication_tracker/services/export/pdf_service.dart';
 import 'package:medication_tracker/data/providers/medication_provider.dart';
 import 'package:medication_tracker/ui/edit_profile/edit_profile_view.dart';
+import 'package:medication_tracker/ui/select_profile/select_profile_view.dart'; // Import the SelectProfilePage
 import 'package:provider/provider.dart';
 
 class NavBar extends StatelessWidget {
@@ -29,42 +30,63 @@ class NavBar extends StatelessWidget {
   }
 
   @override
+  @override
   Widget build(BuildContext context) {
-    return BottomAppBar(
-      color: Colors.black,
-      shape: const CircularNotchedRectangle(),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: <Widget>[
-          _navItem(
-            icon: Icons.account_circle,
-            label: "Profile",
-            onTap: () {
-              // Navigate to profile page
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const EditProfilePage()),
-              );
-            },
+    return Padding(
+      padding:
+          const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 40.0, top: 8),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.black,
+          borderRadius: BorderRadius.circular(30),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.3),
+              blurRadius: 10,
+              offset: const Offset(0, 5),
+            ),
+          ],
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              _navItem(
+                icon: Icons.account_circle,
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const EditProfilePage()),
+                  );
+                },
+              ),
+              _navItem(
+                icon: Icons.save,
+                onTap: () {
+                  _shareMedications(context);
+                },
+              ),
+              _navItem(
+                icon: Icons.switch_account,
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const SelectProfilePage()),
+                  );
+                },
+              ),
+            ],
           ),
-          const SizedBox(width: 16), // Placeholder for FAB
-          _navItem(
-            icon: Icons.save,
-            label: "Export PDF",
-            onTap: () {
-              // Implement Export functionality
-              _shareMedications(context);
-            },
-          ),
-        ],
+        ),
       ),
     );
   }
 
   Widget _navItem({
     required IconData icon,
-    required String label,
     required VoidCallback onTap,
   }) {
     return InkWell(
@@ -73,8 +95,6 @@ class NavBar extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           Icon(icon, color: Colors.white),
-          Text(label,
-              style: const TextStyle(color: Colors.white, fontSize: 16)),
         ],
       ),
     );
