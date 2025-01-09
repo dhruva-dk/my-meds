@@ -5,11 +5,6 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:share_plus/share_plus.dart';
 
 class PDFService {
-  // Singleton pattern
-  static final PDFService _instance = PDFService._internal();
-  factory PDFService() => _instance;
-  PDFService._internal();
-
   Future<void> shareMedications(List<Medication> medications) async {
     try {
       final filePath = await _generatePDF(medications);

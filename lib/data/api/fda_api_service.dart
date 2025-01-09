@@ -3,10 +3,6 @@ import 'package:http/http.dart' as http;
 import 'package:medication_tracker/data/model/fda_drug_model.dart';
 
 class FDAAPIService {
-  static final FDAAPIService _instance = FDAAPIService._internal();
-  factory FDAAPIService() => _instance;
-  FDAAPIService._internal();
-
   final String baseUrl = "https://api.fda.gov/drug/ndc.json";
 
   Future<List<FDADrug>> searchMedications(String query) async {
