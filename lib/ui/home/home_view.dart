@@ -142,8 +142,7 @@ class HomeScreen extends StatelessWidget {
 
   Widget _buildHeader(BuildContext context) {
     final theme = Theme.of(context);
-    final profileProvider =
-        Provider.of<ProfileProvider>(context, listen: false);
+    final profileProvider = Provider.of<ProfileProvider>(context, listen: true);
 
     return Container(
       width: double.infinity,
