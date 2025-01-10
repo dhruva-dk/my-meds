@@ -16,7 +16,7 @@ class HomeScreen extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Scaffold(
-      backgroundColor: theme.colorScheme.secondary,
+      backgroundColor: theme.colorScheme.surface,
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(kToolbarHeight + 50),
         child: _buildHeader(context),
@@ -123,7 +123,7 @@ class HomeScreen extends StatelessWidget {
           );
         },
         backgroundColor: theme.colorScheme.primary,
-        elevation: 6,
+        elevation: 2,
         shape: const StadiumBorder(),
         label: Text(
           'Add',
@@ -150,14 +150,14 @@ class HomeScreen extends StatelessWidget {
       decoration: BoxDecoration(
         color: theme.colorScheme.secondary,
         borderRadius: const BorderRadius.only(
-          bottomLeft: Radius.circular(20),
-          bottomRight: Radius.circular(20),
+          bottomLeft: Radius.circular(48),
+          bottomRight: Radius.circular(48),
         ),
       ),
       padding: EdgeInsets.only(
-        top: MediaQuery.of(context).padding.top + 16.0,
-        left: 16.0,
-        right: 16.0,
+        top: MediaQuery.of(context).padding.top + 8,
+        left: 36.0,
+        right: 36.0,
         bottom: 16.0,
       ),
       child: Column(

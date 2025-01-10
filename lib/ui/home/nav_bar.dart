@@ -32,52 +32,51 @@ class NavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final bottomPadding = MediaQuery.of(context).padding.bottom;
 
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 28),
-      child: Container(
-        decoration: BoxDecoration(
-          color: theme.colorScheme.secondary, // Use primary color from theme
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: <Widget>[
-              _navItem(
-                context: context,
-                icon: Icons.account_circle,
-                label: 'Profile',
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const EditProfilePage()),
-                  );
-                },
-              ),
-              _navItem(
-                context: context,
-                icon: Icons.save,
-                label: 'Export',
-                onTap: () {
-                  _shareMedications(context);
-                },
-              ),
-              _navItem(
-                context: context,
-                icon: Icons.switch_account,
-                label: 'Switch',
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const SelectProfilePage()),
-                  );
-                },
-              ),
-            ],
-          ),
+    return Container(
+      decoration: BoxDecoration(
+        color: theme.colorScheme.secondary, // Use secondary color from theme
+      ),
+      padding: EdgeInsets.only(bottom: bottomPadding),
+      child: Padding(
+        padding: const EdgeInsets.only(top: 12.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: <Widget>[
+            _navItem(
+              context: context,
+              icon: Icons.account_circle,
+              label: 'Profile',
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const EditProfilePage()),
+                );
+              },
+            ),
+            _navItem(
+              context: context,
+              icon: Icons.save,
+              label: 'Export',
+              onTap: () {
+                _shareMedications(context);
+              },
+            ),
+            _navItem(
+              context: context,
+              icon: Icons.switch_account,
+              label: 'Switch',
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const SelectProfilePage()),
+                );
+              },
+            ),
+          ],
         ),
       ),
     );
@@ -98,8 +97,8 @@ class NavBar extends StatelessWidget {
         children: <Widget>[
           Icon(
             icon,
-            color:
-                theme.colorScheme.onSecondary, // Use onPrimary color from theme
+            color: theme
+                .colorScheme.onSecondary, // Use onSecondary color from theme
             size: 28,
           ),
           const SizedBox(height: 4),
