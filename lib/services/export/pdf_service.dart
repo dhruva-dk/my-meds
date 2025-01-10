@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:medication_tracker/data/model/medication_model.dart';
+import 'package:medication_tracker/services/storage/local_storage_service.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:share_plus/share_plus.dart';
@@ -66,10 +67,12 @@ class PDFService {
 
   Future<List<pw.ImageProvider?>> _loadImages(
       List<Medication> medications) async {
+    final directory = await getApplicationDocumentsDirectory();
     return Future.wait(medications.map((medication) async {
       if (medication.imageUrl.isNotEmpty) {
         try {
-          final image = await File(medication.imageUrl).readAsBytes();
+          final imagePath = '${directory.path}/${medication.imageUrl}';
+          final image = await File(imagePath).readAsBytes();
           return pw.MemoryImage(image);
         } catch (e) {
           rethrow;

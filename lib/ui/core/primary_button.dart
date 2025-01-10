@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-class BlackButton extends StatelessWidget {
+class PrimaryButton extends StatelessWidget {
   final String title;
   final VoidCallback onTap;
 
-  const BlackButton({
+  const PrimaryButton({
     Key? key,
     required this.title,
     required this.onTap,
@@ -12,10 +12,12 @@ class BlackButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-        foregroundColor: Colors.white,
-        backgroundColor: Colors.black,
+        foregroundColor: theme.colorScheme.onPrimary,
+        backgroundColor: theme.colorScheme.primary,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(24),
         ),
@@ -25,7 +27,9 @@ class BlackButton extends StatelessWidget {
       onPressed: onTap,
       child: Text(
         title,
-        style: const TextStyle(fontSize: 16),
+        style: theme.textTheme.bodyLarge?.copyWith(
+          color: theme.colorScheme.onPrimary,
+        ),
       ),
     );
   }

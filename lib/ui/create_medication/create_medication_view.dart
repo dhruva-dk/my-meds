@@ -5,7 +5,7 @@ import 'package:medication_tracker/data/providers/medication_provider.dart';
 import 'package:medication_tracker/data/providers/profile_provider.dart';
 import 'package:medication_tracker/services/image/image_service.dart';
 import 'package:medication_tracker/services/storage/local_storage_service.dart';
-import 'package:medication_tracker/ui/core/black_button.dart';
+import 'package:medication_tracker/ui/core/primary_button.dart';
 import 'package:medication_tracker/ui/core/header.dart';
 import 'package:medication_tracker/ui/core/photo_upload_button.dart';
 import 'package:medication_tracker/ui/edit_medication/zoomable_image.dart';
@@ -66,6 +66,30 @@ class _CreateMedicationPageState extends State<CreateMedicationPage> {
     super.dispose();
   }
 
+  InputDecoration _inputDecoration(String label) {
+    return InputDecoration(
+      labelText: label,
+      labelStyle: TextStyle(
+        color: Theme.of(context).colorScheme.onSurfaceVariant,
+      ),
+      filled: true,
+      fillColor: Theme.of(context).colorScheme.secondaryContainer,
+      contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+      floatingLabelBehavior: FloatingLabelBehavior.always,
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(24),
+        borderSide: BorderSide.none,
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(24),
+        borderSide: BorderSide(
+          color: Theme.of(context).colorScheme.primary,
+          width: 2,
+        ),
+      ),
+    );
+  }
+
   void _handleTakePhoto() async {
     final imagePickerService =
         Provider.of<ImageService>(context, listen: false);
@@ -119,13 +143,11 @@ class _CreateMedicationPageState extends State<CreateMedicationPage> {
 
         if (!context.mounted) return;
 
-        // Only navigate if the operation is successful
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const HomeScreen()),
         );
       } catch (e) {
-        // Stay on the current screen and show an error message
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Failed to add medication: $e')),
         );
@@ -133,35 +155,27 @@ class _CreateMedicationPageState extends State<CreateMedicationPage> {
     }
   }
 
-  InputDecoration _inputDecoration(String label) {
-    return InputDecoration(
-      labelText: label,
-      labelStyle: const TextStyle(color: Colors.black),
-      border: OutlineInputBorder(borderRadius: BorderRadius.circular(24)),
-      focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(24),
-        borderSide: const BorderSide(color: Colors.black, width: 2),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     bool hasImage = _imageFileName.isNotEmpty;
 
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: theme.colorScheme.surface,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(kToolbarHeight + 80),
+        child: Header(
+          title: 'Add Medication',
+          showBackButton: Navigator.canPop(context),
+        ),
+      ),
       body: SafeArea(
         bottom: false,
         child: Column(
           children: [
-            Header(
-              title: 'Add Medication',
-              showBackButton: Navigator.canPop(context),
-            ),
             Expanded(
               child: Container(
-                color: Colors.white,
+                color: theme.colorScheme.surface,
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: SingleChildScrollView(
@@ -170,6 +184,17 @@ class _CreateMedicationPageState extends State<CreateMedicationPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
+                          // Medication Details Subheading
+                          Text(
+                            'Medication Details',
+                            style: theme.textTheme.headlineSmall?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: theme.colorScheme.onSurface,
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+
+                          // Medication Name Field
                           TextFormField(
                             controller: _nameController,
                             decoration: _inputDecoration('Name'),
@@ -179,18 +204,22 @@ class _CreateMedicationPageState extends State<CreateMedicationPage> {
                               }
                               return null;
                             },
-                            maxLines: null, // Allows the field to expand
+                            maxLines: null,
                           ),
                           const SizedBox(height: 8),
+
+                          // Dosage Field
                           Row(
                             children: [
                               Expanded(
                                 flex: 2,
                                 child: TextFormField(
                                   controller: _dosageController,
-                                  decoration: _inputDecoration(
-                                      'Dosage (optional)'), // Updated label
-                                  keyboardType: TextInputType.number,
+                                  decoration:
+                                      _inputDecoration('Dosage (optional)'),
+                                  keyboardType:
+                                      const TextInputType.numberWithOptions(
+                                          decimal: true),
                                   validator: (value) {
                                     if (value != null && value.isNotEmpty) {
                                       final number = double.tryParse(value);
@@ -198,7 +227,7 @@ class _CreateMedicationPageState extends State<CreateMedicationPage> {
                                         return 'Please enter a valid number';
                                       }
                                     }
-                                    return null; // Allow empty values
+                                    return null;
                                   },
                                 ),
                               ),
@@ -220,7 +249,6 @@ class _CreateMedicationPageState extends State<CreateMedicationPage> {
                                     });
                                   },
                                   validator: (value) {
-                                    // Only validate the unit if dosage is provided
                                     if (_dosageController.text.isNotEmpty &&
                                         value == null) {
                                       return 'Please select a unit';
@@ -232,46 +260,55 @@ class _CreateMedicationPageState extends State<CreateMedicationPage> {
                             ],
                           ),
                           const SizedBox(height: 8),
+
+                          // Additional Info Field
                           TextFormField(
                             controller: _additionalInfoController,
                             decoration:
                                 _inputDecoration('Additional Info (optional)'),
-                            maxLines: null, // Allows the field to expand
+                            maxLines: null,
                           ),
+                          const SizedBox(height: 24),
+
+                          // Medication Image Subheading (Conditional)
                           if (hasImage) ...[
-                            const SizedBox(height: 16),
-                            // Rounded Image with Caption
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(24),
-                                  child: FutureBuilder<String>(
-                                    future: Provider.of<LocalStorageService>(
-                                            context,
-                                            listen: false)
-                                        .getFilePath(_imageFileName),
-                                    builder: (context, snapshot) {
-                                      if (snapshot.hasData) {
-                                        return ZoomableImage(
-                                            imagePath: snapshot.data!);
-                                      }
-                                      return const Center(
-                                          child: CircularProgressIndicator());
-                                    },
-                                  ),
-                                ),
-                              ],
+                            Text(
+                              'Medication Image',
+                              style: theme.textTheme.headlineSmall?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: theme.colorScheme.onSurface,
+                              ),
                             ),
+                            const SizedBox(height: 16),
+                            FutureBuilder<String>(
+                              future: Provider.of<LocalStorageService>(context,
+                                      listen: false)
+                                  .getFilePath(_imageFileName),
+                              builder: (context, snapshot) {
+                                if (snapshot.hasData) {
+                                  return ClipRRect(
+                                    borderRadius: BorderRadius.circular(24),
+                                    child: ZoomableImage(
+                                        imagePath: snapshot.data!),
+                                  );
+                                }
+                                return const Center(
+                                    child: CircularProgressIndicator());
+                              },
+                            ),
+                            const SizedBox(height: 16),
                           ],
-                          const SizedBox(height: 16),
+
+                          // Photo Upload Button
                           PhotoUploadButton(
                             onTakePhoto: _handleTakePhoto,
                             onUploadPhoto: _handleUploadFromGallery,
                             hasImage: hasImage,
                           ),
-                          const SizedBox(height: 8),
-                          BlackButton(
+                          const SizedBox(height: 24),
+
+                          // Add Medication Button
+                          PrimaryButton(
                             title: "Add Medication",
                             onTap: () => _accept(context),
                           ),

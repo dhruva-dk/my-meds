@@ -31,54 +31,52 @@ class NavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 28), // Reduced bottom padding
-      child: Container(
-        decoration: const BoxDecoration(
-          color: Colors.black, // iOS style background
-          border: Border(
-            top: BorderSide(
-              color: Color.fromRGBO(128, 128, 128, 0.3),
-              width: 0.5,
+    final theme = Theme.of(context);
+    final bottomPadding = MediaQuery.of(context).padding.bottom;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: theme.colorScheme.secondary, // Use secondary color from theme
+      ),
+      padding: EdgeInsets.only(bottom: bottomPadding),
+      child: Padding(
+        padding: const EdgeInsets.only(top: 12.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: <Widget>[
+            _navItem(
+              context: context,
+              icon: Icons.account_circle,
+              label: 'Profile',
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const EditProfilePage()),
+                );
+              },
             ),
-          ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: <Widget>[
-              _navItem(
-                icon: Icons.account_circle,
-                label: 'Profile',
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const EditProfilePage()),
-                  );
-                },
-              ),
-              _navItem(
-                icon: Icons.save,
-                label: 'Export',
-                onTap: () {
-                  _shareMedications(context);
-                },
-              ),
-              _navItem(
-                icon: Icons.switch_account,
-                label: 'Switch',
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const SelectProfilePage()),
-                  );
-                },
-              ),
-            ],
-          ),
+            _navItem(
+              context: context,
+              icon: Icons.save,
+              label: 'Export',
+              onTap: () {
+                _shareMedications(context);
+              },
+            ),
+            _navItem(
+              context: context,
+              icon: Icons.switch_account,
+              label: 'Switch',
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const SelectProfilePage()),
+                );
+              },
+            ),
+          ],
         ),
       ),
     );
@@ -88,7 +86,10 @@ class NavBar extends StatelessWidget {
     required IconData icon,
     required String label,
     required VoidCallback onTap,
+    required BuildContext context,
   }) {
+    final theme = Theme.of(context);
+
     return InkWell(
       onTap: onTap,
       child: Column(
@@ -96,15 +97,15 @@ class NavBar extends StatelessWidget {
         children: <Widget>[
           Icon(
             icon,
-            color: Colors.white,
+            color: theme
+                .colorScheme.onSecondary, // Use onSecondary color from theme
             size: 28,
           ),
           const SizedBox(height: 4),
           Text(
             label,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 12,
+            style: theme.textTheme.labelSmall?.copyWith(
+              color: theme.colorScheme.onSecondary,
             ),
           ),
         ],

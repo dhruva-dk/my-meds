@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:medication_tracker/ui/core/outline_button.dart';
+import 'package:medication_tracker/ui/core/secondary_button.dart';
 
 class PhotoUploadButton extends StatelessWidget {
   final VoidCallback onTakePhoto;
@@ -17,34 +17,61 @@ class PhotoUploadButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return OutlineButton(
       title: hasImage ? 'Change Photo' : 'Upload Photo',
-      icon: const Icon(Icons.camera_alt, size: 20),
+      icon: const Icon(
+        Icons.camera_alt,
+        size: 20,
+      ),
       onTap: () => _showPhotoSourceDialog(context),
     );
   }
 
   void _showPhotoSourceDialog(BuildContext context) {
+    final theme = Theme.of(context);
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog.adaptive(
-          title: const Text('Upload Photo'),
-          content: const Text('Choose a photo source'),
+          title: Text(
+            'Upload Photo',
+            style: theme.dialogTheme.titleTextStyle,
+          ),
+          content: Text(
+            'Choose a photo source',
+            style: theme.dialogTheme.contentTextStyle,
+          ),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.pop(context); // Close the dialog
                 onTakePhoto(); // Trigger camera action
               },
-              child: const Text('Camera'),
+              child: Text(
+                'Camera',
+                style: theme.dialogTheme.contentTextStyle,
+              ),
             ),
             TextButton(
               onPressed: () {
                 Navigator.pop(context); // Close the dialog
                 onUploadPhoto(); // Trigger gallery action
               },
-              child: const Text('Gallery'),
+              child: Text(
+                'Gallery',
+                style: theme.dialogTheme.contentTextStyle,
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context); // Close the dialog
+              },
+              child: Text(
+                'Cancel',
+                style: TextStyle(color: theme.colorScheme.error, fontSize: 16),
+              ),
             ),
           ],
+          actionsAlignment: MainAxisAlignment.spaceEvenly,
         );
       },
     );

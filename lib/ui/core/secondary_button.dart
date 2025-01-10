@@ -14,16 +14,22 @@ class OutlineButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return OutlinedButton(
       style: OutlinedButton.styleFrom(
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black, // Text Color
-        side: const BorderSide(color: Colors.black, width: 1), // Border Color
+        backgroundColor:
+            theme.colorScheme.secondaryContainer, // Background color
+        foregroundColor: theme.colorScheme.onSecondaryContainer, // Text color
+        side: BorderSide.none, // Remove the border
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(24),
+          borderRadius:
+              BorderRadius.circular(24), // Same border radius as PrimaryButton
         ),
-        minimumSize: const Size(double.infinity, 50),
-        padding: const EdgeInsets.symmetric(vertical: 16),
+        minimumSize:
+            const Size(double.infinity, 50), // Same size as PrimaryButton
+        padding: const EdgeInsets.symmetric(
+            vertical: 16), // Same padding as PrimaryButton
       ),
       onPressed: onTap,
       child: Row(
@@ -35,7 +41,9 @@ class OutlineButton extends StatelessWidget {
           ],
           Text(
             title,
-            style: const TextStyle(fontSize: 16),
+            style: theme.textTheme.bodyLarge?.copyWith(
+              color: theme.colorScheme.onSecondaryContainer, // Match text style
+            ),
           ),
         ],
       ),

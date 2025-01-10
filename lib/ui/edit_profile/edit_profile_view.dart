@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:medication_tracker/data/model/user_profile_model.dart';
 import 'package:medication_tracker/data/providers/profile_provider.dart';
-import 'package:medication_tracker/ui/core/black_button.dart';
+import 'package:medication_tracker/ui/core/primary_button.dart';
 import 'package:medication_tracker/ui/core/header.dart';
 import 'package:medication_tracker/ui/core/privacy_policy_button.dart';
 import 'package:provider/provider.dart';
@@ -98,31 +98,47 @@ class _EditProfilePageState extends State<EditProfilePage> {
     }
   }
 
-// edit_profile_view.dart
-
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor:
+          theme.colorScheme.surface, // Set scaffold background color
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(kToolbarHeight + 80),
+        child: Header(
+          title: 'Your Profile',
+          showBackButton: Navigator.canPop(context),
+        ),
+      ),
       body: SafeArea(
         bottom: false,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Header(
-              title: 'Your Profile',
-              showBackButton: Navigator.canPop(context),
-            ),
             Expanded(
               child: Container(
-                color: Colors.white,
+                color: theme.colorScheme.surface,
                 child: SingleChildScrollView(
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Form(
                       key: _formKey,
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
+                          // Personal Information Subheading
+                          Text(
+                            'Personal Information',
+                            style: theme.textTheme.headlineSmall?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: theme.colorScheme.onSurface,
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+
+                          // Name Field
                           TextFormField(
                             controller: _nameController,
                             decoration: _inputDecoration('Name'),
@@ -135,6 +151,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             },
                           ),
                           const SizedBox(height: 8),
+
+                          // Date of Birth Field
                           TextFormField(
                             controller: _dobController,
                             decoration: _inputDecoration('Date of Birth'),
@@ -146,13 +164,27 @@ class _EditProfilePageState extends State<EditProfilePage> {
                               return null;
                             },
                           ),
-                          const SizedBox(height: 8),
+                          const SizedBox(height: 16),
+
+                          // Health Information Subheading
+                          Text(
+                            'Health Information',
+                            style: theme.textTheme.headlineSmall?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: theme.colorScheme.onSurface,
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+
+                          // Primary Care Physician Field
                           TextFormField(
                             controller: _pcpController,
                             decoration: _inputDecoration(
                                 'Primary Care Physician (optional)'),
                           ),
                           const SizedBox(height: 8),
+
+                          // Pharmacy Phone Field
                           TextFormField(
                             controller: _pharmacyController,
                             decoration:
@@ -161,6 +193,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             inputFormatters: [_phoneNumberFormatter],
                           ),
                           const SizedBox(height: 8),
+
+                          // Health Conditions Field
                           TextFormField(
                             controller: _healthConditionsController,
                             decoration: _inputDecoration(
@@ -168,11 +202,17 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             keyboardType: TextInputType.multiline,
                             maxLines: null,
                           ),
-                          const SizedBox(height: 16),
+                          const SizedBox(height: 24),
+
+                          // Privacy Policy Button
                           const PrivacyPolicyButton(),
                           const SizedBox(height: 8),
-                          BlackButton(
-                              title: "Save Profile", onTap: _saveProfile),
+
+                          // Save Profile Button
+                          PrimaryButton(
+                            title: "Save Profile",
+                            onTap: _saveProfile,
+                          ),
                         ],
                       ),
                     ),
@@ -189,11 +229,22 @@ class _EditProfilePageState extends State<EditProfilePage> {
   InputDecoration _inputDecoration(String label) {
     return InputDecoration(
       labelText: label,
-      labelStyle: const TextStyle(color: Colors.black),
-      border: OutlineInputBorder(borderRadius: BorderRadius.circular(24)),
+      labelStyle: TextStyle(
+        color: Theme.of(context).colorScheme.onSurfaceVariant,
+      ),
+      filled: true,
+      fillColor:
+          Theme.of(context).colorScheme.secondaryContainer, // Background color
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(24),
+        borderSide: BorderSide.none, // Remove border
+      ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(24),
-        borderSide: const BorderSide(color: Colors.black, width: 2),
+        borderSide: BorderSide(
+          color: Theme.of(context).colorScheme.primary,
+          width: 2,
+        ),
       ),
     );
   }

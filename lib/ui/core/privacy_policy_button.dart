@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:medication_tracker/ui/core/outline_button.dart';
+import 'package:medication_tracker/ui/core/secondary_button.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class PrivacyPolicyButton extends StatelessWidget {

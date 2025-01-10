@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:medication_tracker/data/providers/profile_provider.dart';
 import 'package:medication_tracker/ui/create_profile/create_profile_view.dart';
 import 'package:medication_tracker/ui/home/home_view.dart';
-import 'package:medication_tracker/ui/core/black_button.dart';
+import 'package:medication_tracker/ui/core/primary_button.dart';
 import 'package:medication_tracker/ui/core/header.dart';
 import 'package:provider/provider.dart';
 
@@ -11,20 +11,25 @@ class SelectProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: theme.colorScheme.surface,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(kToolbarHeight + 80),
+        child: Header(
+          title: 'Select Profile',
+          showBackButton: Navigator.canPop(context),
+        ),
+      ),
       body: SafeArea(
         bottom: false,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Header(
-              title: 'Select Profile',
-              showBackButton: Navigator.canPop(context),
-            ),
             Expanded(
               child: Container(
-                color: Colors.white,
+                color: theme.colorScheme.surface,
                 child: Consumer<ProfileProvider>(
                   builder: (context, profileProvider, child) {
                     if (profileProvider.isLoading) {
@@ -39,10 +44,9 @@ class SelectProfilePage extends StatelessWidget {
                           padding: const EdgeInsets.all(16.0),
                           child: Text(
                             profileProvider.errorMessage,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 16,
-                              color:
-                                  Colors.black, // Black text for error message
+                              color: theme.colorScheme.onSurface,
                             ),
                           ),
                         ),
@@ -50,15 +54,15 @@ class SelectProfilePage extends StatelessWidget {
                     }
 
                     if (profileProvider.profiles.isEmpty) {
-                      return const Center(
+                      return Center(
                         child: Padding(
-                          padding: EdgeInsets.all(16.0),
+                          padding: const EdgeInsets.all(16.0),
                           child: Text(
                             "No profiles added yet. Add your first profile by pressing the button below.",
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: 16,
-                              color: Colors.black,
+                              color: theme.colorScheme.onSurface,
                             ),
                           ),
                         ),
@@ -73,20 +77,12 @@ class SelectProfilePage extends StatelessWidget {
                         return Container(
                           padding: const EdgeInsets.all(16),
                           margin: const EdgeInsets.symmetric(
-                            vertical: 8,
+                            vertical: 4,
                             horizontal: 16,
                           ),
                           decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(16),
-                            boxShadow: const [
-                              BoxShadow(
-                                color: Color.fromRGBO(128, 128, 128, 0.3),
-                                spreadRadius: 1,
-                                blurRadius: 5,
-                                offset: Offset(0, 1),
-                              ),
-                            ],
+                            color: theme.colorScheme.secondaryContainer,
+                            borderRadius: BorderRadius.circular(24),
                           ),
                           child: InkWell(
                             onTap: () async {
@@ -103,17 +99,21 @@ class SelectProfilePage extends StatelessWidget {
                               } catch (e) {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
-                                      content: Text(
-                                    'Failed to select profile: $e',
-                                  )),
+                                    content:
+                                        Text('Failed to select profile: $e'),
+                                  ),
                                 );
                               }
                             },
                             child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                // Profile Icon
-                                const Icon(Icons.person,
-                                    size: 32, color: Colors.grey),
+                                // Account Icon
+                                Icon(
+                                  Icons.person,
+                                  size: 32,
+                                  color: theme.colorScheme.onSecondaryContainer,
+                                ),
                                 const SizedBox(width: 16),
 
                                 // Profile Details
@@ -125,25 +125,37 @@ class SelectProfilePage extends StatelessWidget {
                                       // Profile Name
                                       Text(
                                         profile.name,
-                                        style: const TextStyle(
-                                          fontSize: 22,
+                                        style: theme.textTheme.headlineSmall
+                                            ?.copyWith(
                                           fontWeight: FontWeight.bold,
-                                          color: Colors.black,
+                                          color: theme
+                                              .colorScheme.onSecondaryContainer,
                                         ),
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
                                       ),
-                                      const SizedBox(height: 4),
+                                      const SizedBox(height: 8),
 
                                       // Date of Birth
                                       Row(
                                         children: [
-                                          const Icon(Icons.cake,
-                                              size: 16, color: Colors.grey),
+                                          Icon(
+                                            Icons.cake,
+                                            size: 16,
+                                            color: theme
+                                                .colorScheme.onSurfaceVariant,
+                                          ),
                                           const SizedBox(width: 8),
-                                          Text(
-                                            profile.dob,
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              color: Colors.grey[600],
+                                          Flexible(
+                                            child: Text(
+                                              profile.dob,
+                                              style: theme.textTheme.bodyMedium
+                                                  ?.copyWith(
+                                                color: theme.colorScheme
+                                                    .onSurfaceVariant,
+                                              ),
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
                                             ),
                                           ),
                                         ],
@@ -184,15 +196,18 @@ class SelectProfilePage extends StatelessWidget {
                                                     ScaffoldMessenger.of(
                                                             context)
                                                         .showSnackBar(
-                                                      const SnackBar(
+                                                      SnackBar(
                                                         content: Text(
                                                           'Profile deleted successfully.',
                                                           style: TextStyle(
-                                                              color: Colors
-                                                                  .white), // White text
+                                                            color: theme
+                                                                .colorScheme
+                                                                .onPrimary,
+                                                          ),
                                                         ),
-                                                        backgroundColor: Colors
-                                                            .black, // Black background
+                                                        backgroundColor: theme
+                                                            .colorScheme
+                                                            .primary,
                                                       ),
                                                     );
                                                   } catch (e) {
@@ -200,9 +215,9 @@ class SelectProfilePage extends StatelessWidget {
                                                             context)
                                                         .showSnackBar(
                                                       SnackBar(
-                                                          content: Text(
-                                                        'Failed to delete profile: $e',
-                                                      )),
+                                                        content: Text(
+                                                            'Failed to delete profile: $e'),
+                                                      ),
                                                     );
                                                   }
                                                 },
@@ -217,19 +232,22 @@ class SelectProfilePage extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(16.0),
                                   ),
                                   itemBuilder: (BuildContext context) => [
-                                    const PopupMenuItem<String>(
+                                    PopupMenuItem<String>(
                                       value: 'delete',
                                       child: Row(
                                         children: [
-                                          Icon(Icons.delete,
-                                              color: Colors.red, size: 20),
-                                          SizedBox(width: 12),
+                                          Icon(
+                                            Icons.delete,
+                                            color: theme.colorScheme.error,
+                                            size: 20,
+                                          ),
+                                          const SizedBox(width: 12),
                                           Text(
                                             'Delete',
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w500,
-                                              color: Colors.white,
+                                            style: theme.textTheme.bodyMedium
+                                                ?.copyWith(
+                                              color:
+                                                  theme.colorScheme.onSurface,
                                             ),
                                           ),
                                         ],
@@ -253,7 +271,7 @@ class SelectProfilePage extends StatelessWidget {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        child: BlackButton(
+        child: PrimaryButton(
           title: "Add Profile",
           onTap: () {
             Navigator.push(
