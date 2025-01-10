@@ -190,8 +190,9 @@ class SelectProfilePage extends StatelessWidget {
                                                     await profileProvider
                                                         .deleteProfile(
                                                             profile.id!);
-                                                    if (!context.mounted)
+                                                    if (!context.mounted) {
                                                       return;
+                                                    }
                                                     ScaffoldMessenger.of(
                                                             context)
                                                         .showSnackBar(
