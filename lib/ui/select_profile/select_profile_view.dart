@@ -74,12 +74,12 @@ class SelectProfilePage extends StatelessWidget {
                         return Container(
                           padding: const EdgeInsets.all(16),
                           margin: const EdgeInsets.symmetric(
-                            vertical: 8,
+                            vertical: 4,
                             horizontal: 16,
                           ),
                           decoration: BoxDecoration(
                             color: theme.colorScheme.secondaryContainer,
-                            borderRadius: BorderRadius.circular(16),
+                            borderRadius: BorderRadius.circular(24),
                           ),
                           child: InkWell(
                             onTap: () async {
@@ -103,12 +103,14 @@ class SelectProfilePage extends StatelessWidget {
                               }
                             },
                             child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                // Profile Icon
-                                Icon(Icons.person,
-                                    size: 32,
-                                    color:
-                                        theme.colorScheme.onSecondaryContainer),
+                                // Account Icon (unchanged)
+                                Icon(
+                                  Icons.person,
+                                  size: 32,
+                                  color: theme.colorScheme.onSecondaryContainer,
+                                ),
                                 const SizedBox(width: 16),
 
                                 // Profile Details
@@ -120,28 +122,37 @@ class SelectProfilePage extends StatelessWidget {
                                       // Profile Name
                                       Text(
                                         profile.name,
-                                        style: TextStyle(
-                                          fontSize: 22,
+                                        style: theme.textTheme.headlineSmall
+                                            ?.copyWith(
                                           fontWeight: FontWeight.bold,
-                                          color: theme.colorScheme.onSurface,
+                                          color: theme
+                                              .colorScheme.onSecondaryContainer,
                                         ),
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
                                       ),
-                                      const SizedBox(height: 4),
+                                      const SizedBox(height: 8),
 
                                       // Date of Birth
                                       Row(
                                         children: [
-                                          Icon(Icons.cake,
-                                              size: 16,
-                                              color:
-                                                  theme.colorScheme.onSurface),
+                                          Icon(
+                                            Icons.cake,
+                                            size: 16,
+                                            color: theme
+                                                .colorScheme.onSurfaceVariant,
+                                          ),
                                           const SizedBox(width: 8),
-                                          Text(
-                                            profile.dob,
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              color:
-                                                  theme.colorScheme.onSurface,
+                                          Flexible(
+                                            child: Text(
+                                              profile.dob,
+                                              style: theme.textTheme.bodyMedium
+                                                  ?.copyWith(
+                                                color: theme.colorScheme
+                                                    .onSurfaceVariant,
+                                              ),
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
                                             ),
                                           ),
                                         ],
@@ -221,15 +232,16 @@ class SelectProfilePage extends StatelessWidget {
                                       value: 'delete',
                                       child: Row(
                                         children: [
-                                          Icon(Icons.delete,
-                                              color: theme.colorScheme.error,
-                                              size: 20),
+                                          Icon(
+                                            Icons.delete,
+                                            color: theme.colorScheme.error,
+                                            size: 20,
+                                          ),
                                           const SizedBox(width: 12),
                                           Text(
                                             'Delete',
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w500,
+                                            style: theme.textTheme.bodyMedium
+                                                ?.copyWith(
                                               color:
                                                   theme.colorScheme.onSurface,
                                             ),

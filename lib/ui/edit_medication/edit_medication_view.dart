@@ -69,11 +69,25 @@ class _EditMedicationPageState extends State<EditMedicationPage> {
   InputDecoration _inputDecoration(String label) {
     return InputDecoration(
       labelText: label,
-      labelStyle: const TextStyle(color: Colors.black),
-      border: OutlineInputBorder(borderRadius: BorderRadius.circular(24)),
+      labelStyle: TextStyle(
+        color: Theme.of(context).colorScheme.onSurfaceVariant,
+      ),
+      filled: true,
+      fillColor:
+          Theme.of(context).colorScheme.secondaryContainer, // Background color
+      contentPadding: const EdgeInsets.symmetric(
+          vertical: 16, horizontal: 16), // Add padding here
+      floatingLabelBehavior: FloatingLabelBehavior.always,
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(24),
+        borderSide: BorderSide.none, // Remove border
+      ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(24),
-        borderSide: const BorderSide(color: Colors.black, width: 2),
+        borderSide: BorderSide(
+          color: Theme.of(context).colorScheme.primary,
+          width: 2,
+        ),
       ),
     );
   }
@@ -167,6 +181,7 @@ class _EditMedicationPageState extends State<EditMedicationPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     bool hasImage = Provider.of<MedicationProvider>(context)
         .medications
         .firstWhere((medication) => medication.id == widget.medication.id)
@@ -174,18 +189,19 @@ class _EditMedicationPageState extends State<EditMedicationPage> {
         .isNotEmpty;
 
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor:
+          theme.colorScheme.surface, // Set scaffold background color
       body: SafeArea(
         bottom: false,
         child: Column(
           children: [
             Header(
-              title: 'Edit Medication',
+              title: 'View Medication',
               showBackButton: Navigator.canPop(context),
             ),
             Expanded(
               child: Container(
-                color: Colors.white,
+                color: theme.colorScheme.surface,
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: SingleChildScrollView(
@@ -194,6 +210,17 @@ class _EditMedicationPageState extends State<EditMedicationPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
+                          // Medication Details Subheading
+                          Text(
+                            'Medication Details',
+                            style: theme.textTheme.headlineSmall?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: theme.colorScheme.onSurface,
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+
+                          // Medication Name Field
                           TextFormField(
                             controller: _nameController,
                             decoration: _inputDecoration('Name'),
@@ -206,6 +233,8 @@ class _EditMedicationPageState extends State<EditMedicationPage> {
                             maxLines: null, // Allows the field to expand
                           ),
                           const SizedBox(height: 8),
+
+                          // Dosage Field
                           Row(
                             children: [
                               Expanded(
@@ -214,7 +243,9 @@ class _EditMedicationPageState extends State<EditMedicationPage> {
                                   controller: _dosageController,
                                   decoration:
                                       _inputDecoration('Dosage (optional)'),
-                                  keyboardType: TextInputType.number,
+                                  keyboardType:
+                                      const TextInputType.numberWithOptions(
+                                          decimal: true),
                                   validator: (value) {
                                     if (value != null && value.isNotEmpty) {
                                       final number = double.tryParse(value);
@@ -255,13 +286,25 @@ class _EditMedicationPageState extends State<EditMedicationPage> {
                             ],
                           ),
                           const SizedBox(height: 8),
+
+                          // Additional Info Field
                           TextFormField(
                             controller: _additionalInfoController,
                             decoration:
                                 _inputDecoration('Additional Info (optional)'),
                             maxLines: null,
                           ),
+                          const SizedBox(height: 24),
+
+                          // Medication Image Subheading (Conditional)
                           if (hasImage) ...[
+                            Text(
+                              'Medication Image',
+                              style: theme.textTheme.headlineSmall?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: theme.colorScheme.onSurface,
+                              ),
+                            ),
                             const SizedBox(height: 16),
                             Consumer<MedicationProvider>(
                               builder: (context, provider, child) {
@@ -288,14 +331,18 @@ class _EditMedicationPageState extends State<EditMedicationPage> {
                                 );
                               },
                             ),
+                            const SizedBox(height: 16),
                           ],
-                          const SizedBox(height: 16),
+
+                          // Photo Upload Button
                           PhotoUploadButton(
                             onTakePhoto: _handleTakePhoto,
                             onUploadPhoto: _handleUploadFromGallery,
                             hasImage: hasImage,
                           ),
                           const SizedBox(height: 8),
+
+                          // Update Medication Button
                           PrimaryButton(
                             title: "Update Medication",
                             onTap: () => _saveMedication(context),

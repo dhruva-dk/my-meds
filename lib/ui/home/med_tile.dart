@@ -26,16 +26,14 @@ class MedicationTile extends StatelessWidget {
       },
       child: Container(
         padding: const EdgeInsets.all(16),
-        margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+        margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
         decoration: BoxDecoration(
-          color: theme.colorScheme.surface,
+          color: theme.colorScheme.secondaryContainer,
           borderRadius: BorderRadius.circular(24),
-          // Removed box shadow
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // Image (if available)
             if (hasImage) ...[
               ClipRRect(
                 borderRadius: BorderRadius.circular(12),
@@ -51,67 +49,78 @@ class MedicationTile extends StatelessWidget {
                         height: imageSize,
                         fit: BoxFit.cover,
                         errorBuilder: (context, error, stackTrace) {
-                          return const Icon(Icons.error, color: Colors.red);
+                          return Icon(Icons.error,
+                              color: theme.colorScheme.error);
                         },
                       );
                     }
-                    return const SizedBox(
+                    return SizedBox(
                       width: imageSize,
                       height: imageSize,
-                      child: CircularProgressIndicator(),
+                      child: CircularProgressIndicator(
+                        color: theme.colorScheme.primary,
+                      ),
                     );
                   },
                 ),
               ),
               const SizedBox(width: 16),
             ],
-
-            // Text Content
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Medication Name
                   Text(
                     medication.name,
                     style: theme.textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.bold,
+                      color: theme.colorScheme.onSecondaryContainer,
                     ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 8),
-
-                  // Dosage
                   if (medication.dosage.isNotEmpty) ...[
                     Row(
                       children: [
-                        const Icon(Icons.medical_services,
-                            size: 16, color: Colors.grey),
+                        Icon(
+                          Icons.medical_services,
+                          size: 16,
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
                         const SizedBox(width: 8),
-                        Text(
-                          medication.dosage,
-                          style: theme.textTheme.bodyMedium,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
+                        Flexible(
+                          child: Text(
+                            medication.dosage,
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              color: theme.colorScheme.onSurfaceVariant,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
                       ],
                     ),
                     const SizedBox(height: 4),
                   ],
-
-                  // Additional Info
                   if (medication.additionalInfo.isNotEmpty) ...[
                     Row(
                       children: [
-                        const Icon(Icons.info_outline,
-                            size: 16, color: Colors.grey),
+                        Icon(
+                          Icons.info_outline,
+                          size: 16,
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
                         const SizedBox(width: 8),
-                        Text(
-                          medication.additionalInfo,
-                          style: theme.textTheme.bodyMedium,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
+                        Flexible(
+                          child: Text(
+                            medication.additionalInfo,
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              color: theme.colorScheme.onSurfaceVariant,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
                       ],
                     ),
@@ -119,8 +128,6 @@ class MedicationTile extends StatelessWidget {
                 ],
               ),
             ),
-
-            // Menu Button
             PopupMenuButton<String>(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
@@ -131,18 +138,20 @@ class MedicationTile extends StatelessWidget {
                 }
               },
               itemBuilder: (BuildContext context) => [
-                const PopupMenuItem<String>(
+                PopupMenuItem<String>(
                   value: 'delete',
                   child: Row(
                     children: [
-                      Icon(Icons.delete, color: Colors.red, size: 20),
-                      SizedBox(width: 12),
+                      Icon(
+                        Icons.delete,
+                        color: theme.colorScheme.error,
+                        size: 20,
+                      ),
+                      const SizedBox(width: 12),
                       Text(
                         'Delete',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.white,
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: theme.colorScheme.onSurface,
                         ),
                       ),
                     ],
@@ -170,17 +179,16 @@ class MedicationTile extends StatelessWidget {
       await Provider.of<MedicationProvider>(context, listen: false)
           .deleteMedication(id);
 
-      if (!context.mounted) {
-        return;
-      }
-      // Show a success message
+      if (!context.mounted) return;
+
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Medication deleted successfully.'),
         ),
       );
     } catch (e) {
-      // Show an error message if the deletion fails
+      if (!context.mounted) return;
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Failed to delete medication: $e'),

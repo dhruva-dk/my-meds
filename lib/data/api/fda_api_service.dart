@@ -27,10 +27,23 @@ class FDAAPIService {
   }
 
   List<FDADrug> _processMedications(List<FDADrug> medications) {
-    // Remove duplicates
+    // Helper function to convert a string to title case
+    String toTitleCase(String str) {
+      return str.split(' ').map((word) {
+        if (word.isEmpty) return word;
+        return word[0].toUpperCase() + word.substring(1).toLowerCase();
+      }).join(' ');
+    }
+
+    // Remove duplicates and convert fields to title case
     var uniqueMedications = <String, FDADrug>{};
     for (var medication in medications) {
-      uniqueMedications[medication.ndc] = medication;
+      uniqueMedications[medication.ndc] = FDADrug(
+        brandName: toTitleCase(medication.brandName),
+        genericName: toTitleCase(medication.genericName),
+        dosageForm: toTitleCase(medication.dosageForm),
+        ndc: medication.ndc,
+      );
     }
     return uniqueMedications.values.toList();
   }
