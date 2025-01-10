@@ -165,7 +165,7 @@ class _CreateMedicationPageState extends State<CreateMedicationPage> {
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(kToolbarHeight + 80),
         child: Header(
-          title: 'Confirm Medication',
+          title: 'Add Medication',
           showBackButton: Navigator.canPop(context),
         ),
       ),
