@@ -1,6 +1,6 @@
 import 'package:medication_tracker/data/model/medication_model.dart';
 import 'package:medication_tracker/data/model/user_profile_model.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart' as path;
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
@@ -100,10 +100,6 @@ class DatabaseService {
             List<Map<String, dynamic>> oldMedicationsRead =
                 await oldMedsDb.query('medication_table');
 
-            // Get application documents directory
-            final appDocDir = await getApplicationDocumentsDirectory();
-            String path = appDocDir.path;
-
             for (var medicationRead in oldMedicationsRead) {
               // Create modifiable copy
               Map<String, dynamic> medication =
@@ -111,11 +107,8 @@ class DatabaseService {
               medication['profile_id'] = defaultProfileId;
 
               // Ensure only the file name is saved in imageUrl
-              if ((medication['imageUrl'] as String).contains(path)) {
-                medication['imageUrl'] = (medication['imageUrl'] as String)
-                    .replaceAll(path, "")
-                    .trim();
-              }
+              medication['imageUrl'] =
+                  path.basename(medication['imageUrl'] as String);
 
               await txn.insert(medicationTable, medication);
             }
