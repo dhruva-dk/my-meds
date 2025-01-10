@@ -26,28 +26,52 @@ class PhotoUploadButton extends StatelessWidget {
   }
 
   void _showPhotoSourceDialog(BuildContext context) {
+    final theme = Theme.of(context);
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog.adaptive(
-          title: const Text('Upload Photo'),
-          content: const Text('Choose a photo source'),
+          title: Text(
+            'Upload Photo',
+            style: theme.dialogTheme.titleTextStyle,
+          ),
+          content: Text(
+            'Choose a photo source',
+            style: theme.dialogTheme.contentTextStyle,
+          ),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.pop(context); // Close the dialog
                 onTakePhoto(); // Trigger camera action
               },
-              child: const Text('Camera'),
+              child: Text(
+                'Camera',
+                style: theme.dialogTheme.contentTextStyle,
+              ),
             ),
             TextButton(
               onPressed: () {
                 Navigator.pop(context); // Close the dialog
                 onUploadPhoto(); // Trigger gallery action
               },
-              child: const Text('Gallery'),
+              child: Text(
+                'Gallery',
+                style: theme.dialogTheme.contentTextStyle,
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context); // Close the dialog
+              },
+              child: Text(
+                'Cancel',
+                style: TextStyle(color: theme.colorScheme.error, fontSize: 16),
+              ),
             ),
           ],
+          actionsAlignment: MainAxisAlignment.spaceEvenly,
         );
       },
     );

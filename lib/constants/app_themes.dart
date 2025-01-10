@@ -26,6 +26,16 @@ class AppThemes {
     datePickerTheme: const DatePickerThemeData(
       backgroundColor: AppColors.lightBackgroundSecondary,
     ),
+    dialogTheme: const DialogTheme(
+      titleTextStyle: TextStyle(
+        color: Colors.black, // Blue text for dialog title
+        fontSize: 16,
+      ),
+      contentTextStyle: TextStyle(
+        color: Colors.black, // Blue text for dialog content
+        fontSize: 16,
+      ),
+    ),
     textTheme: const TextTheme(
       // Headings
       headlineLarge: TextStyle(
