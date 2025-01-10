@@ -13,7 +13,7 @@ class FDASearchPage extends StatefulWidget {
   const FDASearchPage({super.key});
 
   @override
-  _FDASearchPageState createState() => _FDASearchPageState();
+  State<FDASearchPage> createState() => _FDASearchPageState();
 }
 
 class _FDASearchPageState extends State<FDASearchPage> {
@@ -47,8 +47,7 @@ class _FDASearchPageState extends State<FDASearchPage> {
         Provider.of<ImageService>(context, listen: false);
     try {
       String imageFileName = await imagePickerService.takePhoto();
-      if (!context.mounted) return;
-
+      if (!mounted) return;
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -67,7 +66,7 @@ class _FDASearchPageState extends State<FDASearchPage> {
         Provider.of<ImageService>(context, listen: false);
     try {
       String imageFileName = await imagePickerService.pickFromGallery();
-      if (!context.mounted) return;
+      if (!mounted) return;
 
       Navigator.push(
         context,

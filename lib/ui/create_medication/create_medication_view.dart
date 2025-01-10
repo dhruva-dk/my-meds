@@ -19,7 +19,7 @@ class CreateMedicationPage extends StatefulWidget {
   const CreateMedicationPage({super.key, this.initialDrug, this.imageFileName});
 
   @override
-  _CreateMedicationPageState createState() => _CreateMedicationPageState();
+  State<CreateMedicationPage> createState() => _CreateMedicationPageState();
 }
 
 class _CreateMedicationPageState extends State<CreateMedicationPage> {
@@ -73,6 +73,7 @@ class _CreateMedicationPageState extends State<CreateMedicationPage> {
       String imageFileName = await imagePickerService.takePhoto();
       setState(() => _imageFileName = imageFileName);
     } catch (e) {
+      if (!mounted) return;
       _showErrorSnackbar(context, e.toString());
     }
   }
@@ -84,11 +85,13 @@ class _CreateMedicationPageState extends State<CreateMedicationPage> {
       String imageFileName = await imagePickerService.pickFromGallery();
       setState(() => _imageFileName = imageFileName);
     } catch (e) {
+      if (!mounted) return;
       _showErrorSnackbar(context, e.toString());
     }
   }
 
   void _showErrorSnackbar(BuildContext context, String message) {
+    if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(message)),
     );
@@ -119,7 +122,7 @@ class _CreateMedicationPageState extends State<CreateMedicationPage> {
         // Only navigate if the operation is successful
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => HomeScreen()),
+          MaterialPageRoute(builder: (context) => const HomeScreen()),
         );
       } catch (e) {
         // Stay on the current screen and show an error message

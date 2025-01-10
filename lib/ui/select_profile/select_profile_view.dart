@@ -79,12 +79,12 @@ class SelectProfilePage extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(16),
-                            boxShadow: [
+                            boxShadow: const [
                               BoxShadow(
-                                color: Colors.grey.withOpacity(0.2),
+                                color: Color.fromRGBO(128, 128, 128, 0.3),
                                 spreadRadius: 1,
                                 blurRadius: 5,
-                                offset: const Offset(0, 1),
+                                offset: Offset(0, 1),
                               ),
                             ],
                           ),
@@ -93,10 +93,11 @@ class SelectProfilePage extends StatelessWidget {
                               try {
                                 await profileProvider
                                     .selectProfile(profile.id!);
+                                if (!context.mounted) return;
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => HomeScreen(),
+                                    builder: (context) => const HomeScreen(),
                                   ),
                                 );
                               } catch (e) {
@@ -139,7 +140,7 @@ class SelectProfilePage extends StatelessWidget {
                                               size: 16, color: Colors.grey),
                                           const SizedBox(width: 8),
                                           Text(
-                                            '${profile.dob}',
+                                            profile.dob,
                                             style: TextStyle(
                                               fontSize: 16,
                                               color: Colors.grey[600],
@@ -177,6 +178,9 @@ class SelectProfilePage extends StatelessWidget {
                                                     await profileProvider
                                                         .deleteProfile(
                                                             profile.id!);
+                                                    if (!context.mounted) {
+                                                      return;
+                                                    }
                                                     ScaffoldMessenger.of(
                                                             context)
                                                         .showSnackBar(

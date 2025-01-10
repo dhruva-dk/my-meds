@@ -17,12 +17,12 @@ class SearchTile extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(16),
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(
-              color: Colors.grey.withOpacity(0.2),
+              color: Color.fromRGBO(128, 128, 128, 0.3),
               spreadRadius: 1,
               blurRadius: 5,
-              offset: const Offset(0, 1),
+              offset: Offset(0, 1),
             ),
           ],
         ),

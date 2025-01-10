@@ -13,7 +13,7 @@ class CreateProfilePage extends StatefulWidget {
   const CreateProfilePage({super.key});
 
   @override
-  _CreateProfilePageState createState() => _CreateProfilePageState();
+  State<CreateProfilePage> createState() => _CreateProfilePageState();
 }
 
 class _CreateProfilePageState extends State<CreateProfilePage> {

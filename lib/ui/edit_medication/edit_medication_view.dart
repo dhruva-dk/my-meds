@@ -17,7 +17,7 @@ class EditMedicationPage extends StatefulWidget {
       : super(key: key);
 
   @override
-  _EditMedicationPageState createState() => _EditMedicationPageState();
+  State<EditMedicationPage> createState() => _EditMedicationPageState();
 }
 
 class _EditMedicationPageState extends State<EditMedicationPage> {
@@ -45,7 +45,7 @@ class _EditMedicationPageState extends State<EditMedicationPage> {
         TextEditingController(text: widget.medication.additionalInfo);
 
     // Parse the dosage to separate the value and unit
-    final dosageParts = widget.medication.dosage?.split(' ') ?? [];
+    final dosageParts = widget.medication.dosage.split(' ');
     if (dosageParts.length > 1) {
       _dosageController = TextEditingController(text: dosageParts[0]);
       // Check if the unit is in the _unitOptions list
