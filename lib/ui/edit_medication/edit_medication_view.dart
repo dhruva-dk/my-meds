@@ -3,7 +3,7 @@ import 'package:medication_tracker/data/model/medication_model.dart';
 import 'package:medication_tracker/data/providers/medication_provider.dart';
 import 'package:medication_tracker/services/image/image_service.dart';
 import 'package:medication_tracker/services/storage/local_storage_service.dart';
-import 'package:medication_tracker/ui/core/black_button.dart';
+import 'package:medication_tracker/ui/core/primary_button.dart';
 import 'package:medication_tracker/ui/core/header.dart';
 import 'package:medication_tracker/ui/core/photo_upload_button.dart';
 import 'package:medication_tracker/ui/edit_medication/zoomable_image.dart';
@@ -296,7 +296,7 @@ class _EditMedicationPageState extends State<EditMedicationPage> {
                             hasImage: hasImage,
                           ),
                           const SizedBox(height: 8),
-                          BlackButton(
+                          PrimaryButton(
                             title: "Update Medication",
                             onTap: () => _saveMedication(context),
                           ),

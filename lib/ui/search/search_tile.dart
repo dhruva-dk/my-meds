@@ -9,72 +9,78 @@ class SearchTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.all(16),
         margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 0),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: theme.colorScheme.secondaryContainer,
           borderRadius: BorderRadius.circular(16),
-          boxShadow: const [
-            BoxShadow(
-              color: Color.fromRGBO(128, 128, 128, 0.3),
-              spreadRadius: 1,
-              blurRadius: 5,
-              offset: Offset(0, 1),
-            ),
-          ],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            // Brand Name
             Text(
               drug.brandName,
-              style: const TextStyle(
-                fontSize: 20,
+              style: theme.textTheme.headlineSmall?.copyWith(
                 fontWeight: FontWeight.bold,
-                color: Colors.black,
+                color: theme.colorScheme.onSecondaryContainer,
               ),
-            ),
-            const SizedBox(height: 4),
-
-            // Generic Name
-            Text(
-              drug.genericName,
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-                color: Colors.black,
-              ),
-              maxLines: 2, // Limit to 2 lines
-              overflow: TextOverflow.ellipsis, // Add ellipsis if text overflows
             ),
             const SizedBox(height: 8),
-
-            // Dosage Form and NDC
+            Text(
+              drug.genericName,
+              style: theme.textTheme.bodyLarge?.copyWith(
+                fontWeight: FontWeight.w500,
+                color: theme.colorScheme.onSecondaryContainer,
+              ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+            const SizedBox(height: 8),
             Row(
               children: [
-                const Icon(Icons.medical_services,
-                    size: 16, color: Colors.grey),
-                const SizedBox(width: 4),
-                Text(
-                  drug.dosageForm,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey,
+                Expanded(
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.medical_services,
+                        size: 16,
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                      const SizedBox(width: 4),
+                      Flexible(
+                        child: Text(
+                          drug.dosageForm,
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                const SizedBox(width: 16),
-                const Icon(Icons.confirmation_number,
-                    size: 16, color: Colors.grey),
-                const SizedBox(width: 4),
-                Text(
-                  'NDC: ${drug.ndc}',
-                  style: const TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey,
+                Expanded(
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.confirmation_number,
+                        size: 16,
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        'NDC: ${drug.ndc}',
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],

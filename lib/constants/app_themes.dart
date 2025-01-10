@@ -7,18 +7,16 @@ class AppThemes {
     fontFamily: "Inter",
     colorScheme: const ColorScheme.light(
       primary: AppColors.lightAccent,
-      onPrimary: AppColors.darkTextPrimary,
+      onPrimary: AppColors.lightBackgroundSecondary,
+      secondary: AppColors.lightAccentSecondary,
+      onSecondary: AppColors.lightBackgroundSecondary,
       surface: AppColors.lightBackgroundPrimary,
       onSurface: AppColors.lightTextPrimary,
-      error: AppColors.lightError,
-      onError: AppColors.lightTextPrimary,
-      secondary: AppColors.lightAccentSecondary,
-      onSecondary: AppColors.lightTextPrimary,
       secondaryContainer: AppColors.lightBackgroundSecondary,
       onSecondaryContainer: AppColors.lightTextPrimary,
-      tertiaryContainer:
-          AppColors.darkAccentSecondary, //headers / nav bars are tertiary
-      onTertiaryContainer: AppColors.darkTextPrimary,
+      error: AppColors.lightError,
+      onError: AppColors.lightTextPrimary,
+      onSurfaceVariant: AppColors.lightTextSecondary,
     ),
     scaffoldBackgroundColor: AppColors.lightBackgroundPrimary,
     popupMenuTheme: const PopupMenuThemeData(
@@ -31,49 +29,34 @@ class AppThemes {
     textTheme: const TextTheme(
       // Headings
       headlineLarge: TextStyle(
-          fontSize: 24,
-          fontWeight: FontWeight.bold,
-          color: AppColors.lightTextPrimary),
+        fontSize: 32,
+        fontWeight: FontWeight.bold,
+      ),
       headlineMedium: TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.normal,
-          color: AppColors.lightTextPrimary),
+        fontSize: 24,
+        fontWeight: FontWeight.bold,
+      ),
       headlineSmall: TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.normal,
-          color: AppColors.lightTextPrimary),
-
+        fontSize: 18,
+        fontWeight: FontWeight.bold,
+      ),
       // Body Text
       bodyLarge: TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.normal,
-          color: AppColors.lightTextPrimary),
+        fontSize: 16,
+        fontWeight: FontWeight.normal,
+      ),
       bodyMedium: TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.normal,
-          color: AppColors.lightTextSecondary),
+        fontSize: 14,
+        fontWeight: FontWeight.normal,
+      ),
       bodySmall: TextStyle(
-          fontSize: 12,
-          fontWeight: FontWeight.normal,
-          color: AppColors.lightTextSecondary),
-
-      // Labels (for buttons, form fields, etc.)
-      labelLarge: TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.bold,
-          color: AppColors.lightTextPrimary),
-      labelMedium: TextStyle(
-          fontSize: 12,
-          fontWeight: FontWeight.bold,
-          color: AppColors.lightTextSecondary),
-      labelSmall: TextStyle(
-          fontSize: 11,
-          fontWeight: FontWeight.bold,
-          color: AppColors.lightTextSecondary),
+        fontSize: 12,
+        fontWeight: FontWeight.normal,
+      ),
     ),
   );
-
-  static final ThemeData darkTheme = ThemeData(
+}
+/*  static final ThemeData darkTheme = ThemeData(
     useMaterial3: true,
     fontFamily: "Inter",
     colorScheme: const ColorScheme.dark(
@@ -143,4 +126,4 @@ class AppThemes {
           color: AppColors.darkTextPrimary),
     ),
   );
-}
+}8*/

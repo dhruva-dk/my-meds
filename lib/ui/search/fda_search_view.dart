@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:medication_tracker/data/providers/fda_api_provider.dart';
 import 'package:medication_tracker/services/image/image_service.dart';
-import 'package:medication_tracker/ui/core/black_button.dart';
+import 'package:medication_tracker/ui/core/primary_button.dart';
 import 'package:medication_tracker/ui/create_medication/create_medication_view.dart';
 import 'package:medication_tracker/ui/core/header.dart';
 import 'package:medication_tracker/ui/core/photo_upload_button.dart';
@@ -89,58 +89,104 @@ class _FDASearchPageState extends State<FDASearchPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: theme.colorScheme.background,
       body: SafeArea(
         bottom: false,
         child: Column(
           children: [
             Header(
-              title: 'FDA Search',
+              title: 'Add Medication',
               showBackButton: Navigator.canPop(context),
             ),
             Expanded(
               child: Container(
-                color: Colors.white,
+                color: theme.colorScheme.surface,
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
+                    crossAxisAlignment:
+                        CrossAxisAlignment.start, // Align text to the left
                     children: [
+                      // Subheading above the search box and buttons
+                      Text(
+                        'FDA Search',
+                        style: theme.textTheme.headlineSmall?.copyWith(
+                          color: theme.colorScheme.onSurface,
+                        ),
+                      ),
+                      const SizedBox(
+                          height: 16), // Spacing below the subheading
+
+                      // Search Box
                       TextField(
                         controller: _searchController,
                         decoration: InputDecoration(
                           hintText: 'Search',
                           prefixIcon: const Icon(Icons.search),
+                          filled: true,
+                          fillColor: Colors.white, // Set background to white
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(24),
+                            borderSide: BorderSide.none,
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(24),
+                            borderSide: BorderSide.none,
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(24),
-                            borderSide:
-                                const BorderSide(color: Colors.black, width: 2),
+                            borderSide: BorderSide(
+                              color: theme.colorScheme.primary,
+                              width: 2,
+                            ),
                           ),
                         ),
                       ),
-                      const SizedBox(height: 8),
-                      BlackButton(
-                        title: "Manual Input",
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  const CreateMedicationPage(),
+                      const SizedBox(
+                          height: 16), // Spacing below the search box
+
+                      // Buttons Row
+                      Row(
+                        children: [
+                          Expanded(
+                            child: PrimaryButton(
+                              title: "Manual Input",
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        const CreateMedicationPage(),
+                                  ),
+                                );
+                              },
                             ),
-                          );
-                        },
+                          ),
+                          const SizedBox(width: 8), // Spacing between buttons
+                          Expanded(
+                            child: PhotoUploadButton(
+                              onTakePhoto: _handleTakePhoto,
+                              onUploadPhoto: _handleUploadFromGallery,
+                              hasImage: false,
+                            ),
+                          ),
+                        ],
                       ),
-                      const SizedBox(height: 8),
-                      PhotoUploadButton(
-                        onTakePhoto: _handleTakePhoto,
-                        onUploadPhoto: _handleUploadFromGallery,
-                        hasImage: false,
+                      const SizedBox(height: 32), // Spacing below the buttons
+
+                      // Subheading below the buttons
+                      Text(
+                        'Search Results',
+                        style: theme.textTheme.headlineSmall?.copyWith(
+                          color: theme.colorScheme.onSurface,
+                        ),
                       ),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 8), // Spacing below the subheading
+
+                      // Search Results List
                       Expanded(
                         child: Consumer<FDAAPIServiceProvider>(
                           builder: (context, provider, child) {

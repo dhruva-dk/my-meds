@@ -5,7 +5,7 @@ import 'package:medication_tracker/data/providers/medication_provider.dart';
 import 'package:medication_tracker/data/providers/profile_provider.dart';
 import 'package:medication_tracker/services/image/image_service.dart';
 import 'package:medication_tracker/services/storage/local_storage_service.dart';
-import 'package:medication_tracker/ui/core/black_button.dart';
+import 'package:medication_tracker/ui/core/primary_button.dart';
 import 'package:medication_tracker/ui/core/header.dart';
 import 'package:medication_tracker/ui/core/photo_upload_button.dart';
 import 'package:medication_tracker/ui/edit_medication/zoomable_image.dart';
@@ -271,7 +271,7 @@ class _CreateMedicationPageState extends State<CreateMedicationPage> {
                             hasImage: hasImage,
                           ),
                           const SizedBox(height: 8),
-                          BlackButton(
+                          PrimaryButton(
                             title: "Add Medication",
                             onTap: () => _accept(context),
                           ),

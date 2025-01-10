@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:medication_tracker/data/providers/profile_provider.dart';
 import 'package:medication_tracker/ui/create_profile/create_profile_view.dart';
 import 'package:medication_tracker/ui/home/home_view.dart';
-import 'package:medication_tracker/ui/core/black_button.dart';
+import 'package:medication_tracker/ui/core/primary_button.dart';
 import 'package:medication_tracker/ui/core/header.dart';
 import 'package:provider/provider.dart';
 
@@ -11,8 +11,10 @@ class SelectProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: theme.colorScheme.background,
       body: SafeArea(
         bottom: false,
         child: Column(
@@ -24,7 +26,7 @@ class SelectProfilePage extends StatelessWidget {
             ),
             Expanded(
               child: Container(
-                color: Colors.white,
+                color: theme.colorScheme.surface,
                 child: Consumer<ProfileProvider>(
                   builder: (context, profileProvider, child) {
                     if (profileProvider.isLoading) {
@@ -39,10 +41,9 @@ class SelectProfilePage extends StatelessWidget {
                           padding: const EdgeInsets.all(16.0),
                           child: Text(
                             profileProvider.errorMessage,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 16,
-                              color:
-                                  Colors.black, // Black text for error message
+                              color: theme.colorScheme.onSurface,
                             ),
                           ),
                         ),
@@ -50,15 +51,15 @@ class SelectProfilePage extends StatelessWidget {
                     }
 
                     if (profileProvider.profiles.isEmpty) {
-                      return const Center(
+                      return Center(
                         child: Padding(
-                          padding: EdgeInsets.all(16.0),
+                          padding: const EdgeInsets.all(16.0),
                           child: Text(
                             "No profiles added yet. Add your first profile by pressing the button below.",
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: 16,
-                              color: Colors.black,
+                              color: theme.colorScheme.onSurface,
                             ),
                           ),
                         ),
@@ -77,16 +78,8 @@ class SelectProfilePage extends StatelessWidget {
                             horizontal: 16,
                           ),
                           decoration: BoxDecoration(
-                            color: Colors.white,
+                            color: theme.colorScheme.secondaryContainer,
                             borderRadius: BorderRadius.circular(16),
-                            boxShadow: const [
-                              BoxShadow(
-                                color: Color.fromRGBO(128, 128, 128, 0.3),
-                                spreadRadius: 1,
-                                blurRadius: 5,
-                                offset: Offset(0, 1),
-                              ),
-                            ],
                           ),
                           child: InkWell(
                             onTap: () async {
@@ -112,8 +105,10 @@ class SelectProfilePage extends StatelessWidget {
                             child: Row(
                               children: [
                                 // Profile Icon
-                                const Icon(Icons.person,
-                                    size: 32, color: Colors.grey),
+                                Icon(Icons.person,
+                                    size: 32,
+                                    color:
+                                        theme.colorScheme.onSecondaryContainer),
                                 const SizedBox(width: 16),
 
                                 // Profile Details
@@ -125,10 +120,10 @@ class SelectProfilePage extends StatelessWidget {
                                       // Profile Name
                                       Text(
                                         profile.name,
-                                        style: const TextStyle(
+                                        style: TextStyle(
                                           fontSize: 22,
                                           fontWeight: FontWeight.bold,
-                                          color: Colors.black,
+                                          color: theme.colorScheme.onSurface,
                                         ),
                                       ),
                                       const SizedBox(height: 4),
@@ -136,14 +131,17 @@ class SelectProfilePage extends StatelessWidget {
                                       // Date of Birth
                                       Row(
                                         children: [
-                                          const Icon(Icons.cake,
-                                              size: 16, color: Colors.grey),
+                                          Icon(Icons.cake,
+                                              size: 16,
+                                              color:
+                                                  theme.colorScheme.onSurface),
                                           const SizedBox(width: 8),
                                           Text(
                                             profile.dob,
                                             style: TextStyle(
                                               fontSize: 16,
-                                              color: Colors.grey[600],
+                                              color:
+                                                  theme.colorScheme.onSurface,
                                             ),
                                           ),
                                         ],
@@ -184,15 +182,17 @@ class SelectProfilePage extends StatelessWidget {
                                                     ScaffoldMessenger.of(
                                                             context)
                                                         .showSnackBar(
-                                                      const SnackBar(
+                                                      SnackBar(
                                                         content: Text(
                                                           'Profile deleted successfully.',
                                                           style: TextStyle(
-                                                              color: Colors
-                                                                  .white), // White text
+                                                              color: theme
+                                                                  .colorScheme
+                                                                  .onPrimary),
                                                         ),
-                                                        backgroundColor: Colors
-                                                            .black, // Black background
+                                                        backgroundColor: theme
+                                                            .colorScheme
+                                                            .primary,
                                                       ),
                                                     );
                                                   } catch (e) {
@@ -217,19 +217,21 @@ class SelectProfilePage extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(16.0),
                                   ),
                                   itemBuilder: (BuildContext context) => [
-                                    const PopupMenuItem<String>(
+                                    PopupMenuItem<String>(
                                       value: 'delete',
                                       child: Row(
                                         children: [
                                           Icon(Icons.delete,
-                                              color: Colors.red, size: 20),
-                                          SizedBox(width: 12),
+                                              color: theme.colorScheme.error,
+                                              size: 20),
+                                          const SizedBox(width: 12),
                                           Text(
                                             'Delete',
                                             style: TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.w500,
-                                              color: Colors.white,
+                                              color:
+                                                  theme.colorScheme.onSurface,
                                             ),
                                           ),
                                         ],
@@ -253,7 +255,7 @@ class SelectProfilePage extends StatelessWidget {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        child: BlackButton(
+        child: PrimaryButton(
           title: "Add Profile",
           onTap: () {
             Navigator.push(

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:medication_tracker/data/model/user_profile_model.dart';
 import 'package:medication_tracker/data/providers/profile_provider.dart';
-import 'package:medication_tracker/ui/core/black_button.dart';
+import 'package:medication_tracker/ui/core/primary_button.dart';
 import 'package:medication_tracker/ui/core/header.dart';
 import 'package:medication_tracker/ui/core/privacy_policy_button.dart';
 import 'package:medication_tracker/ui/select_profile/select_profile_view.dart';
@@ -103,7 +103,7 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
                           const SizedBox(height: 16),
                           const PrivacyPolicyButton(),
                           const SizedBox(height: 8),
-                          BlackButton(
+                          PrimaryButton(
                               title: "Continue", onTap: () => _submitForm()),
                         ],
                       ),

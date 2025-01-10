@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:medication_tracker/ui/core/outline_button.dart';
+import 'package:medication_tracker/ui/core/secondary_button.dart';
 
 class PhotoUploadButton extends StatelessWidget {
   final VoidCallback onTakePhoto;
@@ -17,7 +17,10 @@ class PhotoUploadButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return OutlineButton(
       title: hasImage ? 'Change Photo' : 'Upload Photo',
-      icon: const Icon(Icons.camera_alt, size: 20),
+      icon: const Icon(
+        Icons.camera_alt,
+        size: 20,
+      ),
       onTap: () => _showPhotoSourceDialog(context),
     );
   }

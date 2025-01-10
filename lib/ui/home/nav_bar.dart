@@ -98,15 +98,15 @@ class NavBar extends StatelessWidget {
         children: <Widget>[
           Icon(
             icon,
-            color: theme.colorScheme
-                .onSecondaryContainer, // Use onPrimary color from theme
+            color:
+                theme.colorScheme.onSecondary, // Use onPrimary color from theme
             size: 28,
           ),
           const SizedBox(height: 4),
           Text(
             label,
             style: theme.textTheme.labelSmall?.copyWith(
-              color: theme.colorScheme.onSecondaryContainer,
+              color: theme.colorScheme.onSecondary,
             ),
           ),
         ],

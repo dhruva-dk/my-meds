@@ -21,7 +21,7 @@ class Header extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 16.0),
-      color: theme.colorScheme.primary, // Use primary color from theme
+      color: theme.colorScheme.secondary, // Use secondary color from theme
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -33,7 +33,7 @@ class Header extends StatelessWidget {
                     icon: Icon(
                       Icons.chevron_left,
                       color: theme.colorScheme
-                          .onPrimary, // Use onPrimary color from theme
+                          .onSecondary, // Use onSecondary color from theme
                       size: 32,
                     ),
                     onPressed:
@@ -42,9 +42,9 @@ class Header extends StatelessWidget {
                 Expanded(
                   child: AutoSizeText(
                     title,
-                    style: theme.textTheme.headlineMedium?.copyWith(
+                    style: theme.textTheme.headlineLarge?.copyWith(
                       color: theme.colorScheme
-                          .onPrimary, // Use onPrimary color from theme
+                          .onSecondary, // Use onSecondary color from theme
                     ),
                     overflow: TextOverflow.ellipsis,
                     minFontSize: 18,
