@@ -58,7 +58,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     }
   }
 
-  void _saveProfile() {
+  void _saveProfile() async {
     if (_formKey.currentState!.validate()) {
       final currentProfile =
           Provider.of<ProfileProvider>(context, listen: false).selectedProfile;
@@ -70,6 +70,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
         );
         return;
       }
+
       final profile = UserProfile(
         id: currentProfile!.id,
         name: _nameController.text,
@@ -78,17 +79,21 @@ class _EditProfilePageState extends State<EditProfilePage> {
         healthConditions: _healthConditionsController.text,
         pharmacy: _pharmacyController.text,
       );
-      Provider.of<ProfileProvider>(context, listen: false)
-          .updateProfile(profile);
-      // Navigate back or show a success message
-      // show snack bar: profile updated
-      print('Saved profile: ${profile.name}, selectedProfileId: ${profile.id}');
-      // Show a Snackbar indicating profile successfully updated
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Profile successfully updated'),
-        ),
-      );
+
+      try {
+        await Provider.of<ProfileProvider>(context, listen: false)
+            .updateProfile(profile);
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Profile successfully updated'),
+          ),
+        );
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to update profile: $e')),
+        );
+      }
     }
   }
 

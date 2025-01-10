@@ -78,7 +78,7 @@ class _EditMedicationPageState extends State<EditMedicationPage> {
     );
   }
 
-  void _saveMedication(BuildContext context) {
+  void _saveMedication(BuildContext context) async {
     if (_formKey.currentState!.validate()) {
       final String name = _nameController.text;
       final String dosage = _dosageController.text.trim().isEmpty
@@ -100,13 +100,21 @@ class _EditMedicationPageState extends State<EditMedicationPage> {
         profileId: widget.medication.profileId,
       );
 
-      Provider.of<MedicationProvider>(context, listen: false)
-          .updateMedication(updatedMedication);
+      try {
+        await Provider.of<MedicationProvider>(context, listen: false)
+            .updateMedication(updatedMedication);
 
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => HomeScreen()),
-      );
+        if (!context.mounted) return;
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomeScreen()),
+        );
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to update medication: $e')),
+        );
+      }
     }
   }
 

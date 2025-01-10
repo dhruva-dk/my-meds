@@ -179,8 +179,27 @@ class MedicationTile extends StatelessWidget {
     );
   }
 
-  void _deleteMedication(BuildContext context, int id) {
-    Provider.of<MedicationProvider>(context, listen: false)
-        .deleteMedication(id);
+  void _deleteMedication(BuildContext context, int id) async {
+    try {
+      await Provider.of<MedicationProvider>(context, listen: false)
+          .deleteMedication(id);
+
+      if (!context.mounted) {
+        return;
+      }
+      // Show a success message
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Medication deleted successfully.'),
+        ),
+      );
+    } catch (e) {
+      // Show an error message if the deletion fails
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to delete medication: $e'),
+        ),
+      );
+    }
   }
 }

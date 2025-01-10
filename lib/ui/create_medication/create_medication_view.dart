@@ -98,7 +98,7 @@ class _CreateMedicationPageState extends State<CreateMedicationPage> {
     if (_formKey.currentState!.validate()) {
       final String name = _nameController.text;
       final String dosage = _dosageController.text.trim().isEmpty
-          ? '' // Leave dosage empty if no value is provided
+          ? ''
           : '${_dosageController.text} ${_selectedUnit == 'N/A' ? '' : _selectedUnit ?? ''}';
       final String additionalInfo = _additionalInfoController.text;
 
@@ -113,15 +113,18 @@ class _CreateMedicationPageState extends State<CreateMedicationPage> {
       try {
         await Provider.of<MedicationProvider>(context, listen: false)
             .addMedication(newMedication);
+
         if (!context.mounted) return;
 
+        // Only navigate if the operation is successful
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => HomeScreen()),
         );
       } catch (e) {
+        // Stay on the current screen and show an error message
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Error saving medication')),
+          SnackBar(content: Text('Failed to add medication: $e')),
         );
       }
     }

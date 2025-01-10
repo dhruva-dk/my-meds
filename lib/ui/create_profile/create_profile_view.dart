@@ -156,20 +156,21 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
           pharmacy: _pharmacyController.text,
         );
 
-        Provider.of<ProfileProvider>(context, listen: false)
+        await Provider.of<ProfileProvider>(context, listen: false)
             .addProfile(profile);
 
         if (!mounted) return;
 
+        // Only navigate if the operation is successful
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const SelectProfilePage()),
         );
       }
     } catch (e) {
-      // Handle the error, e.g., show a dialog or a snackbar
+      // Stay on the current screen and show an error message
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('$e')),
+        SnackBar(content: Text('Failed to create profile: $e')),
       );
     }
   }

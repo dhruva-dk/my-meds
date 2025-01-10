@@ -90,7 +90,24 @@ class HomeScreen extends StatelessWidget {
                             return const Center(
                               child: CircularProgressIndicator(),
                             );
-                          } else if (medicationProvider.medications.isEmpty) {
+                          }
+
+                          if (medicationProvider.errorMessage.isNotEmpty) {
+                            return Center(
+                              child: Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Text(
+                                  medicationProvider.errorMessage,
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ),
+                            );
+                          }
+
+                          if (medicationProvider.medications.isEmpty) {
                             return const Center(
                               child: Padding(
                                 padding: EdgeInsets.all(16.0),
@@ -104,20 +121,31 @@ class HomeScreen extends StatelessWidget {
                               ),
                             );
                           }
+
                           return ListView.builder(
                             itemCount: medicationProvider.medications.length,
                             itemBuilder: (context, index) {
                               final medication =
                                   medicationProvider.medications[index];
                               return GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => EditMedicationPage(
-                                          medication: medication),
-                                    ),
-                                  );
+                                onTap: () async {
+                                  try {
+                                    await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            EditMedicationPage(
+                                                medication: medication),
+                                      ),
+                                    );
+                                  } catch (e) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                            'Failed to edit medication: $e'),
+                                      ),
+                                    );
+                                  }
                                 },
                                 child: MedicationTile(medication: medication),
                               );

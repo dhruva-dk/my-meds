@@ -27,6 +27,28 @@ class SelectProfilePage extends StatelessWidget {
                 color: Colors.white,
                 child: Consumer<ProfileProvider>(
                   builder: (context, profileProvider, child) {
+                    if (profileProvider.isLoading) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+
+                    if (profileProvider.errorMessage.isNotEmpty) {
+                      return Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Text(
+                            profileProvider.errorMessage,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              color:
+                                  Colors.black, // Black text for error message
+                            ),
+                          ),
+                        ),
+                      );
+                    }
+
                     if (profileProvider.profiles.isEmpty) {
                       return const Center(
                         child: Padding(
@@ -42,6 +64,7 @@ class SelectProfilePage extends StatelessWidget {
                         ),
                       );
                     }
+
                     return ListView.builder(
                       padding: const EdgeInsets.only(top: 8),
                       itemCount: profileProvider.profiles.length,
@@ -66,14 +89,24 @@ class SelectProfilePage extends StatelessWidget {
                             ],
                           ),
                           child: InkWell(
-                            onTap: () {
-                              profileProvider.selectProfile(profile.id!);
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => HomeScreen(),
-                                ),
-                              );
+                            onTap: () async {
+                              try {
+                                await profileProvider
+                                    .selectProfile(profile.id!);
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => HomeScreen(),
+                                  ),
+                                );
+                              } catch (e) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                      content: Text(
+                                    'Failed to select profile: $e',
+                                  )),
+                                );
+                              }
                             },
                             child: Row(
                               children: [
@@ -120,7 +153,7 @@ class SelectProfilePage extends StatelessWidget {
 
                                 // Menu Button
                                 PopupMenuButton<String>(
-                                  onSelected: (String result) {
+                                  onSelected: (String result) async {
                                     if (result == 'delete') {
                                       showDialog(
                                         context: context,
@@ -138,10 +171,36 @@ class SelectProfilePage extends StatelessWidget {
                                               ),
                                               TextButton(
                                                 child: const Text('Delete'),
-                                                onPressed: () {
-                                                  profileProvider.deleteProfile(
-                                                      profile.id!);
+                                                onPressed: () async {
                                                   Navigator.of(context).pop();
+                                                  try {
+                                                    await profileProvider
+                                                        .deleteProfile(
+                                                            profile.id!);
+                                                    ScaffoldMessenger.of(
+                                                            context)
+                                                        .showSnackBar(
+                                                      SnackBar(
+                                                        content: Text(
+                                                          'Profile deleted successfully.',
+                                                          style: const TextStyle(
+                                                              color: Colors
+                                                                  .white), // White text
+                                                        ),
+                                                        backgroundColor: Colors
+                                                            .black, // Black background
+                                                      ),
+                                                    );
+                                                  } catch (e) {
+                                                    ScaffoldMessenger.of(
+                                                            context)
+                                                        .showSnackBar(
+                                                      SnackBar(
+                                                          content: Text(
+                                                        'Failed to delete profile: $e',
+                                                      )),
+                                                    );
+                                                  }
                                                 },
                                               ),
                                             ],
