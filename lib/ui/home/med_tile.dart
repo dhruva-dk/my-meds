@@ -18,6 +18,7 @@ class MedicationTile extends StatelessWidget {
   Widget build(BuildContext context) {
     bool hasImage = medication.imageUrl.isNotEmpty;
     const double imageSize = 64.0;
+    final theme = Theme.of(context);
 
     return GestureDetector(
       onTap: () {
@@ -27,16 +28,9 @@ class MedicationTile extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: theme.colorScheme.surface,
           borderRadius: BorderRadius.circular(24),
-          boxShadow: const [
-            BoxShadow(
-              color: Color.fromRGBO(128, 128, 128, 0.3),
-              spreadRadius: 0,
-              blurRadius: 8,
-              offset: Offset(0, 2),
-            ),
-          ],
+          // Removed box shadow
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -80,10 +74,8 @@ class MedicationTile extends StatelessWidget {
                   // Medication Name
                   Text(
                     medication.name,
-                    style: const TextStyle(
-                      fontSize: 20,
+                    style: theme.textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.bold,
-                      color: Colors.black,
                     ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
@@ -99,10 +91,7 @@ class MedicationTile extends StatelessWidget {
                         const SizedBox(width: 8),
                         Text(
                           medication.dosage,
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.grey[700],
-                          ),
+                          style: theme.textTheme.bodyMedium,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -120,10 +109,7 @@ class MedicationTile extends StatelessWidget {
                         const SizedBox(width: 8),
                         Text(
                           medication.additionalInfo,
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.grey[700],
-                          ),
+                          style: theme.textTheme.bodyMedium,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),

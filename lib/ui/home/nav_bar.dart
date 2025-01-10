@@ -31,17 +31,13 @@ class NavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Padding(
-      padding: const EdgeInsets.only(bottom: 28), // Reduced bottom padding
+      padding: const EdgeInsets.only(bottom: 28),
       child: Container(
-        decoration: const BoxDecoration(
-          color: Colors.black, // iOS style background
-          border: Border(
-            top: BorderSide(
-              color: Color.fromRGBO(128, 128, 128, 0.3),
-              width: 0.5,
-            ),
-          ),
+        decoration: BoxDecoration(
+          color: theme.colorScheme.secondary, // Use primary color from theme
         ),
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -49,6 +45,7 @@ class NavBar extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
               _navItem(
+                context: context,
                 icon: Icons.account_circle,
                 label: 'Profile',
                 onTap: () {
@@ -60,6 +57,7 @@ class NavBar extends StatelessWidget {
                 },
               ),
               _navItem(
+                context: context,
                 icon: Icons.save,
                 label: 'Export',
                 onTap: () {
@@ -67,6 +65,7 @@ class NavBar extends StatelessWidget {
                 },
               ),
               _navItem(
+                context: context,
                 icon: Icons.switch_account,
                 label: 'Switch',
                 onTap: () {
@@ -88,7 +87,10 @@ class NavBar extends StatelessWidget {
     required IconData icon,
     required String label,
     required VoidCallback onTap,
+    required BuildContext context,
   }) {
+    final theme = Theme.of(context);
+
     return InkWell(
       onTap: onTap,
       child: Column(
@@ -96,15 +98,15 @@ class NavBar extends StatelessWidget {
         children: <Widget>[
           Icon(
             icon,
-            color: Colors.white,
+            color: theme.colorScheme
+                .onSecondaryContainer, // Use onPrimary color from theme
             size: 28,
           ),
           const SizedBox(height: 4),
           Text(
             label,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 12,
+            style: theme.textTheme.labelSmall?.copyWith(
+              color: theme.colorScheme.onSecondaryContainer,
             ),
           ),
         ],

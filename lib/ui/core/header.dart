@@ -1,4 +1,3 @@
-// header_widget.dart
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 
@@ -18,9 +17,11 @@ class Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Container(
       padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 16.0),
-      color: Colors.black,
+      color: theme.colorScheme.primary, // Use primary color from theme
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -29,9 +30,10 @@ class Header extends StatelessWidget {
               children: [
                 if (showBackButton && Navigator.of(context).canPop())
                   IconButton(
-                    icon: const Icon(
+                    icon: Icon(
                       Icons.chevron_left,
-                      color: Colors.white,
+                      color: theme.colorScheme
+                          .onPrimary, // Use onPrimary color from theme
                       size: 32,
                     ),
                     onPressed:
@@ -40,10 +42,9 @@ class Header extends StatelessWidget {
                 Expanded(
                   child: AutoSizeText(
                     title,
-                    style: const TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.white,
+                    style: theme.textTheme.headlineMedium?.copyWith(
+                      color: theme.colorScheme
+                          .onPrimary, // Use onPrimary color from theme
                     ),
                     overflow: TextOverflow.ellipsis,
                     minFontSize: 18,

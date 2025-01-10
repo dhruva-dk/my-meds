@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:medication_tracker/constants/app_themes.dart';
 import 'package:medication_tracker/data/api/fda_api_service.dart';
 import 'package:medication_tracker/data/database/database.dart';
 import 'package:medication_tracker/data/providers/fda_api_provider.dart';
@@ -75,33 +76,9 @@ class MyApp extends StatelessWidget {
           title: 'Flutter Demo',
           debugShowCheckedModeBanner: false,
           //showSemanticsDebugger: false,
-          theme: ThemeData(
-            fontFamily: "Inter",
-            colorScheme: const ColorScheme.light(
-              primary: Colors.black, // Color of the header and selected items
-              onPrimary: Colors.white, // Color of text and icons on the header
-              surface: Colors.white, // Background color of the picker
-              onSurface: Colors.black, // Color of text and icons on the picker
-            ),
-            useMaterial3: true,
-            scaffoldBackgroundColor: Colors.white, // Default background color
-            appBarTheme: AppBarTheme(
-              color: Colors.grey[200], // AppBar background color
-              iconTheme:
-                  const IconThemeData(color: Colors.black), // AppBar icon color
-              titleTextStyle: const TextStyle(
-                  color: Colors.black, fontSize: 20), // AppBar title text style
-            ),
-            // Setting the popup menu theme
-            popupMenuTheme: const PopupMenuThemeData(
-              color: Colors.black, // Default popup menu background color
-              textStyle: TextStyle(
-                  color: Colors.white), // Text color for popup menu items
-            ),
-            datePickerTheme: const DatePickerThemeData(
-              backgroundColor: Colors.white,
-            ),
-          ),
+          theme: AppThemes.lightTheme,
+          darkTheme: AppThemes.darkTheme,
+          themeMode: ThemeMode.system,
           home: const SelectProfilePage()),
     );
   }

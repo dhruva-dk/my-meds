@@ -28,9 +28,10 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final profileProvider = Provider.of<ProfileProvider>(context);
+    final theme = Theme.of(context);
 
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: SafeArea(
         bottom: false,
         child: Column(
@@ -39,6 +40,7 @@ class HomeScreen extends StatelessWidget {
             // Profile header section
             Container(
               padding: const EdgeInsets.all(16.0),
+              color: theme.colorScheme.secondary,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -48,10 +50,8 @@ class HomeScreen extends StatelessWidget {
                       children: [
                         AutoSizeText(
                           nameOrNA(profileProvider.selectedProfile?.name),
-                          style: const TextStyle(
-                            fontSize: 30,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.white,
+                          style: theme.textTheme.headlineLarge?.copyWith(
+                            color: theme.colorScheme.onSecondary,
                           ),
                           overflow: TextOverflow.ellipsis,
                           minFontSize: 18,
@@ -60,9 +60,8 @@ class HomeScreen extends StatelessWidget {
                         const SizedBox(height: 4),
                         Text(
                           dOBOrNA(profileProvider.selectedProfile?.dob),
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.grey[300],
+                          style: theme.textTheme.headlineSmall?.copyWith(
+                            color: theme.colorScheme.onSecondary,
                           ),
                         ),
                       ],
@@ -75,9 +74,8 @@ class HomeScreen extends StatelessWidget {
             // Medication list section
             Expanded(
               child: Container(
-                decoration: const BoxDecoration(
-                  color: Colors.white, // Changed to white for better contrast
-                  // Removed border radius for cleaner look
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.surface,
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -97,9 +95,8 @@ class HomeScreen extends StatelessWidget {
                                 padding: const EdgeInsets.all(16.0),
                                 child: Text(
                                   medicationProvider.errorMessage,
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.black,
+                                  style: theme.textTheme.bodyMedium?.copyWith(
+                                    color: theme.colorScheme.onSurface,
                                   ),
                                 ),
                               ),
@@ -107,15 +104,13 @@ class HomeScreen extends StatelessWidget {
                           }
 
                           if (medicationProvider.medications.isEmpty) {
-                            return const Center(
+                            return Center(
                               child: Padding(
-                                padding: EdgeInsets.all(16.0),
+                                padding: const EdgeInsets.all(16.0),
                                 child: Text(
                                   "No medications. Add by pressing the + button below.",
                                   textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                  ),
+                                  style: theme.textTheme.bodyMedium,
                                 ),
                               ),
                             );
@@ -170,20 +165,18 @@ class HomeScreen extends StatelessWidget {
             MaterialPageRoute(builder: (context) => const FDASearchPage()),
           );
         },
-        backgroundColor: Colors.black,
+        backgroundColor: theme.colorScheme.primary,
         elevation: 6,
         shape: const StadiumBorder(),
-        label: const Text(
+        label: Text(
           'Add',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
+          style: theme.textTheme.labelLarge?.copyWith(
+            color: theme.colorScheme.onPrimary,
           ),
         ),
-        icon: const Icon(
+        icon: Icon(
           Icons.add,
-          color: Colors.white,
+          color: theme.colorScheme.onPrimary,
         ),
       ),
       bottomNavigationBar: const NavBar(),
