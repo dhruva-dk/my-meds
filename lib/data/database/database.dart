@@ -1,5 +1,6 @@
 import 'package:medication_tracker/data/model/medication_model.dart';
 import 'package:medication_tracker/data/model/user_profile_model.dart';
+import 'package:path/path.dart' as path;
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
@@ -104,6 +105,11 @@ class DatabaseService {
               Map<String, dynamic> medication =
                   Map<String, dynamic>.from(medicationRead);
               medication['profile_id'] = defaultProfileId;
+
+              // Ensure only the file name is saved in imageUrl
+              medication['imageUrl'] =
+                  path.basename(medication['imageUrl'] as String);
+
               await txn.insert(medicationTable, medication);
             }
 
