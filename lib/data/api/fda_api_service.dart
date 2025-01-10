@@ -22,7 +22,7 @@ class FDAAPIService {
       }
       throw Exception('No results found');
     } catch (e) {
-      throw Exception('Search failed: ${e.toString()}');
+      rethrow;
     }
   }
 
