@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:medication_tracker/data/model/user_profile_model.dart';
 import 'package:medication_tracker/data/providers/profile_provider.dart';
-import 'package:medication_tracker/ui/home/home_view.dart';
 import 'package:medication_tracker/ui/core/black_button.dart';
 import 'package:medication_tracker/ui/core/header.dart';
 import 'package:medication_tracker/ui/core/privacy_policy_button.dart';

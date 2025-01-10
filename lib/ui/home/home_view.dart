@@ -4,22 +4,21 @@ import 'package:medication_tracker/data/providers/medication_provider.dart';
 import 'package:medication_tracker/data/providers/profile_provider.dart';
 import 'package:medication_tracker/ui/edit_medication/edit_medication_view.dart';
 import 'package:medication_tracker/ui/search/fda_search_view.dart';
-import 'package:medication_tracker/ui/select_profile/select_profile_view.dart';
 import 'package:medication_tracker/ui/home/med_tile.dart';
 import 'package:medication_tracker/ui/home/nav_bar.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatelessWidget {
-  HomeScreen({super.key});
+  const HomeScreen({super.key});
 
-  String NameOrNA(String? text) {
+  String nameOrNA(String? text) {
     if (text == null || text.isEmpty) {
       return "Name N/A";
     }
     return text;
   }
 
-  String DOBOrNA(String? text) {
+  String dOBOrNA(String? text) {
     if (text == null || text.isEmpty) {
       return "N/A";
     }
@@ -48,7 +47,7 @@ class HomeScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         AutoSizeText(
-                          DOBOrNA(profileProvider.selectedProfile?.name),
+                          nameOrNA(profileProvider.selectedProfile?.name),
                           style: const TextStyle(
                             fontSize: 30,
                             fontWeight: FontWeight.w500,
@@ -60,7 +59,7 @@ class HomeScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          "${DOBOrNA(profileProvider.selectedProfile?.dob)}",
+                          dOBOrNA(profileProvider.selectedProfile?.dob),
                           style: TextStyle(
                             fontSize: 18,
                             color: Colors.grey[300],
@@ -130,6 +129,7 @@ class HomeScreen extends StatelessWidget {
                               return GestureDetector(
                                 onTap: () async {
                                   try {
+                                    if (!context.mounted) return;
                                     await Navigator.push(
                                       context,
                                       MaterialPageRoute(
@@ -139,6 +139,7 @@ class HomeScreen extends StatelessWidget {
                                       ),
                                     );
                                   } catch (e) {
+                                    if (!context.mounted) return;
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
                                         content: Text(
@@ -185,7 +186,7 @@ class HomeScreen extends StatelessWidget {
           color: Colors.white,
         ),
       ),
-      bottomNavigationBar: NavBar(),
+      bottomNavigationBar: const NavBar(),
     );
   }
 }

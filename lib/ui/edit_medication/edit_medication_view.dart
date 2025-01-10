@@ -108,7 +108,7 @@ class _EditMedicationPageState extends State<EditMedicationPage> {
 
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => HomeScreen()),
+          MaterialPageRoute(builder: (context) => const HomeScreen()),
         );
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -123,8 +123,14 @@ class _EditMedicationPageState extends State<EditMedicationPage> {
         Provider.of<ImageService>(context, listen: false);
     try {
       String imageFileName = await imagePickerService.takePhoto();
+      // Check if the widget is still mounted before using the context
+      if (!mounted) return;
+
       _updateMedicationImage(imageFileName);
     } catch (e) {
+      // Check if the widget is still mounted before using the context
+      if (!mounted) return;
+
       _showErrorSnackbar(context, e.toString());
     }
   }
@@ -134,8 +140,14 @@ class _EditMedicationPageState extends State<EditMedicationPage> {
         Provider.of<ImageService>(context, listen: false);
     try {
       String imageFileName = await imagePickerService.pickFromGallery();
+      // Check if the widget is still mounted before using the context
+      if (!mounted) return;
+
       _updateMedicationImage(imageFileName);
     } catch (e) {
+      // Check if the widget is still mounted before using the context
+      if (!mounted) return;
+
       _showErrorSnackbar(context, e.toString());
     }
   }

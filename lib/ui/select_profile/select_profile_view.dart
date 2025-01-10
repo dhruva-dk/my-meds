@@ -180,10 +180,10 @@ class SelectProfilePage extends StatelessWidget {
                                                     ScaffoldMessenger.of(
                                                             context)
                                                         .showSnackBar(
-                                                      SnackBar(
+                                                      const SnackBar(
                                                         content: Text(
                                                           'Profile deleted successfully.',
-                                                          style: const TextStyle(
+                                                          style: TextStyle(
                                                               color: Colors
                                                                   .white), // White text
                                                         ),

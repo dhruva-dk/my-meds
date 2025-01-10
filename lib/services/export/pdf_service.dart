@@ -16,7 +16,7 @@ class PDFService {
         throw Exception('PDF sharing was cancelled');
       }
     } catch (e) {
-      throw Exception('Failed to share PDF');
+      rethrow;
     }
   }
 
@@ -72,8 +72,7 @@ class PDFService {
           final image = await File(medication.imageUrl).readAsBytes();
           return pw.MemoryImage(image);
         } catch (e) {
-          print('Failed to load image: ${e.toString()}');
-          return null;
+          rethrow;
         }
       }
       return null;

@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:medication_tracker/services/export/pdf_service.dart';
 import 'package:medication_tracker/data/providers/medication_provider.dart';
 import 'package:medication_tracker/ui/edit_profile/edit_profile_view.dart';
-import 'package:medication_tracker/ui/select_profile/select_profile_view.dart'; // Import the SelectProfilePage
+import 'package:medication_tracker/ui/select_profile/select_profile_view.dart';
 import 'package:provider/provider.dart';
 
 class NavBar extends StatelessWidget {
-  NavBar({super.key});
+  const NavBar({super.key});
 
   void _shareMedications(BuildContext context) async {
     final pdfService = Provider.of<PDFService>(context, listen: false);
@@ -24,20 +24,21 @@ class NavBar extends StatelessWidget {
     } catch (e) {
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.toString())),
+        SnackBar(content: Text('Failed to share PDF: ${e.toString()}')),
       );
     }
   }
 
+  @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 28), // Reduced bottom padding
       child: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           color: Colors.black, // iOS style background
           border: Border(
             top: BorderSide(
-              color: Colors.grey.withOpacity(0.3),
+              color: Color.fromRGBO(128, 128, 128, 0.3),
               width: 0.5,
             ),
           ),
@@ -95,14 +96,14 @@ class NavBar extends StatelessWidget {
         children: <Widget>[
           Icon(
             icon,
-            color: Colors.white, // iOS blue color
+            color: Colors.white,
             size: 28,
           ),
           const SizedBox(height: 4),
           Text(
             label,
-            style: TextStyle(
-              color: Colors.white, // iOS blue color
+            style: const TextStyle(
+              color: Colors.white,
               fontSize: 12,
             ),
           ),

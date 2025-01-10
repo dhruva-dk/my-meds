@@ -31,19 +31,16 @@ class ImageService {
   Future<String> _captureImage(ImageSource source) async {
     final XFile? image = await _picker.pickImage(source: source);
     if (image == null) {
-      print('No image selected');
       throw Exception('No image selected');
     }
 
     final file = File(image.path);
     if (await file.exists()) {
-      print('File exists: ${image.path}');
       await _storage.saveFile(image.path, path.basename(image.path));
       return path.basename(image
           .path); //return only the image's file name. The UI layer joins this image file name with the documents directory. The base file name wouldn't change regardless of its path.
     } else {
-      print('File does not exist: ${image.path}');
-      throw Exception('File does not exist');
+      throw Exception('File does not exist: ${image.path}');
     }
   }
 }
