@@ -169,7 +169,7 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
     } catch (e) {
       // Handle the error, e.g., show a dialog or a snackbar
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('An error occurred: $e')),
+        SnackBar(content: Text('$e')),
       );
     }
   }
