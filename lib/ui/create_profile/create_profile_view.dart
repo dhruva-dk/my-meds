@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:medication_tracker/data/model/user_profile_model.dart';
 import 'package:medication_tracker/data/providers/profile_provider.dart';
-import 'package:medication_tracker/ui/home/home_view.dart';
 import 'package:medication_tracker/ui/core/black_button.dart';
 import 'package:medication_tracker/ui/core/header.dart';
 import 'package:medication_tracker/ui/core/privacy_policy_button.dart';
@@ -14,7 +13,7 @@ class CreateProfilePage extends StatefulWidget {
   const CreateProfilePage({super.key});
 
   @override
-  _CreateProfilePageState createState() => _CreateProfilePageState();
+  State<CreateProfilePage> createState() => _CreateProfilePageState();
 }
 
 class _CreateProfilePageState extends State<CreateProfilePage> {
@@ -36,6 +35,7 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
     return Scaffold(
       backgroundColor: Colors.black,
       body: SafeArea(
+        bottom: false,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -58,14 +58,25 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
                         children: <Widget>[
                           TextFormField(
                             controller: _nameController,
-                            decoration: _inputDecoration('Name (optional)'),
+                            decoration: _inputDecoration('Name'),
+                            validator: (value) {
+                              if (value == null || value.trim().isEmpty) {
+                                return 'Name is required';
+                              }
+                              return null;
+                            },
                           ),
                           const SizedBox(height: 8),
                           TextFormField(
                             controller: _dobController,
-                            decoration:
-                                _inputDecoration('Date of Birth (optional)'),
+                            decoration: _inputDecoration('Date of Birth'),
                             onTap: () => _selectDate(context),
+                            validator: (value) {
+                              if (value == null || value.trim().isEmpty) {
+                                return 'Date of Birth is required';
+                              }
+                              return null;
+                            },
                           ),
                           const SizedBox(height: 8),
                           TextFormField(
@@ -87,8 +98,7 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
                             decoration: _inputDecoration(
                                 'Health Conditions (optional)'),
                             keyboardType: TextInputType.multiline,
-                            minLines: 3,
-                            maxLines: 6,
+                            maxLines: null,
                           ),
                           const SizedBox(height: 16),
                           const PrivacyPolicyButton(),
@@ -145,20 +155,21 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
           pharmacy: _pharmacyController.text,
         );
 
-        Provider.of<ProfileProvider>(context, listen: false)
+        await Provider.of<ProfileProvider>(context, listen: false)
             .addProfile(profile);
 
         if (!mounted) return;
 
+        // Only navigate if the operation is successful
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const SelectProfilePage()),
         );
       }
     } catch (e) {
-      // Handle the error, e.g., show a dialog or a snackbar
+      // Stay on the current screen and show an error message
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('An error occurred: $e')),
+        SnackBar(content: Text('Failed to create profile: $e')),
       );
     }
   }

@@ -41,7 +41,6 @@ class Header extends StatelessWidget {
                   child: AutoSizeText(
                     title,
                     style: const TextStyle(
-                      fontFamily: 'OpenSans',
                       fontSize: 30,
                       fontWeight: FontWeight.w500,
                       color: Colors.white,

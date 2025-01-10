@@ -5,11 +5,6 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:share_plus/share_plus.dart';
 
 class PDFService {
-  // Singleton pattern
-  static final PDFService _instance = PDFService._internal();
-  factory PDFService() => _instance;
-  PDFService._internal();
-
   Future<void> shareMedications(List<Medication> medications) async {
     try {
       final filePath = await _generatePDF(medications);
@@ -21,7 +16,7 @@ class PDFService {
         throw Exception('PDF sharing was cancelled');
       }
     } catch (e) {
-      throw Exception('Failed to share PDF: ${e.toString()}');
+      rethrow;
     }
   }
 
@@ -77,8 +72,7 @@ class PDFService {
           final image = await File(medication.imageUrl).readAsBytes();
           return pw.MemoryImage(image);
         } catch (e) {
-          print('Failed to load image: ${e.toString()}');
-          return null;
+          rethrow;
         }
       }
       return null;

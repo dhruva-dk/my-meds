@@ -18,9 +18,7 @@ class LocalStorageService {
   Future<void> saveFile(String sourcePath, String fileName) async {
     final appDocPath = await getAppDocPath();
     final destinationPath = path.join(appDocPath, fileName);
-    print('Saving file from $sourcePath to $destinationPath');
     await File(sourcePath).copy(destinationPath);
-    print('File saved: $destinationPath');
     //do not return anything as we now use the file name in the medication object, not the entire path
   }
 }

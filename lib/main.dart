@@ -76,7 +76,7 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           //showSemanticsDebugger: false,
           theme: ThemeData(
-            //... theme data ...
+            fontFamily: "Inter",
             colorScheme: const ColorScheme.light(
               primary: Colors.black, // Color of the header and selected items
               onPrimary: Colors.white, // Color of text and icons on the header

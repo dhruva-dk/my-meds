@@ -12,7 +12,7 @@ class EditProfilePage extends StatefulWidget {
   const EditProfilePage({super.key});
 
   @override
-  _EditProfilePageState createState() => _EditProfilePageState();
+  State<EditProfilePage> createState() => _EditProfilePageState();
 }
 
 class _EditProfilePageState extends State<EditProfilePage> {
@@ -58,7 +58,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     }
   }
 
-  void _saveProfile() {
+  void _saveProfile() async {
     if (_formKey.currentState!.validate()) {
       final currentProfile =
           Provider.of<ProfileProvider>(context, listen: false).selectedProfile;
@@ -70,6 +70,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
         );
         return;
       }
+
       final profile = UserProfile(
         id: currentProfile!.id,
         name: _nameController.text,
@@ -78,17 +79,22 @@ class _EditProfilePageState extends State<EditProfilePage> {
         healthConditions: _healthConditionsController.text,
         pharmacy: _pharmacyController.text,
       );
-      Provider.of<ProfileProvider>(context, listen: false)
-          .updateProfile(profile);
-      // Navigate back or show a success message
-      // show snack bar: profile updated
-      print('Saved profile: ${profile.name}, selectedProfileId: ${profile.id}');
-      // Show a Snackbar indicating profile successfully updated
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Profile successfully updated'),
-        ),
-      );
+
+      try {
+        await Provider.of<ProfileProvider>(context, listen: false)
+            .updateProfile(profile);
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Profile successfully updated'),
+          ),
+        );
+      } catch (e) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to update profile: $e')),
+        );
+      }
     }
   }
 
@@ -99,6 +105,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     return Scaffold(
       backgroundColor: Colors.black,
       body: SafeArea(
+        bottom: false,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -118,15 +125,26 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         children: [
                           TextFormField(
                             controller: _nameController,
-                            decoration: _inputDecoration('Name (optional)'),
+                            decoration: _inputDecoration('Name'),
                             keyboardType: TextInputType.name,
+                            validator: (value) {
+                              if (value == null || value.trim().isEmpty) {
+                                return 'Name is required';
+                              }
+                              return null;
+                            },
                           ),
                           const SizedBox(height: 8),
                           TextFormField(
                             controller: _dobController,
-                            decoration:
-                                _inputDecoration('Date of Birth (optional)'),
+                            decoration: _inputDecoration('Date of Birth'),
                             onTap: () => _selectDate(context),
+                            validator: (value) {
+                              if (value == null || value.trim().isEmpty) {
+                                return 'Date of Birth is required';
+                              }
+                              return null;
+                            },
                           ),
                           const SizedBox(height: 8),
                           TextFormField(
@@ -148,7 +166,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             decoration: _inputDecoration(
                                 'Health Conditions (optional)'),
                             keyboardType: TextInputType.multiline,
-                            maxLines: 6,
+                            maxLines: null,
                           ),
                           const SizedBox(height: 16),
                           const PrivacyPolicyButton(),

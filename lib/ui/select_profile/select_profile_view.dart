@@ -14,6 +14,7 @@ class SelectProfilePage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.black,
       body: SafeArea(
+        bottom: false,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -26,6 +27,28 @@ class SelectProfilePage extends StatelessWidget {
                 color: Colors.white,
                 child: Consumer<ProfileProvider>(
                   builder: (context, profileProvider, child) {
+                    if (profileProvider.isLoading) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+
+                    if (profileProvider.errorMessage.isNotEmpty) {
+                      return Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Text(
+                            profileProvider.errorMessage,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              color:
+                                  Colors.black, // Black text for error message
+                            ),
+                          ),
+                        ),
+                      );
+                    }
+
                     if (profileProvider.profiles.isEmpty) {
                       return const Center(
                         child: Padding(
@@ -34,7 +57,6 @@ class SelectProfilePage extends StatelessWidget {
                             "No profiles added yet. Add your first profile by pressing the button below.",
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              fontFamily: 'OpenSans',
                               fontSize: 16,
                               color: Colors.black,
                             ),
@@ -42,6 +64,7 @@ class SelectProfilePage extends StatelessWidget {
                         ),
                       );
                     }
+
                     return ListView.builder(
                       padding: const EdgeInsets.only(top: 8),
                       itemCount: profileProvider.profiles.length,
@@ -56,109 +79,163 @@ class SelectProfilePage extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(16),
-                            boxShadow: [
+                            boxShadow: const [
                               BoxShadow(
-                                color: Colors.grey.withOpacity(0.2),
+                                color: Color.fromRGBO(128, 128, 128, 0.3),
                                 spreadRadius: 1,
                                 blurRadius: 5,
-                                offset: const Offset(0, 1),
+                                offset: Offset(0, 1),
                               ),
                             ],
                           ),
                           child: InkWell(
-                            onTap: () {
-                              profileProvider.selectProfile(profile.id!);
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => HomeScreen(),
-                                ),
-                              );
+                            onTap: () async {
+                              try {
+                                await profileProvider
+                                    .selectProfile(profile.id!);
+                                if (!context.mounted) return;
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const HomeScreen(),
+                                  ),
+                                );
+                              } catch (e) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                      content: Text(
+                                    'Failed to select profile: $e',
+                                  )),
+                                );
+                              }
                             },
                             child: Row(
                               children: [
+                                // Profile Icon
+                                const Icon(Icons.person,
+                                    size: 32, color: Colors.grey),
+                                const SizedBox(width: 16),
+
+                                // Profile Details
                                 Expanded(
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
+                                      // Profile Name
                                       Text(
                                         profile.name,
                                         style: const TextStyle(
-                                          fontFamily: 'OpenSans',
                                           fontSize: 22,
-                                          fontWeight: FontWeight.w500,
+                                          fontWeight: FontWeight.bold,
                                           color: Colors.black,
                                         ),
                                       ),
-                                      Text(
-                                        'Date of Birth: ${profile.dob}',
-                                        style: TextStyle(
-                                          fontFamily: 'OpenSans',
-                                          fontSize: 14,
-                                          color: Colors.grey[600],
-                                        ),
+                                      const SizedBox(height: 4),
+
+                                      // Date of Birth
+                                      Row(
+                                        children: [
+                                          const Icon(Icons.cake,
+                                              size: 16, color: Colors.grey),
+                                          const SizedBox(width: 8),
+                                          Text(
+                                            profile.dob,
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.grey[600],
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
                                 ),
-                                Theme(
-                                  data: Theme.of(context).copyWith(),
-                                  child: PopupMenuButton<String>(
-                                    onSelected: (String result) {
-                                      if (result == 'delete') {
-                                        // Show confirmation dialog before deleting
-                                        showDialog(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return AlertDialog(
-                                              title:
-                                                  const Text('Delete Profile'),
-                                              content: const Text(
-                                                  'Are you sure you want to delete this profile? This action cannot be undone.'),
-                                              actions: <Widget>[
-                                                TextButton(
-                                                  child: const Text('Cancel'),
-                                                  onPressed: () {
-                                                    Navigator.of(context).pop();
-                                                  },
-                                                ),
-                                                TextButton(
-                                                  child: const Text('Delete'),
-                                                  onPressed: () {
-                                                    profileProvider
+
+                                // Menu Button
+                                PopupMenuButton<String>(
+                                  onSelected: (String result) async {
+                                    if (result == 'delete') {
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog.adaptive(
+                                            title: const Text('Delete Profile'),
+                                            content: const Text(
+                                                'Are you sure you want to delete this profile? This action cannot be undone.'),
+                                            actions: <Widget>[
+                                              TextButton(
+                                                child: const Text('Cancel'),
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                              ),
+                                              TextButton(
+                                                child: const Text('Delete'),
+                                                onPressed: () async {
+                                                  Navigator.of(context).pop();
+                                                  try {
+                                                    await profileProvider
                                                         .deleteProfile(
                                                             profile.id!);
-                                                    Navigator.of(context).pop();
-                                                  },
-                                                ),
-                                              ],
-                                            );
-                                          },
-                                        );
-                                      }
-                                    },
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(16.0),
-                                    ),
-                                    itemBuilder: (BuildContext context) =>
-                                        <PopupMenuEntry<String>>[
-                                      const PopupMenuItem<String>(
-                                        value: 'delete',
-                                        child: ListTile(
-                                          leading: Icon(Icons.delete,
-                                              color: Colors.red),
-                                          title: Text('Delete',
-                                              style: TextStyle(
-                                                fontFamily: 'OpenSans',
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.w500,
-                                                color: Colors.white,
-                                              )),
-                                        ),
-                                      ),
-                                    ],
+                                                    if (!context.mounted) {
+                                                      return;
+                                                    }
+                                                    ScaffoldMessenger.of(
+                                                            context)
+                                                        .showSnackBar(
+                                                      const SnackBar(
+                                                        content: Text(
+                                                          'Profile deleted successfully.',
+                                                          style: TextStyle(
+                                                              color: Colors
+                                                                  .white), // White text
+                                                        ),
+                                                        backgroundColor: Colors
+                                                            .black, // Black background
+                                                      ),
+                                                    );
+                                                  } catch (e) {
+                                                    ScaffoldMessenger.of(
+                                                            context)
+                                                        .showSnackBar(
+                                                      SnackBar(
+                                                          content: Text(
+                                                        'Failed to delete profile: $e',
+                                                      )),
+                                                    );
+                                                  }
+                                                },
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    }
+                                  },
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(16.0),
                                   ),
+                                  itemBuilder: (BuildContext context) => [
+                                    const PopupMenuItem<String>(
+                                      value: 'delete',
+                                      child: Row(
+                                        children: [
+                                          Icon(Icons.delete,
+                                              color: Colors.red, size: 20),
+                                          SizedBox(width: 12),
+                                          Text(
+                                            'Delete',
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w500,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),

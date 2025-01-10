@@ -12,7 +12,7 @@ class PrivacyPolicyButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return WhiteOutlineButton(
+    return OutlineButton(
       title: "Privacy Policy",
       onTap: () => _openPrivacyPolicy(context),
     );

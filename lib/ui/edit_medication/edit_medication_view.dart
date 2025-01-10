@@ -5,7 +5,7 @@ import 'package:medication_tracker/services/image/image_service.dart';
 import 'package:medication_tracker/services/storage/local_storage_service.dart';
 import 'package:medication_tracker/ui/core/black_button.dart';
 import 'package:medication_tracker/ui/core/header.dart';
-import 'package:medication_tracker/ui/core/photo_upload_row.dart';
+import 'package:medication_tracker/ui/core/photo_upload_button.dart';
 import 'package:medication_tracker/ui/edit_medication/zoomable_image.dart';
 import 'package:medication_tracker/ui/home/home_view.dart';
 import 'package:provider/provider.dart';
@@ -17,7 +17,7 @@ class EditMedicationPage extends StatefulWidget {
       : super(key: key);
 
   @override
-  _EditMedicationPageState createState() => _EditMedicationPageState();
+  State<EditMedicationPage> createState() => _EditMedicationPageState();
 }
 
 class _EditMedicationPageState extends State<EditMedicationPage> {
@@ -25,14 +25,37 @@ class _EditMedicationPageState extends State<EditMedicationPage> {
   late TextEditingController _nameController;
   late TextEditingController _dosageController;
   late TextEditingController _additionalInfoController;
+  String? _selectedUnit;
+
+  final List<String> _unitOptions = [
+    'N/A', // Added "N/A" option
+    'mg',
+    'mL',
+    'g',
+    'mcg',
+    'IU',
+    '%'
+  ];
 
   @override
   void initState() {
     super.initState();
     _nameController = TextEditingController(text: widget.medication.name);
-    _dosageController = TextEditingController(text: widget.medication.dosage);
     _additionalInfoController =
         TextEditingController(text: widget.medication.additionalInfo);
+
+    // Parse the dosage to separate the value and unit
+    final dosageParts = widget.medication.dosage.split(' ');
+    if (dosageParts.length > 1) {
+      _dosageController = TextEditingController(text: dosageParts[0]);
+      // Check if the unit is in the _unitOptions list
+      _selectedUnit = _unitOptions.contains(dosageParts[1])
+          ? dosageParts[1]
+          : 'N/A'; // Fallback to 'N/A' if the unit is unknown
+    } else {
+      _dosageController = TextEditingController(text: widget.medication.dosage);
+      _selectedUnit = 'N/A'; // Default to "N/A" if no unit is present
+    }
   }
 
   @override
@@ -55,10 +78,12 @@ class _EditMedicationPageState extends State<EditMedicationPage> {
     );
   }
 
-  void _saveMedication(BuildContext context) {
+  void _saveMedication(BuildContext context) async {
     if (_formKey.currentState!.validate()) {
       final String name = _nameController.text;
-      final String dosage = _dosageController.text;
+      final String dosage = _dosageController.text.trim().isEmpty
+          ? ''
+          : '${_dosageController.text} ${_selectedUnit == 'N/A' ? '' : _selectedUnit ?? ''}';
       final String additionalInfo = _additionalInfoController.text;
       final String imageUrl =
           Provider.of<MedicationProvider>(context, listen: false)
@@ -75,13 +100,21 @@ class _EditMedicationPageState extends State<EditMedicationPage> {
         profileId: widget.medication.profileId,
       );
 
-      Provider.of<MedicationProvider>(context, listen: false)
-          .updateMedication(updatedMedication);
+      try {
+        await Provider.of<MedicationProvider>(context, listen: false)
+            .updateMedication(updatedMedication);
 
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => HomeScreen()),
-      );
+        if (!context.mounted) return;
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const HomeScreen()),
+        );
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to update medication: $e')),
+        );
+      }
     }
   }
 
@@ -90,8 +123,14 @@ class _EditMedicationPageState extends State<EditMedicationPage> {
         Provider.of<ImageService>(context, listen: false);
     try {
       String imageFileName = await imagePickerService.takePhoto();
+      // Check if the widget is still mounted before using the context
+      if (!mounted) return;
+
       _updateMedicationImage(imageFileName);
     } catch (e) {
+      // Check if the widget is still mounted before using the context
+      if (!mounted) return;
+
       _showErrorSnackbar(context, e.toString());
     }
   }
@@ -101,8 +140,14 @@ class _EditMedicationPageState extends State<EditMedicationPage> {
         Provider.of<ImageService>(context, listen: false);
     try {
       String imageFileName = await imagePickerService.pickFromGallery();
+      // Check if the widget is still mounted before using the context
+      if (!mounted) return;
+
       _updateMedicationImage(imageFileName);
     } catch (e) {
+      // Check if the widget is still mounted before using the context
+      if (!mounted) return;
+
       _showErrorSnackbar(context, e.toString());
     }
   }
@@ -131,10 +176,11 @@ class _EditMedicationPageState extends State<EditMedicationPage> {
     return Scaffold(
       backgroundColor: Colors.black,
       body: SafeArea(
+        bottom: false,
         child: Column(
           children: [
             Header(
-              title: 'View Medication',
+              title: 'Edit Medication',
               showBackButton: Navigator.canPop(context),
             ),
             Expanded(
@@ -150,26 +196,73 @@ class _EditMedicationPageState extends State<EditMedicationPage> {
                         children: [
                           TextFormField(
                             controller: _nameController,
-                            decoration: _inputDecoration('Medication Name'),
+                            decoration: _inputDecoration('Name'),
                             validator: (value) {
                               if (value == null || value.trim().isEmpty) {
                                 return 'Please enter a medication name';
                               }
                               return null;
                             },
+                            maxLines: null, // Allows the field to expand
                           ),
                           const SizedBox(height: 8),
-                          TextFormField(
-                            controller: _dosageController,
-                            decoration: _inputDecoration('Dosage (optional)'),
+                          Row(
+                            children: [
+                              Expanded(
+                                flex: 2,
+                                child: TextFormField(
+                                  controller: _dosageController,
+                                  decoration:
+                                      _inputDecoration('Dosage (optional)'),
+                                  keyboardType: TextInputType.number,
+                                  validator: (value) {
+                                    if (value != null && value.isNotEmpty) {
+                                      final number = double.tryParse(value);
+                                      if (number == null) {
+                                        return 'Please enter a valid number';
+                                      }
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                flex: 1,
+                                child: DropdownButtonFormField<String>(
+                                  value: _selectedUnit,
+                                  decoration: _inputDecoration('Unit'),
+                                  items: _unitOptions.map((String value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Text(value),
+                                    );
+                                  }).toList(),
+                                  onChanged: (newValue) {
+                                    setState(() {
+                                      _selectedUnit = newValue;
+                                    });
+                                  },
+                                  validator: (value) {
+                                    if (_dosageController.text.isNotEmpty &&
+                                        value == null) {
+                                      return 'Please select a unit';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              ),
+                            ],
                           ),
                           const SizedBox(height: 8),
                           TextFormField(
                             controller: _additionalInfoController,
                             decoration:
                                 _inputDecoration('Additional Info (optional)'),
+                            maxLines: null,
                           ),
                           if (hasImage) ...[
+                            const SizedBox(height: 16),
                             Consumer<MedicationProvider>(
                               builder: (context, provider, child) {
                                 Medication updatedMedication = provider
@@ -183,8 +276,11 @@ class _EditMedicationPageState extends State<EditMedicationPage> {
                                       .getFilePath(updatedMedication.imageUrl),
                                   builder: (context, snapshot) {
                                     if (snapshot.hasData) {
-                                      return ZoomableImage(
-                                          imagePath: snapshot.data!);
+                                      return ClipRRect(
+                                        borderRadius: BorderRadius.circular(24),
+                                        child: ZoomableImage(
+                                            imagePath: snapshot.data!),
+                                      );
                                     }
                                     return const Center(
                                         child: CircularProgressIndicator());
@@ -194,7 +290,7 @@ class _EditMedicationPageState extends State<EditMedicationPage> {
                             ),
                           ],
                           const SizedBox(height: 16),
-                          PhotoUploadRow(
+                          PhotoUploadButton(
                             onTakePhoto: _handleTakePhoto,
                             onUploadPhoto: _handleUploadFromGallery,
                             hasImage: hasImage,

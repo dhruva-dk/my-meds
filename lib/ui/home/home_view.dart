@@ -4,22 +4,21 @@ import 'package:medication_tracker/data/providers/medication_provider.dart';
 import 'package:medication_tracker/data/providers/profile_provider.dart';
 import 'package:medication_tracker/ui/edit_medication/edit_medication_view.dart';
 import 'package:medication_tracker/ui/search/fda_search_view.dart';
-import 'package:medication_tracker/ui/select_profile/select_profile_view.dart';
 import 'package:medication_tracker/ui/home/med_tile.dart';
 import 'package:medication_tracker/ui/home/nav_bar.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatelessWidget {
-  HomeScreen({super.key});
+  const HomeScreen({super.key});
 
-  String NameOrNA(String? text) {
+  String nameOrNA(String? text) {
     if (text == null || text.isEmpty) {
       return "Name N/A";
     }
     return text;
   }
 
-  String DOBOrNA(String? text) {
+  String dOBOrNA(String? text) {
     if (text == null || text.isEmpty) {
       return "N/A";
     }
@@ -33,6 +32,7 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.black,
       body: SafeArea(
+        bottom: false,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -47,9 +47,8 @@ class HomeScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         AutoSizeText(
-                          DOBOrNA(profileProvider.selectedProfile?.name),
+                          nameOrNA(profileProvider.selectedProfile?.name),
                           style: const TextStyle(
-                            fontFamily: 'OpenSans',
                             fontSize: 30,
                             fontWeight: FontWeight.w500,
                             color: Colors.white,
@@ -60,37 +59,13 @@ class HomeScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          "Date of Birth: ${DOBOrNA(profileProvider.selectedProfile?.dob)}",
+                          dOBOrNA(profileProvider.selectedProfile?.dob),
                           style: TextStyle(
-                            fontFamily: 'OpenSans',
                             fontSize: 18,
                             color: Colors.grey[300],
                           ),
                         ),
                       ],
-                    ),
-                  ),
-                  TextButton.icon(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const SelectProfilePage()),
-                      );
-                    },
-                    icon: const Icon(
-                      Icons
-                          .switch_account, // Changed icon to be more descriptive
-                      color: Colors.white,
-                      size: 24,
-                    ),
-                    label: const Text(
-                      'Switch\nProfile', // Added label for clarity
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 12,
-                      ),
                     ),
                   ),
                 ],
@@ -114,7 +89,24 @@ class HomeScreen extends StatelessWidget {
                             return const Center(
                               child: CircularProgressIndicator(),
                             );
-                          } else if (medicationProvider.medications.isEmpty) {
+                          }
+
+                          if (medicationProvider.errorMessage.isNotEmpty) {
+                            return Center(
+                              child: Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Text(
+                                  medicationProvider.errorMessage,
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ),
+                            );
+                          }
+
+                          if (medicationProvider.medications.isEmpty) {
                             return const Center(
                               child: Padding(
                                 padding: EdgeInsets.all(16.0),
@@ -122,27 +114,39 @@ class HomeScreen extends StatelessWidget {
                                   "No medications. Add by pressing the + button below.",
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
-                                    fontFamily: 'OpenSans',
                                     fontSize: 16,
                                   ),
                                 ),
                               ),
                             );
                           }
+
                           return ListView.builder(
                             itemCount: medicationProvider.medications.length,
                             itemBuilder: (context, index) {
                               final medication =
                                   medicationProvider.medications[index];
                               return GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => EditMedicationPage(
-                                          medication: medication),
-                                    ),
-                                  );
+                                onTap: () async {
+                                  try {
+                                    if (!context.mounted) return;
+                                    await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            EditMedicationPage(
+                                                medication: medication),
+                                      ),
+                                    );
+                                  } catch (e) {
+                                    if (!context.mounted) return;
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                            'Failed to edit medication: $e'),
+                                      ),
+                                    );
+                                  }
                                 },
                                 child: MedicationTile(medication: medication),
                               );
@@ -158,31 +162,31 @@ class HomeScreen extends StatelessWidget {
           ],
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: Container(
-        margin: const EdgeInsets.only(top: 10),
-        height: 64,
-        width: 64,
-        child: FloatingActionButton(
-          backgroundColor: Colors.white,
-          elevation: 0,
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const FDASearchPage()),
-            );
-          },
-          shape: RoundedRectangleBorder(
-            side: const BorderSide(width: 3, color: Colors.black),
-            borderRadius: BorderRadius.circular(100),
-          ),
-          child: const Icon(
-            Icons.add,
-            color: Colors.black,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const FDASearchPage()),
+          );
+        },
+        backgroundColor: Colors.black,
+        elevation: 6,
+        shape: const StadiumBorder(),
+        label: const Text(
+          'Add',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
           ),
         ),
+        icon: const Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
       ),
-      bottomNavigationBar: NavBar(),
+      bottomNavigationBar: const NavBar(),
     );
   }
 }

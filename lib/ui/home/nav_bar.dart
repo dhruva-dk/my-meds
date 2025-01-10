@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:medication_tracker/services/export/pdf_service.dart';
 import 'package:medication_tracker/data/providers/medication_provider.dart';
 import 'package:medication_tracker/ui/edit_profile/edit_profile_view.dart';
+import 'package:medication_tracker/ui/select_profile/select_profile_view.dart';
 import 'package:provider/provider.dart';
 
 class NavBar extends StatelessWidget {
-  NavBar({super.key});
+  const NavBar({super.key});
 
   void _shareMedications(BuildContext context) async {
     final pdfService = Provider.of<PDFService>(context, listen: false);
@@ -23,41 +24,62 @@ class NavBar extends StatelessWidget {
     } catch (e) {
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('An error occurred: ${e.toString()}')),
+        SnackBar(content: Text('Failed to share PDF: ${e.toString()}')),
       );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return BottomAppBar(
-      color: Colors.black,
-      shape: const CircularNotchedRectangle(),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: <Widget>[
-          _navItem(
-            icon: Icons.account_circle,
-            label: "Profile",
-            onTap: () {
-              // Navigate to profile page
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const EditProfilePage()),
-              );
-            },
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 28), // Reduced bottom padding
+      child: Container(
+        decoration: const BoxDecoration(
+          color: Colors.black, // iOS style background
+          border: Border(
+            top: BorderSide(
+              color: Color.fromRGBO(128, 128, 128, 0.3),
+              width: 0.5,
+            ),
           ),
-          const SizedBox(width: 16), // Placeholder for FAB
-          _navItem(
-            icon: Icons.save,
-            label: "Export PDF",
-            onTap: () {
-              // Implement Export functionality
-              _shareMedications(context);
-            },
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              _navItem(
+                icon: Icons.account_circle,
+                label: 'Profile',
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const EditProfilePage()),
+                  );
+                },
+              ),
+              _navItem(
+                icon: Icons.save,
+                label: 'Export',
+                onTap: () {
+                  _shareMedications(context);
+                },
+              ),
+              _navItem(
+                icon: Icons.switch_account,
+                label: 'Switch',
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const SelectProfilePage()),
+                  );
+                },
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -72,9 +94,19 @@ class NavBar extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Icon(icon, color: Colors.white),
-          Text(label,
-              style: const TextStyle(color: Colors.white, fontSize: 16)),
+          Icon(
+            icon,
+            color: Colors.white,
+            size: 28,
+          ),
+          const SizedBox(height: 4),
+          Text(
+            label,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 12,
+            ),
+          ),
         ],
       ),
     );

@@ -4,7 +4,7 @@ import 'package:medication_tracker/services/image/image_service.dart';
 import 'package:medication_tracker/ui/core/black_button.dart';
 import 'package:medication_tracker/ui/create_medication/create_medication_view.dart';
 import 'package:medication_tracker/ui/core/header.dart';
-import 'package:medication_tracker/ui/core/photo_upload_row.dart';
+import 'package:medication_tracker/ui/core/photo_upload_button.dart';
 import 'package:provider/provider.dart';
 import 'package:medication_tracker/ui/search/search_tile.dart';
 import 'dart:async';
@@ -13,7 +13,7 @@ class FDASearchPage extends StatefulWidget {
   const FDASearchPage({super.key});
 
   @override
-  _FDASearchPageState createState() => _FDASearchPageState();
+  State<FDASearchPage> createState() => _FDASearchPageState();
 }
 
 class _FDASearchPageState extends State<FDASearchPage> {
@@ -47,8 +47,7 @@ class _FDASearchPageState extends State<FDASearchPage> {
         Provider.of<ImageService>(context, listen: false);
     try {
       String imageFileName = await imagePickerService.takePhoto();
-      if (!context.mounted) return;
-
+      if (!mounted) return;
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -67,7 +66,7 @@ class _FDASearchPageState extends State<FDASearchPage> {
         Provider.of<ImageService>(context, listen: false);
     try {
       String imageFileName = await imagePickerService.pickFromGallery();
-      if (!context.mounted) return;
+      if (!mounted) return;
 
       Navigator.push(
         context,
@@ -93,6 +92,7 @@ class _FDASearchPageState extends State<FDASearchPage> {
     return Scaffold(
       backgroundColor: Colors.black,
       body: SafeArea(
+        bottom: false,
         child: Column(
           children: [
             Header(
@@ -135,7 +135,7 @@ class _FDASearchPageState extends State<FDASearchPage> {
                         },
                       ),
                       const SizedBox(height: 8),
-                      PhotoUploadRow(
+                      PhotoUploadButton(
                         onTakePhoto: _handleTakePhoto,
                         onUploadPhoto: _handleUploadFromGallery,
                         hasImage: false,
