@@ -191,14 +191,17 @@ class _EditMedicationPageState extends State<EditMedicationPage> {
     return Scaffold(
       backgroundColor:
           theme.colorScheme.surface, // Set scaffold background color
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(kToolbarHeight + 80),
+        child: Header(
+          title: 'View Medication',
+          showBackButton: Navigator.canPop(context),
+        ),
+      ),
       body: SafeArea(
         bottom: false,
         child: Column(
           children: [
-            Header(
-              title: 'View Medication',
-              showBackButton: Navigator.canPop(context),
-            ),
             Expanded(
               child: Container(
                 color: theme.colorScheme.surface,

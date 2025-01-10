@@ -37,15 +37,18 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
     return Scaffold(
       backgroundColor:
           theme.colorScheme.surface, // Set scaffold background color
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(kToolbarHeight + 80),
+        child: Header(
+          title: 'Add Profile',
+          showBackButton: Navigator.canPop(context),
+        ),
+      ),
       body: SafeArea(
         bottom: false,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Header(
-              title: 'Create Profile',
-              showBackButton: Navigator.canPop(context),
-            ),
             Expanded(
               child: Container(
                 color: theme.colorScheme.surface,

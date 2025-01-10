@@ -19,43 +19,64 @@ class Header extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return Container(
-      padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 16.0),
-      color: theme.colorScheme.secondary, // Use secondary color from theme
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Expanded(
-            child: Row(
-              children: [
-                if (showBackButton && Navigator.of(context).canPop())
-                  IconButton(
-                    icon: Icon(
-                      Icons.chevron_left,
-                      color: theme.colorScheme
-                          .onSecondary, // Use onSecondary color from theme
-                      size: 32,
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: theme.colorScheme.secondary,
+        borderRadius: const BorderRadius.only(
+          bottomLeft: Radius.circular(48),
+          bottomRight: Radius.circular(48),
+        ),
+      ),
+      child: Container(
+        width: double.infinity,
+        padding: EdgeInsets.only(
+          top: MediaQuery.of(context).padding.top + 8.0,
+          left: 20.0,
+          right: 20.0,
+          bottom: 32.0,
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: Row(
+                children: [
+                  if (showBackButton && Navigator.of(context).canPop())
+                    Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.rectangle,
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(
+                            color: Colors.white, width: 1), // White border
+                      ),
+                      child: IconButton(
+                        icon: Icon(
+                          Icons.chevron_left,
+                          color: theme.colorScheme.onSecondary,
+                          size: 32,
+                        ),
+                        onPressed:
+                            onBackPressed ?? () => Navigator.of(context).pop(),
+                      ),
                     ),
-                    onPressed:
-                        onBackPressed ?? () => Navigator.of(context).pop(),
-                  ),
-                Expanded(
-                  child: AutoSizeText(
-                    title,
-                    style: theme.textTheme.headlineLarge?.copyWith(
-                      color: theme.colorScheme
-                          .onSecondary, // Use onSecondary color from theme
+                  const SizedBox(width: 16), // Space between icon and text
+                  Expanded(
+                    child: AutoSizeText(
+                      title,
+                      style: theme.textTheme.headlineMedium?.copyWith(
+                        color: theme.colorScheme.onSecondary,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                      minFontSize: 18,
+                      maxLines: 1,
                     ),
-                    overflow: TextOverflow.ellipsis,
-                    minFontSize: 18,
-                    maxLines: 1,
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          if (rightWidget != null) rightWidget!,
-        ],
+            if (rightWidget != null) rightWidget!,
+          ],
+        ),
       ),
     );
   }

@@ -18,7 +18,7 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: theme.colorScheme.surface,
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(kToolbarHeight + 50),
+        preferredSize: const Size.fromHeight(kToolbarHeight + 60),
         child: _buildHeader(context),
       ),
       body: Column(
@@ -30,14 +30,22 @@ class HomeScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
-                    child: Text(
-                      'Your Medications',
-                      style: theme.textTheme.headlineSmall?.copyWith(
-                        color: theme.colorScheme.onSurface,
-                      ),
-                    ),
+                  Consumer<MedicationProvider>(
+                    builder: (context, medicationProvider, child) {
+                      if (medicationProvider.medications.isNotEmpty) {
+                        return Padding(
+                          padding:
+                              const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
+                          child: Text(
+                            'Your Medications',
+                            style: theme.textTheme.headlineSmall?.copyWith(
+                              color: theme.colorScheme.onSurface,
+                            ),
+                          ),
+                        );
+                      }
+                      return Container(); // Return an empty container if no medications
+                    },
                   ),
                   Expanded(
                     child: Consumer<MedicationProvider>(
@@ -155,8 +163,8 @@ class HomeScreen extends StatelessWidget {
       ),
       padding: EdgeInsets.only(
         top: MediaQuery.of(context).padding.top + 8,
-        left: 36.0,
-        right: 36.0,
+        left: 32.0,
+        right: 32.0,
         bottom: 16.0,
       ),
       child: Column(

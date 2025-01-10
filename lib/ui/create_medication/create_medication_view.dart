@@ -162,14 +162,17 @@ class _CreateMedicationPageState extends State<CreateMedicationPage> {
 
     return Scaffold(
       backgroundColor: theme.colorScheme.surface,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(kToolbarHeight + 80),
+        child: Header(
+          title: 'Confirm Medication',
+          showBackButton: Navigator.canPop(context),
+        ),
+      ),
       body: SafeArea(
         bottom: false,
         child: Column(
           children: [
-            Header(
-              title: 'Add Medication',
-              showBackButton: Navigator.canPop(context),
-            ),
             Expanded(
               child: Container(
                 color: theme.colorScheme.surface,

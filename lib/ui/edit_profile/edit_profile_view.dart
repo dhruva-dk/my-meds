@@ -105,15 +105,18 @@ class _EditProfilePageState extends State<EditProfilePage> {
     return Scaffold(
       backgroundColor:
           theme.colorScheme.surface, // Set scaffold background color
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(kToolbarHeight + 80),
+        child: Header(
+          title: 'Your Profile',
+          showBackButton: Navigator.canPop(context),
+        ),
+      ),
       body: SafeArea(
         bottom: false,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Header(
-              title: 'Your Profile',
-              showBackButton: Navigator.canPop(context),
-            ),
             Expanded(
               child: Container(
                 color: theme.colorScheme.surface,

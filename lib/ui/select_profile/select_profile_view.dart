@@ -14,16 +14,19 @@ class SelectProfilePage extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Scaffold(
-      backgroundColor: theme.colorScheme.background,
+      backgroundColor: theme.colorScheme.surface,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(kToolbarHeight + 80),
+        child: Header(
+          title: 'Select Profile',
+          showBackButton: Navigator.canPop(context),
+        ),
+      ),
       body: SafeArea(
         bottom: false,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Header(
-              title: 'Select Profile',
-              showBackButton: Navigator.canPop(context),
-            ),
             Expanded(
               child: Container(
                 color: theme.colorScheme.surface,
@@ -96,16 +99,16 @@ class SelectProfilePage extends StatelessWidget {
                               } catch (e) {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
-                                      content: Text(
-                                    'Failed to select profile: $e',
-                                  )),
+                                    content:
+                                        Text('Failed to select profile: $e'),
+                                  ),
                                 );
                               }
                             },
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                // Account Icon (unchanged)
+                                // Account Icon
                                 Icon(
                                   Icons.person,
                                   size: 32,
@@ -187,9 +190,8 @@ class SelectProfilePage extends StatelessWidget {
                                                     await profileProvider
                                                         .deleteProfile(
                                                             profile.id!);
-                                                    if (!context.mounted) {
+                                                    if (!context.mounted)
                                                       return;
-                                                    }
                                                     ScaffoldMessenger.of(
                                                             context)
                                                         .showSnackBar(
@@ -197,9 +199,10 @@ class SelectProfilePage extends StatelessWidget {
                                                         content: Text(
                                                           'Profile deleted successfully.',
                                                           style: TextStyle(
-                                                              color: theme
-                                                                  .colorScheme
-                                                                  .onPrimary),
+                                                            color: theme
+                                                                .colorScheme
+                                                                .onPrimary,
+                                                          ),
                                                         ),
                                                         backgroundColor: theme
                                                             .colorScheme
@@ -211,9 +214,9 @@ class SelectProfilePage extends StatelessWidget {
                                                             context)
                                                         .showSnackBar(
                                                       SnackBar(
-                                                          content: Text(
-                                                        'Failed to delete profile: $e',
-                                                      )),
+                                                        content: Text(
+                                                            'Failed to delete profile: $e'),
+                                                      ),
                                                     );
                                                   }
                                                 },
