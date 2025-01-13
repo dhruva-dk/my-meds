@@ -49,7 +49,7 @@ To set up the development environment for this project, follow these steps:
 
 Install on the iOS App Store: [My Meds on the App Store](https://apps.apple.com/us/app/my-meds-personal-meds-list/id6475703887)
 
-Install on Android: [APKs availabe in GitHub Releases](https://github.com/subbuguru/medication_tracker/releases)
+Install on Android: [APKs available in GitHub Releases](https://github.com/subbuguru/medication_tracker/releases)
 
 ## License
 
