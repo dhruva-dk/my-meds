@@ -31,7 +31,7 @@ if (keystorePropertiesFile.exists()) {
 
 android {
     namespace "com.dhruvakumar.rxtrack"
-    compileSdkVersion 33
+    compileSdkVersion 34
     ndkVersion flutter.ndkVersion
 
     compileOptions {
