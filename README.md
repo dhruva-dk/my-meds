@@ -1,6 +1,6 @@
 # My Meds!
 
-A simple, private medication list app. Your data stays on your device—no accounts, no cloud.
+A simple, private medication list app. Your data stays on your device.
 
 ---
 
@@ -17,7 +17,7 @@ A simple, private medication list app. Your data stays on your device—no accou
 ## Why My Meds?
 
 Most medication apps are either too complex or send your data to external services.  
-**My Meds** was created for people who just want a simple, secure way to track their meds and notes—no cloud, no clutter.  
+**My Meds** was created for people who just want a simple, secure way to track their meds.  
 The app has over 3,500 downloads on the iOS App Store!
 
 ## Tech Stack
@@ -63,11 +63,4 @@ Built with Flutter (cross-platform mobile application framework)
     flutter run
     ```
 
-## License
 
-MIT License. See [`LICENSE`](LICENSE).
-
-## Contact
-
-Questions or feedback?  
-Dhruva Kumar — [dhruva@dhruva-kumar.com](mailto:dhruva@dhruva-kumar.com)
