@@ -5,6 +5,26 @@
 
 A simple medication list app made to be easy to use and not send your data off-device.
 
+## Why Does My Meds Exist (Aren't there 1000s of Med apps?)
+
+Yes! However, My Meds was created to fulfill a certain niche: Many apps are either connected to 3rd party online services (your data is no longer under your control) or far too complicated for people to get started recording their medical information beyond a piece of paper or notebook. My Meds aims to simplify individuals' medication lists through an easy-to-use interface with FDA search and easy PDF export options.
+
+So far, My Meds has received over 3,500 downloads on the iOS App Store!
+
+## Features
+
+- Search functionality using FDA NDC REST APIs
+- Full CRUD functionality using SQLite (`flutter_sqflite`) to add medications
+- Profile input for personal notes
+- Support for image upload using `image_picker`
+- PDF export functionality using `flutter_pdf`
+
+## Installation
+
+Install on the iOS App Store: [My Meds on the App Store](https://apps.apple.com/us/app/my-meds-personal-meds-list/id6475703887)
+
+Install on Android: [APKs available in GitHub Releases](https://github.com/subbuguru/medication_tracker/releases)
+
 ## Architecture
 
 The app follows a provider-based architecture using the `provider` package for state management. The main components are:
@@ -37,19 +57,6 @@ To set up the development environment for this project, follow these steps:
     flutter run
     ```
 
-## Features
-
-- Search functionality using FDA NDC REST APIs
-- Full CRUD functionality using SQLite (`flutter_sqflite`) to add medications
-- Profile input for personal notes
-- Support for image upload using `image_picker`
-- PDF export functionality using `flutter_pdf`
-
-## Installation
-
-Install on the iOS App Store: [My Meds on the App Store](https://apps.apple.com/us/app/my-meds-personal-meds-list/id6475703887)
-
-Install on Android: [APKs available in GitHub Releases](https://github.com/subbuguru/medication_tracker/releases)
 
 ## License
 
@@ -57,6 +64,6 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 ## Contact
 
-Dhruva Kumar - [dkumardevelopment@gmail.com](mailto:dkumardevelopment@gmail.com)
+Dhruva Kumar - [dhruva@dhruva-kumar.com](mailto:dhruva@dhruva-kumar.com)
 
 Thank you!
