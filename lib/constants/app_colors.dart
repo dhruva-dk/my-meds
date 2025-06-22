@@ -11,7 +11,6 @@ class AppColors {
   static const Color lightError = Color(0xFFA11821);
 }
 
-
 /**
  * 
  * 
