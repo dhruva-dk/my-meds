@@ -18,7 +18,7 @@ A simple, private medication list app. Your data stays on your device.
 
 Most medication apps are either too complex or send your data to external services.  
 **My Meds** was created for people who just want a simple, secure way to track their meds.  
-The app has over 3,500 downloads on the iOS App Store!
+The app has over 5,000 downloads on the iOS App Store!
 
 ## Tech Stack
 Built with Flutter (cross-platform mobile application framework)
