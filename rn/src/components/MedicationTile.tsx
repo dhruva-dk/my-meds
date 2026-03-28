@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Medication } from '../types';
+import { resolveLocalImageUri } from '../utils/imageStorage';
 import { AppColors, AppTypography } from '../styles/theme';
 import { DatabaseService } from '../database/database';
 
@@ -39,7 +40,7 @@ export default function MedicationTile({ medication, onEdit, onDeleteSuccess }: 
       <View style={styles.row}>
         {hasImage && (
           <Image 
-            source={{ uri: medication.imageUrl }} 
+            source={{ uri: resolveLocalImageUri(medication.imageUrl!) }} 
             style={styles.image} 
           />
         )}

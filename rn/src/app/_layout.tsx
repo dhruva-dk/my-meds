@@ -35,11 +35,9 @@ export default function RootLayout() {
       >
         <Stack.Screen name="index" />
         <Stack.Screen name="(tabs)" />
-        <Stack.Screen name="FDASearch" />
         <Stack.Screen name="CreateMedication" />
         <Stack.Screen name="EditMedication" />
         <Stack.Screen name="CreateProfile" />
-        <Stack.Screen name="EditProfile" />
       </Stack>
       <StatusBar style="auto" />
     </SafeAreaProvider>
