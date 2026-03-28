@@ -36,8 +36,15 @@ class _HomeScreenState extends State<HomeScreen> {
       );
     } catch (e) {
       if (!context.mounted) return;
+      // Handle the case where 'e' is an Exception or a String, 
+      // and remove the 'Exception: ' prefix for a cleaner UI.
+      final String fullError = e.toString();
+      final String cleanError = fullError.startsWith('Exception: ') 
+          ? fullError.replaceFirst('Exception: ', '') 
+          : fullError;
+
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to share PDF: ${e.toString()}')),
+        SnackBar(content: Text(cleanError)),
       );
     }
   }

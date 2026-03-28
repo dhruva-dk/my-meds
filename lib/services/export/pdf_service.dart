@@ -17,7 +17,7 @@ class PDFService {
       );
 
       if (result.status == ShareResultStatus.dismissed) {
-        throw Exception('PDF sharing was cancelled');
+        throw 'PDF sharing was cancelled';
       }
     } catch (e) {
       rethrow;
@@ -93,7 +93,7 @@ class PDFService {
       await file.writeAsBytes(await pdf.save());
       return path;
     } catch (e) {
-      throw Exception('Failed to save PDF: ${e.toString()}');
+      rethrow;
     }
   }
 }
