@@ -1,17 +1,20 @@
 import 'dart:io';
+import 'dart:ui' show Rect;
 import 'package:medication_tracker/data/model/medication_model.dart';
-import 'package:medication_tracker/services/storage/local_storage_service.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:share_plus/share_plus.dart';
 
 class PDFService {
-  Future<void> shareMedications(List<Medication> medications) async {
+  Future<void> shareMedications(List<Medication> medications, {Rect? shareOrigin}) async {
     try {
       final filePath = await _generatePDF(medications);
       final file = XFile(filePath);
-      final result =
-          await Share.shareXFiles([file], text: "Medication List PDF");
+      final result = await Share.shareXFiles(
+        [file],
+        text: "Medication List PDF",
+        sharePositionOrigin: shareOrigin,
+      );
 
       if (result.status == ShareResultStatus.dismissed) {
         throw Exception('PDF sharing was cancelled');

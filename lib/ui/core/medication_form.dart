@@ -223,7 +223,7 @@ class _MedicationFormState extends State<MedicationForm> {
                 onUploadPhoto: _handleUploadFromGallery,
                 hasImage: hasImage,
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 8),
               PrimaryButton(
                 title: widget.submitLabel,
                 onTap: _submit,

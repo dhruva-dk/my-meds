@@ -5,16 +5,29 @@ import 'package:medication_tracker/ui/edit_profile/edit_profile_view.dart';
 import 'package:medication_tracker/ui/select_profile/select_profile_view.dart';
 import 'package:provider/provider.dart';
 
-class NavBar extends StatelessWidget {
+class NavBar extends StatefulWidget {
   const NavBar({super.key});
+
+  @override
+  State<NavBar> createState() => _NavBarState();
+}
+
+class _NavBarState extends State<NavBar> {
+  final GlobalKey _exportKey = GlobalKey();
 
   void _shareMedications(BuildContext context) async {
     final pdfService = Provider.of<PDFService>(context, listen: false);
     final medications =
         Provider.of<MedicationProvider>(context, listen: false).medications;
 
+    // Derive the share sheet origin from the Export button's position
+    final box = _exportKey.currentContext?.findRenderObject() as RenderBox?;
+    final origin = box != null
+        ? box.localToGlobal(Offset.zero) & box.size
+        : null;
+
     try {
-      await pdfService.shareMedications(medications);
+      await pdfService.shareMedications(medications, shareOrigin: origin);
 
       // Show success message if no exception occurred
       if (!context.mounted) return;
@@ -58,6 +71,7 @@ class NavBar extends StatelessWidget {
             ),
             _navItem(
               context: context,
+              key: _exportKey,
               icon: Icons.save,
               label: 'Export',
               onTap: () {
@@ -87,10 +101,13 @@ class NavBar extends StatelessWidget {
     required String label,
     required VoidCallback onTap,
     required BuildContext context,
+    Key? key,
   }) {
+    // key is applied to the InkWell so we can read its render box for the share sheet origin
     final theme = Theme.of(context);
 
     return InkWell(
+      key: key,
       onTap: onTap,
       child: Column(
         mainAxisSize: MainAxisSize.min,
