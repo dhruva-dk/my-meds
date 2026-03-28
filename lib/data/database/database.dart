@@ -138,7 +138,8 @@ class DatabaseService {
   // Add methods for CRUD operations on profiles and medications
   Future<List<UserProfile>> getAllProfiles() async {
     Database db = await database;
-    final List<Map<String, dynamic>> maps = await db.query(profileTable);
+    final List<Map<String, dynamic>> maps =
+        await db.query(profileTable, orderBy: 'name COLLATE NOCASE');
     return List.generate(maps.length, (i) => UserProfile.fromMap(maps[i]));
   }
 
@@ -183,6 +184,7 @@ class DatabaseService {
       medicationTable,
       where: 'profile_id = ?',
       whereArgs: [profileId],
+      orderBy: 'name COLLATE NOCASE',
     );
     return List.generate(maps.length, (i) => Medication.fromMap(maps[i]));
   }
