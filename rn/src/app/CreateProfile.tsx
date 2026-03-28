@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, ScrollView, Alert, KeyboardAvoidingView, Platform, TouchableOpacity, Modal, Button } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useAtom } from 'jotai';
+import { useRouter } from 'expo-router';
 
 import Header from '../components/Header';
 import PrimaryButton from '../components/PrimaryButton';
@@ -9,7 +10,8 @@ import { AppColors, AppTypography, GlobalStyles } from '../styles/theme';
 import { DatabaseService } from '../database/database';
 import { profilesAtom, selectedProfileAtom } from '../store';
 
-export default function CreateProfileScreen({ navigation }: any) {
+export default function CreateProfileScreen() {
+  const router = useRouter();
   const [, setProfiles] = useAtom(profilesAtom);
   const [, setSelectedProfile] = useAtom(selectedProfileAtom);
 
@@ -41,7 +43,7 @@ export default function CreateProfileScreen({ navigation }: any) {
       const insertedProfile = updated.find(p => p.id === newId);
       if (insertedProfile) setSelectedProfile(insertedProfile);
 
-      navigation.replace('Home');
+      router.replace('/(tabs)');
     } catch (e: any) {
       Alert.alert('Error', e.message);
     }
@@ -49,7 +51,7 @@ export default function CreateProfileScreen({ navigation }: any) {
 
   return (
     <KeyboardAvoidingView style={GlobalStyles.container} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-      <Header title="Add Profile" onBackPressed={() => navigation.goBack()} />
+      <Header title="Add Profile" onBackPressed={() => router.back()} />
       <ScrollView contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="handled">
         <Text style={styles.heading}>Profile Details</Text>
         

@@ -94,7 +94,15 @@ export class DatabaseService {
   // Profiles CRUD
   static async getAllProfiles(): Promise<UserProfile[]> {
     const db = await this.initDatabase();
-    return await db.getAllAsync<UserProfile>('SELECT * FROM profiles');
+    let profiles = await db.getAllAsync<UserProfile>('SELECT * FROM profiles');
+    if (profiles.length === 0) {
+      await db.runAsync(
+        'INSERT INTO profiles (name, dob, pcp, healthConditions, pharmacy) VALUES (?, ?, ?, ?, ?)',
+        ['Me', new Date(1990, 0, 1).toISOString(), '', '', '']
+      );
+      profiles = await db.getAllAsync<UserProfile>('SELECT * FROM profiles');
+    }
+    return profiles;
   }
 
   static async insertProfile(profile: UserProfile): Promise<number> {

@@ -3,28 +3,17 @@ import { View, Text, StyleSheet, FlatList, TouchableOpacity, Alert, ActivityIndi
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAtom } from 'jotai';
 import { Ionicons } from '@expo/vector-icons';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useRouter } from 'expo-router';
 
-import Header from '../components/Header';
-import PrimaryButton from '../components/PrimaryButton';
-import { AppColors, AppTypography, GlobalStyles } from '../styles/theme';
-import { profilesAtom, selectedProfileAtom } from '../store';
-import { DatabaseService } from '../database/database';
-import { UserProfile } from '../types';
+import Header from '../../components/Header';
+import PrimaryButton from '../../components/PrimaryButton';
+import { AppColors, AppTypography, GlobalStyles } from '../../styles/theme';
+import { profilesAtom, selectedProfileAtom } from '../../store';
+import { DatabaseService } from '../../database/database';
+import { UserProfile } from '../../types';
 
-type RootStackParamList = {
-  SelectProfile: undefined;
-  Home: undefined;
-  CreateProfile: undefined;
-};
-
-type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'SelectProfile'>;
-
-interface Props {
-  navigation: NavigationProp;
-}
-
-export default function SelectProfileScreen({ navigation }: Props) {
+export default function SelectProfileScreen() {
+  const router = useRouter();
   const insets = useSafeAreaInsets();
   const [profiles, setProfiles] = useAtom(profilesAtom);
   const [, setSelectedProfile] = useAtom(selectedProfileAtom);
@@ -49,10 +38,7 @@ export default function SelectProfileScreen({ navigation }: Props) {
 
   const handleSelectProfile = (profile: UserProfile) => {
     setSelectedProfile(profile);
-    navigation.reset({
-      index: 0,
-      routes: [{ name: 'Home' }],
-    });
+    router.replace('/(tabs)');
   };
 
   const handleDeleteProfile = (profile: UserProfile) => {
@@ -95,7 +81,7 @@ export default function SelectProfileScreen({ navigation }: Props) {
 
   return (
     <View style={GlobalStyles.container}>
-      <Header title="Select Profile" showBackButton={navigation.canGoBack()} onBackPressed={() => navigation.goBack()} />
+      <Header title="Select Profile" showBackButton={false} />
       
       <View style={styles.body}>
         {loading ? (
@@ -115,7 +101,7 @@ export default function SelectProfileScreen({ navigation }: Props) {
       <View style={[styles.fabContainer, { paddingBottom: Math.max(insets.bottom, 16) }]}>
         <PrimaryButton 
           title="Add Profile" 
-          onPress={() => navigation.navigate('CreateProfile')} 
+          onPress={() => router.push('/CreateProfile')} 
         />
       </View>
     </View>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TextInput, ScrollView, Alert, KeyboardAvoidingView, Platform, TouchableOpacity, Image } from 'react-native';
 import { useAtom } from 'jotai';
 
@@ -9,17 +9,32 @@ import { AppColors, AppTypography, GlobalStyles } from '../styles/theme';
 import { DatabaseService } from '../database/database';
 import { selectedProfileAtom, medicationsAtom } from '../store';
 import * as ImagePicker from 'expo-image-picker';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 
-export default function CreateMedicationScreen({ route, navigation }: any) {
-  const { initialDrug, imageUri } = route.params || {};
+export default function EditMedicationScreen() {
+  const router = useRouter();
+  const params = useLocalSearchParams();
+  const medication = JSON.parse(params.medication as string);
   const [profile] = useAtom(selectedProfileAtom);
   const [, setMedications] = useAtom(medicationsAtom);
 
-  const [name, setName] = useState(initialDrug ? `Brand: ${initialDrug.brandName}\nGeneric: ${initialDrug.genericName}` : (imageUri ? 'Image' : ''));
-  const [dosage, setDosage] = useState('');
-  const [unit, setUnit] = useState('N/A');
-  const [additionalInfo, setAdditionalInfo] = useState(initialDrug ? `Dosage type: ${initialDrug.dosageForm}` : '');
-  const [currentImageUri, setCurrentImageUri] = useState(imageUri || '');
+  const extractDosageAndUnit = (rawDosage: string) => {
+    if (!rawDosage) return { d: '', u: 'N/A' };
+    const parts = rawDosage.split(' ');
+    if (parts.length >= 2) {
+      const u = parts.pop() || 'N/A';
+      return { d: parts.join(' '), u };
+    }
+    return { d: rawDosage, u: 'N/A' };
+  };
+
+  const initialDosageData = extractDosageAndUnit(medication.dosage || '');
+
+  const [name, setName] = useState(medication.name);
+  const [dosage, setDosage] = useState(initialDosageData.d);
+  const [unit, setUnit] = useState(initialDosageData.u);
+  const [additionalInfo, setAdditionalInfo] = useState(medication.additionalInfo || '');
+  const [currentImageUri, setCurrentImageUri] = useState(medication.imageUrl || '');
 
   const units = ['N/A', 'mg', 'mL', 'g', 'mcg', 'IU', '%'];
 
@@ -53,15 +68,13 @@ export default function CreateMedicationScreen({ route, navigation }: any) {
       Alert.alert('Validation Error', 'Please enter a medication name');
       return;
     }
-    if (!profile?.id) {
-      Alert.alert('Error', 'No profile selected');
-      return;
-    }
+    if (!profile?.id || !medication.id) return;
 
     const finalDosage = dosage.trim() ? `${dosage.trim()} ${unit === 'N/A' ? '' : unit}`.trim() : '';
 
     try {
-      await DatabaseService.insertMedication({
+      await DatabaseService.updateMedication({
+        id: medication.id,
         profile_id: profile.id,
         name,
         dosage: finalDosage,
@@ -72,7 +85,7 @@ export default function CreateMedicationScreen({ route, navigation }: any) {
       const updated = await DatabaseService.getMedicationsForProfile(profile.id);
       setMedications(updated);
       
-      navigation.navigate('Home');
+      router.back();
     } catch (e: any) {
       Alert.alert('Error', e.message);
     }
@@ -80,7 +93,7 @@ export default function CreateMedicationScreen({ route, navigation }: any) {
 
   return (
     <KeyboardAvoidingView style={GlobalStyles.container} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-      <Header title="Add Medication" onBackPressed={() => navigation.goBack()} />
+      <Header title="Edit Medication" onBackPressed={() => router.back()} />
       <ScrollView contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="handled">
         <Text style={styles.heading}>Medication Details</Text>
         
@@ -132,7 +145,7 @@ export default function CreateMedicationScreen({ route, navigation }: any) {
         />
 
         <View style={{ height: 24 }} />
-        <PrimaryButton title="Add Medication" onPress={handleSave} />
+        <PrimaryButton title="Save Changes" onPress={handleSave} />
       </ScrollView>
     </KeyboardAvoidingView>
   );

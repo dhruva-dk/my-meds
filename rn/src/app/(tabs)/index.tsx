@@ -3,23 +3,30 @@ import { View, Text, StyleSheet, FlatList, TouchableOpacity, ActivityIndicator, 
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useAtom } from 'jotai';
+import { useRouter } from 'expo-router';
 
-import { AppColors, AppTypography, GlobalStyles } from '../styles/theme';
-import { selectedProfileAtom, medicationsAtom } from '../store';
-import { DatabaseService } from '../database/database';
-import { PDFService } from '../services/pdf';
-import MedicationTile from '../components/MedicationTile';
-import NavBar from '../components/NavBar';
-import { Medication } from '../types';
+import { AppColors, AppTypography, GlobalStyles } from '../../styles/theme';
+import { selectedProfileAtom, medicationsAtom } from '../../store';
+import { DatabaseService } from '../../database/database';
+import MedicationTile from '../../components/MedicationTile';
+import { Medication } from '../../types';
+import { PDFService } from '../../services/pdf';
 
-export default function HomeScreen({ navigation }: any) {
+export default function HomeScreen() {
+  const router = useRouter();
   const insets = useSafeAreaInsets();
-  const [profile] = useAtom(selectedProfileAtom);
+  const [profile, setSelectedProfile] = useAtom(selectedProfileAtom);
   const [medications, setMedications] = useAtom(medicationsAtom);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    loadMeds();
+    if (!profile) {
+      DatabaseService.getAllProfiles().then(all => {
+        if (all.length > 0) setSelectedProfile(all[0]);
+      });
+    } else {
+      loadMeds();
+    }
   }, [profile]);
 
   const loadMeds = async () => {
@@ -43,12 +50,20 @@ export default function HomeScreen({ navigation }: any) {
     }
   };
 
+
+
   const renderHeader = () => {
     const safeTop = Math.max(insets.top, 20);
     return (
       <View style={[styles.headerContainer, { paddingTop: safeTop + 8 }]}>
-        <Text style={styles.headerTitle} numberOfLines={1}>{profile?.name || "Name N/A"}</Text>
-        <Text style={styles.headerDob}>{profile?.dob ? new Date(profile.dob).toLocaleDateString() : "N/A"}</Text>
+        <View style={{ flex: 1 }}>
+          <Text style={styles.headerTitle} numberOfLines={1}>{profile?.name || "Name N/A"}</Text>
+          <Text style={styles.headerDob}>{profile?.dob ? new Date(profile.dob).toLocaleDateString() : "N/A"}</Text>
+        </View>
+        <TouchableOpacity onPress={handleExport} style={styles.exportButton} activeOpacity={0.8}>
+          <Ionicons name="share-outline" size={22} color="#000000" />
+          <Text style={styles.exportButtonText}>Export</Text>
+        </TouchableOpacity>
       </View>
     );
   };
@@ -56,7 +71,7 @@ export default function HomeScreen({ navigation }: any) {
   const renderMedication = ({ item }: { item: Medication }) => (
     <MedicationTile 
       medication={item} 
-      onEdit={() => navigation.navigate('EditMedication', { medication: item })} 
+      onEdit={() => router.push({ pathname: '/EditMedication', params: { medication: JSON.stringify(item) } })} 
       onDeleteSuccess={loadMeds}
     />
   );
@@ -85,22 +100,6 @@ export default function HomeScreen({ navigation }: any) {
           />
         )}
       </View>
-
-      {/* FAB */}
-      <TouchableOpacity 
-        style={[styles.fab, { bottom: insets.bottom + 80 }]}
-        onPress={() => navigation.navigate('FDASearch')}
-        activeOpacity={0.8}
-      >
-        <Ionicons name="add" size={24} color="#FFFFFF" />
-        <Text style={styles.fabText}>Add</Text>
-      </TouchableOpacity>
-
-      <NavBar 
-        onProfile={() => navigation.navigate('EditProfile')}
-        onExport={handleExport}
-        onSwitch={() => navigation.replace('SelectProfile')}
-      />
     </View>
   );
 }
@@ -114,6 +113,28 @@ const styles = StyleSheet.create({
     paddingRight: 32,
     paddingBottom: 16,
     width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  exportButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: 24,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 4,
+  },
+  exportButtonText: {
+    color: '#000000',
+    fontSize: 15,
+    fontWeight: 'bold',
+    marginLeft: 6,
   },
   headerTitle: {
     ...AppTypography.headlineLarge,
@@ -144,27 +165,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   listContent: {
-    paddingBottom: 100, // Space for FAB
-  },
-  fab: {
-    position: 'absolute',
-    right: 16,
-    backgroundColor: AppColors.primary,
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderRadius: 28, // Stadium border
-    elevation: 4,
-    shadowColor: '#000',
-    shadowOpacity: 0.2,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 4,
-  },
-  fabText: {
-    color: '#FFFFFF',
-    fontSize: 14,
-    fontWeight: 'bold',
-    marginLeft: 8,
+    paddingBottom: 24,
   }
 });

@@ -28,7 +28,9 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
+    "scheme": "mymeds",
     "plugins": [
+      "expo-router",
       "expo-sqlite",
       "expo-sharing"
     ]

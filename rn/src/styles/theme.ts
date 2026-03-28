@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
 
 export const AppColors = {
-  lightAccent: '#85CC17',
+  lightAccent: '#2F3A33',
   lightAccentSecondary: '#2F3A33',
   lightBackgroundPrimary: '#F6F6F6',
   lightBackgroundSecondary: '#FFFFFF',
@@ -10,7 +10,7 @@ export const AppColors = {
   lightError: '#A11821',
 
   // Equivalents for ease of use
-  primary: '#85CC17',
+  primary: '#2F3A33',
   background: '#F6F6F6',
   surface: '#FFFFFF',
   text: '#000000',

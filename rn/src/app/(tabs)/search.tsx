@@ -3,15 +3,17 @@ import { View, Text, StyleSheet, TextInput, FlatList, ActivityIndicator } from '
 import * as ImagePicker from 'expo-image-picker';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useRouter } from 'expo-router';
 
-import Header from '../components/Header';
-import PrimaryButton from '../components/PrimaryButton';
-import PhotoUploadButton from '../components/PhotoUploadButton';
-import SearchTile from '../components/SearchTile';
-import { AppColors, AppTypography, GlobalStyles } from '../styles/theme';
-import { FDAAPIService, FDADrug } from '../api/fda';
+import Header from '../../components/Header';
+import PrimaryButton from '../../components/PrimaryButton';
+import PhotoUploadButton from '../../components/PhotoUploadButton';
+import SearchTile from '../../components/SearchTile';
+import { AppColors, AppTypography, GlobalStyles } from '../../styles/theme';
+import { FDAAPIService, FDADrug } from '../../api/fda';
 
-export default function FDASearchScreen({ navigation }: any) {
+export default function FDASearchScreen() {
+  const router = useRouter();
   const insets = useSafeAreaInsets();
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<FDADrug[]>([]);
@@ -43,7 +45,7 @@ export default function FDASearchScreen({ navigation }: any) {
   }, [query]);
 
   const navigateToCreate = (params: any = {}) => {
-    navigation.navigate('CreateMedication', params);
+    router.push({ pathname: '/CreateMedication', params: { imageUri: params.imageUri || '', medication: params.initialDrug ? JSON.stringify(params.initialDrug) : '' } });
   };
 
   const handleTakePhoto = async () => {
@@ -66,7 +68,7 @@ export default function FDASearchScreen({ navigation }: any) {
 
   return (
     <View style={GlobalStyles.container}>
-      <Header title="Add Medication" onBackPressed={() => navigation.goBack()} />
+      <Header title="Add Medication" showBackButton={false} />
       <View style={styles.body}>
         <Text style={styles.heading}>FDA Search</Text>
         <View style={styles.searchBox}>
