@@ -53,9 +53,8 @@ dependencies:
   share_plus: ^7.2.1
   pdf: ^3.10.7
   url_launcher: ^6.2.4
+  flutter_native_splash: ^2.3.11
 
-  
-  
 icons_launcher:
   image_path: 'assets/icon/icon.png'
   platforms:
@@ -63,6 +62,15 @@ icons_launcher:
       enable: true
     ios:
       enable: true
+
+flutter_native_splash:
+  color: "#2F3A33"
+  color_dark: "#2F3A33"
+  image: "splash-logo.png"
+  ios_content_mode: scaleAspectFit
+  android_gravity: center
+  fullscreen: true
+
 
 
 
