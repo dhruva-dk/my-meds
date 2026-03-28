@@ -1,10 +1,11 @@
-import React from 'react';
-import { ScrollView, Alert, KeyboardAvoidingView, Platform, StyleSheet } from 'react-native';
+import React, { useRef } from 'react';
+import { ScrollView, Alert, KeyboardAvoidingView, Platform, StyleSheet, TouchableOpacity, Text } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { useAtom } from 'jotai';
 import { useRouter } from 'expo-router';
 
 import Header from '../../components/Header';
-import ProfileForm, { ProfileFormData } from '../../components/ProfileForm';
+import ProfileForm, { ProfileFormData, ProfileFormRef } from '../../components/ProfileForm';
 import { GlobalStyles } from '../../styles/theme';
 import { DatabaseService } from '../../database/database';
 import { profilesAtom, selectedProfileAtom } from '../../store';
@@ -13,6 +14,14 @@ export default function EditProfileScreen() {
   const router = useRouter();
   const [, setProfiles] = useAtom(profilesAtom);
   const [selectedProfile, setSelectedProfile] = useAtom(selectedProfileAtom);
+  const formRef = useRef<ProfileFormRef>(null);
+
+  const rightWidget = (
+    <TouchableOpacity onPress={() => formRef.current?.submit()} style={GlobalStyles.headerButton} activeOpacity={0.8}>
+      <Ionicons name="save-outline" size={22} color="#000" />
+      <Text style={GlobalStyles.headerButtonText}>Save</Text>
+    </TouchableOpacity>
+  );
 
   const handleSave = async (data: ProfileFormData) => {
     if (!data.name.trim()) {
@@ -52,13 +61,15 @@ export default function EditProfileScreen() {
 
   return (
     <KeyboardAvoidingView style={GlobalStyles.container} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-      <Header title="Your Profile" showBackButton={false} />
+      <Header title="Your Profile" showBackButton={false} rightWidget={rightWidget} />
       <ScrollView contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="handled">
         {initialData && (
           <ProfileForm 
+            ref={formRef}
             initialData={initialData} 
             onSubmit={handleSave} 
             submitLabel="Save Profile" 
+            hideSubmitButton
           />
         )}
       </ScrollView>

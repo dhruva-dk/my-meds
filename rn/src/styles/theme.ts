@@ -82,5 +82,24 @@ export const GlobalStyles = StyleSheet.create({
     fontSize: 16,
     color: AppColors.text,
     marginBottom: 16,
+  },
+  headerButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: 24,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 4,
+  },
+  headerButtonText: {
+    color: '#000000',
+    fontSize: 15,
+    fontWeight: 'bold',
+    marginLeft: 6,
   }
 });

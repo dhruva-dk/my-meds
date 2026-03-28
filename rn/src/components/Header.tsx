@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   title: {
-    ...AppTypography.headlineMedium,
+    ...AppTypography.headlineLarge,
     color: '#FFFFFF',
     flex: 1,
   },

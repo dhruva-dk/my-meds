@@ -1,10 +1,11 @@
-import React from 'react';
-import { Alert, KeyboardAvoidingView, Platform } from 'react-native';
+import React, { useRef } from 'react';
+import { Alert, KeyboardAvoidingView, Platform, TouchableOpacity, Text } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { useAtom } from 'jotai';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 
 import Header from '../components/Header';
-import MedicationForm, { MedicationFormData } from '../components/MedicationForm';
+import MedicationForm, { MedicationFormData, MedicationFormRef } from '../components/MedicationForm';
 import { GlobalStyles } from '../styles/theme';
 import { DatabaseService } from '../database/database';
 import { selectedProfileAtom, medicationsAtom } from '../store';
@@ -18,6 +19,15 @@ export default function CreateMedicationScreen() {
   
   const [profile] = useAtom(selectedProfileAtom);
   const [, setMedications] = useAtom(medicationsAtom);
+
+  const formRef = useRef<MedicationFormRef>(null);
+
+  const rightWidget = (
+    <TouchableOpacity onPress={() => formRef.current?.submit()} style={GlobalStyles.headerButton} activeOpacity={0.8}>
+      <Ionicons name="save-outline" size={22} color="#000" />
+      <Text style={GlobalStyles.headerButtonText}>Save</Text>
+    </TouchableOpacity>
+  );
 
   const initialData: MedicationFormData | undefined = initialDrug || imageUri ? {
     name: initialDrug ? `Brand: ${initialDrug.brandName}\nGeneric: ${initialDrug.genericName}` : (imageUri ? 'Image' : ''),
@@ -60,11 +70,13 @@ export default function CreateMedicationScreen() {
 
   return (
     <KeyboardAvoidingView style={GlobalStyles.container} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-      <Header title="Add Medication" onBackPressed={() => router.back()} />
+      <Header title="Add Medication" onBackPressed={() => router.back()} rightWidget={rightWidget} />
       <MedicationForm 
+        ref={formRef}
         initialData={initialData}
         onSubmit={handleSave}
         submitLabel="Add Medication"
+        hideSubmitButton
       />
     </KeyboardAvoidingView>
   );

@@ -79,9 +79,16 @@ export default function SelectProfileScreen() {
     </TouchableOpacity>
   );
 
+  const rightWidget = (
+    <TouchableOpacity onPress={() => router.push('/CreateProfile')} style={GlobalStyles.headerButton} activeOpacity={0.8}>
+      <Ionicons name="add" size={22} color="#000" />
+      <Text style={GlobalStyles.headerButtonText}>Add</Text>
+    </TouchableOpacity>
+  );
+
   return (
     <View style={GlobalStyles.container}>
-      <Header title="Select Profile" showBackButton={false} />
+      <Header title="Select Profile" showBackButton={false} rightWidget={rightWidget} />
       
       <View style={styles.body}>
         {loading ? (
@@ -96,13 +103,6 @@ export default function SelectProfileScreen() {
             contentContainerStyle={styles.listContent}
           />
         )}
-      </View>
-
-      <View style={[styles.fabContainer, { paddingBottom: Math.max(insets.bottom, 16) }]}>
-        <PrimaryButton 
-          title="Add Profile" 
-          onPress={() => router.push('/CreateProfile')} 
-        />
       </View>
     </View>
   );

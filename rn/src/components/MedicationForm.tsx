@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, forwardRef, useImperativeHandle } from 'react';
 import { View, Text, StyleSheet, TextInput, ScrollView, Alert, TouchableOpacity, Image } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 
@@ -18,9 +18,14 @@ interface Props {
   initialData?: MedicationFormData;
   onSubmit: (data: MedicationFormData) => void;
   submitLabel: string;
+  hideSubmitButton?: boolean;
 }
 
-export default function MedicationForm({ initialData, onSubmit, submitLabel }: Props) {
+export interface MedicationFormRef {
+  submit: () => void;
+}
+
+const MedicationForm = forwardRef<MedicationFormRef, Props>(({ initialData, onSubmit, submitLabel, hideSubmitButton }, ref) => {
   const [name, setName] = useState(initialData?.name || '');
   const [dosage, setDosage] = useState(initialData?.dosage || '');
   const [unit, setUnit] = useState(initialData?.unit || 'N/A');
@@ -61,6 +66,10 @@ export default function MedicationForm({ initialData, onSubmit, submitLabel }: P
     }
     onSubmit({ name, dosage, unit, additionalInfo, currentImageUri });
   };
+
+  useImperativeHandle(ref, () => ({
+    submit: handleSave
+  }));
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="handled">
@@ -113,11 +122,12 @@ export default function MedicationForm({ initialData, onSubmit, submitLabel }: P
         hasImage={!!currentImageUri} 
       />
 
-      <View style={{ height: 24 }} />
-      <PrimaryButton title={submitLabel} onPress={handleSave} />
+      {!hideSubmitButton && (
+        <PrimaryButton title={submitLabel} onPress={handleSave} style={{ marginTop: 8 }} />
+      )}
     </ScrollView>
   );
-}
+});
 
 const styles = StyleSheet.create({
   scrollContent: {
@@ -141,7 +151,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 16,
     fontSize: 16,
-    marginBottom: 16,
+    marginBottom: 8,
   },
   dropdown: {
     backgroundColor: AppColors.lightBackgroundSecondary,
@@ -149,7 +159,7 @@ const styles = StyleSheet.create({
     height: 56,
     justifyContent: 'center',
     paddingHorizontal: 16,
-    marginBottom: 16,
+    marginBottom: 8,
   },
   row: {
     flexDirection: 'row',
@@ -161,3 +171,5 @@ const styles = StyleSheet.create({
     marginTop: 8,
   }
 });
+
+export default MedicationForm;

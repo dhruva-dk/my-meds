@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, forwardRef, useImperativeHandle } from "react";
 import {
   View,
   Text,
@@ -26,13 +26,19 @@ interface ProfileFormProps {
   initialData?: Partial<ProfileFormData>;
   onSubmit: (data: ProfileFormData) => Promise<void>;
   submitLabel: string;
+  hideSubmitButton?: boolean;
 }
 
-export default function ProfileForm({
+export interface ProfileFormRef {
+  submit: () => void;
+}
+
+const ProfileForm = forwardRef<ProfileFormRef, ProfileFormProps>(({
   initialData,
   onSubmit,
   submitLabel,
-}: ProfileFormProps) {
+  hideSubmitButton,
+}, ref) => {
   const [name, setName] = useState("");
   const [dob, setDob] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
@@ -61,23 +67,28 @@ export default function ProfileForm({
     });
   };
 
+  useImperativeHandle(ref, () => ({
+    submit: handleSave
+  }));
+
   return (
     <View>
       <Text style={styles.subHeading}>Personal Information</Text>
 
+      <Text style={styles.label}>Name</Text>
       <TextInput
         style={styles.input}
         value={name}
-        placeholder="Name"
         onChangeText={setName}
       />
 
+      <Text style={styles.label}>Date of Birth</Text>
       <TouchableOpacity
         style={styles.datePickerBtn}
         onPress={() => setShowDatePicker(true)}
       >
         <Text style={{ fontSize: 16, color: AppColors.text }}>
-          {dob ? dob.toLocaleDateString() : "Date of Birth"}
+          {dob ? dob.toLocaleDateString() : ""}
         </Text>
       </TouchableOpacity>
 
@@ -117,25 +128,25 @@ export default function ProfileForm({
         Health Information
       </Text>
 
+      <Text style={styles.label}>Primary Care Physician (optional)</Text>
       <TextInput
         style={styles.input}
         value={pcp}
-        placeholder="Primary Care Physician (optional)"
         onChangeText={setPcp}
       />
 
+      <Text style={styles.label}>Pharmacy Phone (optional)</Text>
       <TextInput
         style={styles.input}
         value={pharmacy}
-        placeholder="Pharmacy Phone (optional)"
         keyboardType="phone-pad"
         onChangeText={setPharmacy}
       />
 
+      <Text style={styles.label}>Health Conditions (optional)</Text>
       <TextInput
         style={[styles.input, { paddingVertical: 16 }]}
         value={healthConditions}
-        placeholder="Health Conditions (optional)"
         onChangeText={setHealthConditions}
         multiline
       />
@@ -148,19 +159,27 @@ export default function ProfileForm({
         <Text style={styles.secondaryButtonText}>Privacy Policy</Text>
       </TouchableOpacity>
 
-      <PrimaryButton
-        title={submitLabel}
-        onPress={handleSave}
-        style={{ marginTop: 8 }}
-      />
+      {!hideSubmitButton && (
+        <PrimaryButton
+          title={submitLabel}
+          onPress={handleSave}
+          style={{ marginTop: 8 }}
+        />
+      )}
     </View>
   );
-}
+});
 
 const styles = StyleSheet.create({
   subHeading: {
     ...AppTypography.headlineSmall,
     marginBottom: 16,
+  },
+  label: {
+    ...AppTypography.bodyMedium,
+    color: AppColors.textSecondary,
+    marginBottom: 4,
+    marginLeft: 4,
   },
   input: {
     backgroundColor: AppColors.lightBackgroundSecondary,
@@ -211,3 +230,5 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
 });
+
+export default ProfileForm;
