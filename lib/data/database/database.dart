@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import 'package:medication_tracker/data/model/medication_model.dart';
 import 'package:medication_tracker/data/model/user_profile_model.dart';
 import 'package:path/path.dart' as path;
@@ -127,7 +128,7 @@ class DatabaseService {
   Future<int> _createDefaultProfile(Transaction txn) async {
     return await txn.insert(profileTable, {
       'name': 'Default Profile',
-      'dob': DateTime.now().toIso8601String(),
+      'dob': DateFormat('MM/dd/yyyy').format(DateTime.now()),
       'pcp': '',
       'healthConditions': '',
       'pharmacy': ''

@@ -6,7 +6,7 @@ class AppThemes {
     useMaterial3: true,
     fontFamily: "Inter",
     colorScheme: const ColorScheme.light(
-      primary: AppColors.lightAccent,
+      primary: AppColors.lightAccentSecondary,
       onPrimary: AppColors.lightBackgroundSecondary,
       secondary: AppColors.lightAccentSecondary,
       onSecondary: AppColors.lightBackgroundSecondary,
