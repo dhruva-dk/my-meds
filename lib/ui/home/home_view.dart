@@ -5,6 +5,7 @@ import 'package:medication_tracker/data/providers/profile_provider.dart';
 import 'package:medication_tracker/services/export/pdf_service.dart';
 import 'package:medication_tracker/ui/edit_medication/edit_medication_view.dart';
 import 'package:medication_tracker/ui/home/med_tile.dart';
+import 'package:medication_tracker/ui/core/no_profile_view.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -19,15 +20,16 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _shareExport(BuildContext context) async {
     final pdfService = Provider.of<PDFService>(context, listen: false);
-    final medications =
-        Provider.of<MedicationProvider>(context, listen: false).medications;
+    final medicationProvider =
+        Provider.of<MedicationProvider>(context, listen: false);
 
     final box = _exportKey.currentContext?.findRenderObject() as RenderBox?;
     final Rect? origin =
         box != null ? box.localToGlobal(Offset.zero) & box.size : null;
 
     try {
-      await pdfService.shareMedications(medications, shareOrigin: origin);
+      await pdfService.shareMedications(medicationProvider.medications,
+          shareOrigin: origin);
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Medications PDF shared successfully!')),
@@ -42,6 +44,52 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final profileProvider = Provider.of<ProfileProvider>(context, listen: true);
+    final selectedProfile = profileProvider.selectedProfile;
+
+    if (selectedProfile == null) {
+      return NoProfileView(
+        title: 'Home',
+        header: Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.secondary,
+            borderRadius: const BorderRadius.only(
+              bottomLeft: Radius.circular(48),
+              bottomRight: Radius.circular(48),
+            ),
+          ),
+          padding: EdgeInsets.only(
+            top: MediaQuery.of(context).padding.top + 8,
+            left: 32.0,
+            right: 32.0,
+            bottom: 16.0,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              AutoSizeText(
+                "Name N/A",
+                style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                      color: Theme.of(context).colorScheme.onSecondary,
+                    ),
+                overflow: TextOverflow.ellipsis,
+                minFontSize: 18,
+                maxLines: 1,
+              ),
+              const SizedBox(height: 4),
+              Text(
+                "N/A",
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      color: Theme.of(context).colorScheme.onSecondary,
+                    ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
     final theme = Theme.of(context);
 
     return Scaffold(

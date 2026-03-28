@@ -128,36 +128,10 @@ class MedicationTile extends StatelessWidget {
                 ],
               ),
             ),
-            PopupMenuButton<String>(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-              onSelected: (String result) {
-                if (result == 'delete') {
-                  _deleteMedication(context, medication.id!);
-                }
-              },
-              itemBuilder: (BuildContext context) => [
-                PopupMenuItem<String>(
-                  value: 'delete',
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.delete,
-                        color: theme.colorScheme.error,
-                        size: 20,
-                      ),
-                      const SizedBox(width: 12),
-                      Text(
-                        'Delete',
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: theme.colorScheme.onSurface,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+            IconButton(
+              icon: Icon(Icons.more_vert,
+                  color: theme.colorScheme.onSecondaryContainer),
+              onPressed: () => _confirmDelete(context, medication.id!),
             ),
           ],
         ),
@@ -174,7 +148,32 @@ class MedicationTile extends StatelessWidget {
     );
   }
 
-  void _deleteMedication(BuildContext context, int id) async {
+  void _confirmDelete(BuildContext context, int id) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog.adaptive(
+        title: const Text('Delete Medication'),
+        content: const Text(
+            'Are you sure you want to delete this medication? This cannot be undone.'),
+        actions: [
+          TextButton(
+            child: const Text('Cancel'),
+            onPressed: () => Navigator.of(dialogContext).pop(),
+          ),
+          TextButton(
+            child: const Text('Delete'),
+            onPressed: () async {
+              Navigator.of(dialogContext).pop();
+              await _deleteMedication(context, id);
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _deleteMedication(BuildContext context, int id) async {
+    final theme = Theme.of(context);
     try {
       await Provider.of<MedicationProvider>(context, listen: false)
           .deleteMedication(id);
@@ -182,17 +181,19 @@ class MedicationTile extends StatelessWidget {
       if (!context.mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Medication deleted successfully.'),
+        SnackBar(
+          content: Text(
+            'Medication deleted successfully.',
+            style: TextStyle(color: theme.colorScheme.onPrimary),
+          ),
+          backgroundColor: theme.colorScheme.primary,
         ),
       );
     } catch (e) {
       if (!context.mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Failed to delete medication: $e'),
-        ),
+        SnackBar(content: Text('Failed to delete medication: $e')),
       );
     }
   }

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:medication_tracker/data/providers/fda_api_provider.dart';
+import 'package:medication_tracker/data/providers/profile_provider.dart';
 import 'package:medication_tracker/services/image/image_service.dart';
 import 'package:medication_tracker/ui/core/primary_button.dart';
 import 'package:medication_tracker/ui/create_medication/create_medication_view.dart';
 import 'package:medication_tracker/ui/core/header.dart';
+import 'package:medication_tracker/ui/core/no_profile_view.dart';
 import 'package:medication_tracker/ui/core/photo_upload_button.dart';
 import 'package:provider/provider.dart';
 import 'package:medication_tracker/ui/search/search_tile.dart';
@@ -95,6 +97,19 @@ class _FDASearchPageState extends State<FDASearchPage> {
 
   @override
   Widget build(BuildContext context) {
+    final selectedProfile =
+        context.watch<ProfileProvider>().selectedProfile;
+
+    if (selectedProfile == null) {
+      return const NoProfileView(
+        title: 'Add Medication',
+        header: Header(
+          title: 'Add Medication',
+          showBackButton: false,
+        ),
+      );
+    }
+
     final theme = Theme.of(context);
 
     return Scaffold(

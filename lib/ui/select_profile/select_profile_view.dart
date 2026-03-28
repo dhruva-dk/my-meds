@@ -156,97 +156,58 @@ class SelectProfilePage extends StatelessWidget {
                                     ],
                                   ),
                                 ),
-                                PopupMenuButton<String>(
-                                  onSelected: (String result) async {
-                                    if (result == 'delete') {
-                                      showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return AlertDialog.adaptive(
-                                            title:
-                                                const Text('Delete Profile'),
-                                            content: const Text(
-                                                'Are you sure you want to delete this profile? This action cannot be undone.'),
-                                            actions: <Widget>[
-                                              TextButton(
-                                                child: const Text('Cancel'),
-                                                onPressed: () {
-                                                  Navigator.of(context).pop();
-                                                },
-                                              ),
-                                              TextButton(
-                                                child: const Text('Delete'),
-                                                onPressed: () async {
-                                                  Navigator.of(context).pop();
-                                                  try {
-                                                    await profileProvider
-                                                        .deleteProfile(
-                                                            profile.id!);
-                                                    if (!context.mounted) {
-                                                      return;
-                                                    }
-                                                    ScaffoldMessenger.of(
-                                                            context)
-                                                        .showSnackBar(
-                                                      SnackBar(
-                                                        content: Text(
-                                                          'Profile deleted successfully.',
-                                                          style: TextStyle(
-                                                            color: theme
-                                                                .colorScheme
-                                                                .onPrimary,
-                                                          ),
-                                                        ),
-                                                        backgroundColor: theme
-                                                            .colorScheme
-                                                            .primary,
-                                                      ),
-                                                    );
-                                                  } catch (e) {
-                                                    if (!context.mounted) return;
-                                                    ScaffoldMessenger.of(
-                                                            context)
-                                                        .showSnackBar(
-                                                      SnackBar(
-                                                        content: Text(
-                                                            'Failed to delete profile: $e'),
-                                                      ),
-                                                    );
-                                                  }
-                                                },
-                                              ),
-                                            ],
-                                          );
-                                        },
-                                      );
-                                    }
-                                  },
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(16.0),
-                                  ),
-                                  itemBuilder: (BuildContext context) => [
-                                    PopupMenuItem<String>(
-                                      value: 'delete',
-                                      child: Row(
-                                        children: [
-                                          Icon(
-                                            Icons.delete,
-                                            color: theme.colorScheme.error,
-                                            size: 20,
+                                IconButton(
+                                  icon: Icon(Icons.more_vert,
+                                      color: theme.colorScheme
+                                          .onSecondaryContainer),
+                                  onPressed: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (dialogContext) =>
+                                          AlertDialog.adaptive(
+                                        title: const Text('Delete Profile'),
+                                        content: const Text(
+                                            'Are you sure you want to delete this profile? This cannot be undone.'),
+                                        actions: [
+                                          TextButton(
+                                            child: const Text('Cancel'),
+                                            onPressed: () => Navigator.of(
+                                                    dialogContext)
+                                                .pop(),
                                           ),
-                                          const SizedBox(width: 12),
-                                          Text(
-                                            'Delete',
-                                            style: theme.textTheme.bodyMedium
-                                                ?.copyWith(
-                                              color:
-                                                  theme.colorScheme.onSurface,
-                                            ),
+                                          TextButton(
+                                            child: const Text('Delete'),
+                                            onPressed: () async {
+                                              Navigator.of(dialogContext).pop();
+                                              try {
+                                                await profileProvider
+                                                    .deleteProfile(profile.id!);
+                                                if (!context.mounted) return;
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(SnackBar(
+                                                  content: Text(
+                                                    'Profile deleted successfully.',
+                                                    style: TextStyle(
+                                                        color: theme.colorScheme
+                                                            .onPrimary),
+                                                  ),
+                                                  backgroundColor:
+                                                      theme.colorScheme.primary,
+                                                ));
+                                              } catch (e) {
+                                                if (!context.mounted) return;
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(SnackBar(
+                                                  content: Text(
+                                                      'Failed to delete profile: $e'),
+                                                ));
+                                              }
+                                            },
                                           ),
                                         ],
                                       ),
-                                    ),
-                                  ],
+                                    );
+                                  },
                                 ),
                               ],
                             ),

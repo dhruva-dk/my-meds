@@ -29,11 +29,19 @@ class _CreateMedicationPageState extends State<CreateMedicationPage> {
   void _accept(BuildContext context, String name, String dosage, String unit, String additionalInfo, String imageFileName) async {
     final String finalDosage = dosage.isEmpty ? '' : '$dosage ${unit == 'N/A' ? '' : unit}';
 
+    final profileId = context.read<ProfileProvider>().selectedProfile?.id;
+    if (profileId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('No profile selected. Please select a profile first.')),
+      );
+      return;
+    }
+
     Medication newMedication = Medication(
       name: name,
       dosage: finalDosage,
       additionalInfo: additionalInfo,
-      profileId: context.read<ProfileProvider>().selectedProfile!.id!,
+      profileId: profileId,
       imageUrl: imageFileName,
     );
 
