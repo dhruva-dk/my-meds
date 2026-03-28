@@ -173,7 +173,7 @@ class _MedicationFormState extends State<MedicationForm> {
                   Expanded(
                     flex: 1,
                     child: DropdownButtonFormField<String>(
-                      value: _selectedUnit,
+                      initialValue: _selectedUnit,
                       decoration: _inputDecoration('Unit'),
                       items: _unitOptions.map((String value) {
                         return DropdownMenuItem<String>(

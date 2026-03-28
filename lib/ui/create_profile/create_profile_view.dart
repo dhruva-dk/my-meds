@@ -39,8 +39,8 @@ class CreateProfilePage extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: theme.colorScheme.surface,
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(kToolbarHeight + 80),
+      appBar: const PreferredSize(
+        preferredSize: Size.fromHeight(kToolbarHeight + 80),
         child: Header(
           title: 'Add Profile',
           showBackButton: true,

@@ -77,7 +77,7 @@ class EditMedicationPage extends StatelessWidget {
                   initialName: medication.name,
                   initialDosage: initialDosage,
                   initialUnit: initialUnit,
-                  initialAdditionalInfo: medication.additionalInfo ?? '',
+                  initialAdditionalInfo: medication.additionalInfo,
                   initialImageFileName: currentMedication.imageUrl,
                   submitLabel: "Update Medication",
                   onSave: (name, dosage, unit, additionalInfo, imageFileName) {
