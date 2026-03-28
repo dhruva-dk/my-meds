@@ -151,7 +151,8 @@ class _FDASearchPageState extends State<FDASearchPage> {
                           hintText: 'Search',
                           prefixIcon: const Icon(Icons.search),
                           filled: true,
-                          fillColor: Colors.white, // Set background to white
+                          fillColor: theme.colorScheme
+                              .secondaryContainer, // Adapt to theme
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(24),
                             borderSide: BorderSide.none,
