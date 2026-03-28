@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:medication_tracker/data/providers/profile_provider.dart';
 import 'package:medication_tracker/ui/create_profile/create_profile_view.dart';
-import 'package:medication_tracker/ui/home/home_view.dart';
-import 'package:medication_tracker/ui/core/primary_button.dart';
 import 'package:medication_tracker/ui/core/header.dart';
 import 'package:provider/provider.dart';
 
 class SelectProfilePage extends StatelessWidget {
-  const SelectProfilePage({super.key});
+  /// Called after a profile is selected. When embedded in the tab shell,
+  /// this switches to the Home tab. When null, the page pops instead.
+  final VoidCallback? onProfileSelected;
+
+  const SelectProfilePage({super.key, this.onProfileSelected});
 
   @override
   Widget build(BuildContext context) {
@@ -33,9 +35,7 @@ class SelectProfilePage extends StatelessWidget {
                 child: Consumer<ProfileProvider>(
                   builder: (context, profileProvider, child) {
                     if (profileProvider.isLoading) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
+                      return const Center(child: CircularProgressIndicator());
                     }
 
                     if (profileProvider.errorMessage.isNotEmpty) {
@@ -58,7 +58,7 @@ class SelectProfilePage extends StatelessWidget {
                         child: Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: Text(
-                            "No profiles added yet. Add your first profile by pressing the button below.",
+                            "No profiles yet. Tap Add Profile below to get started.",
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: 16,
@@ -87,16 +87,15 @@ class SelectProfilePage extends StatelessWidget {
                           child: InkWell(
                             onTap: () async {
                               try {
-                                await profileProvider
-                                    .selectProfile(profile.id!);
+                                await profileProvider.selectProfile(profile.id!);
                                 if (!context.mounted) return;
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const HomeScreen(),
-                                  ),
-                                );
+                                if (onProfileSelected != null) {
+                                  onProfileSelected!();
+                                } else {
+                                  Navigator.pop(context);
+                                }
                               } catch (e) {
+                                if (!context.mounted) return;
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content:
@@ -108,21 +107,17 @@ class SelectProfilePage extends StatelessWidget {
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                // Account Icon
                                 Icon(
                                   Icons.person,
                                   size: 32,
                                   color: theme.colorScheme.onSecondaryContainer,
                                 ),
                                 const SizedBox(width: 16),
-
-                                // Profile Details
                                 Expanded(
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      // Profile Name
                                       Text(
                                         profile.name,
                                         style: theme.textTheme.headlineSmall
@@ -135,8 +130,6 @@ class SelectProfilePage extends StatelessWidget {
                                         overflow: TextOverflow.ellipsis,
                                       ),
                                       const SizedBox(height: 8),
-
-                                      // Date of Birth
                                       Row(
                                         children: [
                                           Icon(
@@ -163,8 +156,6 @@ class SelectProfilePage extends StatelessWidget {
                                     ],
                                   ),
                                 ),
-
-                                // Menu Button
                                 PopupMenuButton<String>(
                                   onSelected: (String result) async {
                                     if (result == 'delete') {
@@ -172,7 +163,8 @@ class SelectProfilePage extends StatelessWidget {
                                         context: context,
                                         builder: (BuildContext context) {
                                           return AlertDialog.adaptive(
-                                            title: const Text('Delete Profile'),
+                                            title:
+                                                const Text('Delete Profile'),
                                             content: const Text(
                                                 'Are you sure you want to delete this profile? This action cannot be undone.'),
                                             actions: <Widget>[
@@ -211,6 +203,7 @@ class SelectProfilePage extends StatelessWidget {
                                                       ),
                                                     );
                                                   } catch (e) {
+                                                    if (!context.mounted) return;
                                                     ScaffoldMessenger.of(
                                                             context)
                                                         .showSnackBar(
@@ -268,20 +261,26 @@ class SelectProfilePage extends StatelessWidget {
           ],
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        child: PrimaryButton(
-          title: "Add Profile",
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const CreateProfilePage(),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const CreateProfilePage(),
+            ),
+          );
+        },
+        backgroundColor: theme.colorScheme.primary,
+        elevation: 2,
+        shape: const StadiumBorder(),
+        label: Text(
+          'Add Profile',
+          style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                color: Theme.of(context).colorScheme.onPrimary,
               ),
-            );
-          },
         ),
+        icon: Icon(Icons.person_add, color: Theme.of(context).colorScheme.onPrimary),
       ),
     );
   }

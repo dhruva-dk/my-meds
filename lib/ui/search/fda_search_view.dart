@@ -10,7 +10,11 @@ import 'package:medication_tracker/ui/search/search_tile.dart';
 import 'dart:async';
 
 class FDASearchPage extends StatefulWidget {
-  const FDASearchPage({super.key});
+  /// Passed through to [CreateMedicationPage] so the shell can switch to
+  /// the Home tab after a medication is added.
+  final VoidCallback? onMedicationAdded;
+
+  const FDASearchPage({super.key, this.onMedicationAdded});
 
   @override
   State<FDASearchPage> createState() => _FDASearchPageState();
@@ -53,6 +57,7 @@ class _FDASearchPageState extends State<FDASearchPage> {
         MaterialPageRoute(
           builder: (context) => CreateMedicationPage(
             imageFileName: imageFileName,
+            onAdded: widget.onMedicationAdded,
           ),
         ),
       );
@@ -73,6 +78,7 @@ class _FDASearchPageState extends State<FDASearchPage> {
         MaterialPageRoute(
           builder: (context) => CreateMedicationPage(
             imageFileName: imageFileName,
+            onAdded: widget.onMedicationAdded,
           ),
         ),
       );
@@ -161,8 +167,9 @@ class _FDASearchPageState extends State<FDASearchPage> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) =>
-                                        const CreateMedicationPage(),
+                                    builder: (context) => CreateMedicationPage(
+                                      onAdded: widget.onMedicationAdded,
+                                    ),
                                   ),
                                 );
                               },
@@ -214,6 +221,7 @@ class _FDASearchPageState extends State<FDASearchPage> {
                                               CreateMedicationPage(
                                             initialDrug:
                                                 provider.searchResults[index],
+                                            onAdded: widget.onMedicationAdded,
                                           ),
                                         ),
                                       );

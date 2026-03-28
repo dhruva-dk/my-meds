@@ -11,6 +11,10 @@ class ProfileForm extends StatefulWidget {
   final String initialPharmacy;
   final String initialHealthConditions;
   final String submitLabel;
+  /// If false, the submit button is omitted from the form body.
+  /// Use [GlobalKey<ProfileFormState>] + [ProfileFormState.submit()] to
+  /// trigger submission from outside (e.g. a FAB).
+  final bool showSubmitButton;
   final void Function(String name, String dob, String pcp, String pharmacy, String healthConditions) onSave;
 
   const ProfileForm({
@@ -22,13 +26,15 @@ class ProfileForm extends StatefulWidget {
     required this.initialHealthConditions,
     required this.submitLabel,
     required this.onSave,
+    this.showSubmitButton = true,
   });
 
   @override
-  State<ProfileForm> createState() => _ProfileFormState();
+  ProfileFormState createState() => ProfileFormState();
 }
 
-class _ProfileFormState extends State<ProfileForm> {
+// Public so callers can use GlobalKey<ProfileFormState> to call submit().
+class ProfileFormState extends State<ProfileForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   late TextEditingController _nameController;
   late TextEditingController _dobController;
@@ -75,7 +81,8 @@ class _ProfileFormState extends State<ProfileForm> {
     }
   }
 
-  void _submit() {
+  /// Public — call from a FAB via GlobalKey<ProfileFormState>.
+  void submit() {
     if (_formKey.currentState!.validate() && _dobController.text.isNotEmpty && _nameController.text.isNotEmpty) {
       widget.onSave(
         _nameController.text,
@@ -177,11 +184,13 @@ class _ProfileFormState extends State<ProfileForm> {
             ),
             const SizedBox(height: 24),
             const PrivacyPolicyButton(),
-            const SizedBox(height: 8),
-            PrimaryButton(
-              title: widget.submitLabel,
-              onTap: _submit,
-            ),
+            if (widget.showSubmitButton) ...[
+              const SizedBox(height: 8),
+              PrimaryButton(
+                title: widget.submitLabel,
+                onTap: submit,
+              ),
+            ],
           ],
         ),
       ),

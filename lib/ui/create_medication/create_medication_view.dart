@@ -5,14 +5,21 @@ import 'package:medication_tracker/data/providers/medication_provider.dart';
 import 'package:medication_tracker/data/providers/profile_provider.dart';
 import 'package:medication_tracker/ui/core/header.dart';
 import 'package:medication_tracker/ui/core/medication_form.dart';
-import 'package:medication_tracker/ui/home/home_view.dart';
 import 'package:provider/provider.dart';
 
 class CreateMedicationPage extends StatefulWidget {
   final FDADrug? initialDrug;
   final String? imageFileName;
+  /// Called after the medication is saved. The shell uses this to switch
+  /// to the Home tab. Falls back to popping the route if null.
+  final VoidCallback? onAdded;
 
-  const CreateMedicationPage({super.key, this.initialDrug, this.imageFileName});
+  const CreateMedicationPage({
+    super.key,
+    this.initialDrug,
+    this.imageFileName,
+    this.onAdded,
+  });
 
   @override
   State<CreateMedicationPage> createState() => _CreateMedicationPageState();
@@ -34,11 +41,10 @@ class _CreateMedicationPageState extends State<CreateMedicationPage> {
       await Provider.of<MedicationProvider>(context, listen: false).addMedication(newMedication);
 
       if (!context.mounted) return;
-
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const HomeScreen()),
-      );
+      // Pop back to the FDASearchPage root within the tab, then let the
+      // shell switch to the Home tab via the callback.
+      Navigator.of(context).popUntil((route) => route.isFirst);
+      widget.onAdded?.call();
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to add medication: $e')),
