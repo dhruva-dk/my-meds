@@ -173,7 +173,6 @@ class MedicationTile extends StatelessWidget {
   }
 
   Future<void> _deleteMedication(BuildContext context, int id) async {
-    final theme = Theme.of(context);
     try {
       await Provider.of<MedicationProvider>(context, listen: false)
           .deleteMedication(id);

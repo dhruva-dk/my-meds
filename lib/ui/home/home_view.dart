@@ -208,6 +208,7 @@ class _HomeScreenState extends State<HomeScreen> {
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton.extended(
         key: _exportKey,
+        heroTag: 'home_fab',
         onPressed: () => _shareExport(context),
         backgroundColor: theme.colorScheme.primary,
         elevation: 2,

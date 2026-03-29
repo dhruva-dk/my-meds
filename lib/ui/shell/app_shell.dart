@@ -59,9 +59,10 @@ class _AppShellState extends State<AppShell> with TickerProviderStateMixin {
   }
 
   void _switchToHome() {
-    // Use the GlobalKey directly so this is race-proof — the context of
-    // CreateMedicationPage may already be gone after the async save.
-    _navigatorKeys[1].currentState?.popUntil((r) => r.isFirst);
+    // Clear all tab back-stacks to ensure a clean state after major entity changes.
+    for (var key in _navigatorKeys) {
+      key.currentState?.popUntil((r) => r.isFirst);
+    }
     setState(() => _selectedIndex = 0);
   }
 

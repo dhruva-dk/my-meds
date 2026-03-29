@@ -4,7 +4,6 @@ import 'package:permission_handler/permission_handler.dart';
 class DialogUtil {
   static void showPermissionDeniedDialog(
       BuildContext context, String title, String description) {
-    final theme = Theme.of(context);
 
     showAdaptiveDialog(
       context: context,

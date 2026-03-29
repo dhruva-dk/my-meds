@@ -74,20 +74,27 @@ class SelectProfilePage extends StatelessWidget {
                       itemCount: profileProvider.profiles.length,
                       itemBuilder: (context, index) {
                         final profile = profileProvider.profiles[index];
+                        final isSelected =
+                            profile.id == profileProvider.selectedProfile?.id;
                         return Container(
                           padding: const EdgeInsets.all(16),
                           margin: const EdgeInsets.symmetric(
-                            vertical: 4,
+                            vertical: 8,
                             horizontal: 16,
                           ),
                           decoration: BoxDecoration(
                             color: theme.colorScheme.secondaryContainer,
                             borderRadius: BorderRadius.circular(24),
+                            border: isSelected
+                                ? Border.all(
+                                    color: theme.colorScheme.primary, width: 2)
+                                : null,
                           ),
                           child: InkWell(
                             onTap: () async {
                               try {
-                                await profileProvider.selectProfile(profile.id!);
+                                await profileProvider
+                                    .selectProfile(profile.id!);
                                 if (!context.mounted) return;
                                 if (onProfileSelected != null) {
                                   onProfileSelected!();
@@ -123,8 +130,8 @@ class SelectProfilePage extends StatelessWidget {
                                         style: theme.textTheme.headlineSmall
                                             ?.copyWith(
                                           fontWeight: FontWeight.bold,
-                                          color: theme
-                                              .colorScheme.onSecondaryContainer,
+                                          color: theme.colorScheme
+                                              .onSecondaryContainer,
                                         ),
                                         maxLines: 2,
                                         overflow: TextOverflow.ellipsis,
@@ -135,8 +142,8 @@ class SelectProfilePage extends StatelessWidget {
                                           Icon(
                                             Icons.cake,
                                             size: 16,
-                                            color: theme
-                                                .colorScheme.onSurfaceVariant,
+                                            color: theme.colorScheme
+                                                .onSurfaceVariant,
                                           ),
                                           const SizedBox(width: 8),
                                           Flexible(
@@ -158,8 +165,8 @@ class SelectProfilePage extends StatelessWidget {
                                 ),
                                 IconButton(
                                   icon: Icon(Icons.more_vert,
-                                      color: theme.colorScheme
-                                          .onSecondaryContainer),
+                                      color: theme
+                                          .colorScheme.onSecondaryContainer),
                                   onPressed: () {
                                     showDialog(
                                       context: context,
@@ -171,9 +178,9 @@ class SelectProfilePage extends StatelessWidget {
                                         actions: [
                                           TextButton(
                                             child: const Text('Cancel'),
-                                            onPressed: () => Navigator.of(
-                                                    dialogContext)
-                                                .pop(),
+                                            onPressed: () =>
+                                                Navigator.of(dialogContext)
+                                                    .pop(),
                                           ),
                                           TextButton(
                                             child: const Text('Delete'),
@@ -184,7 +191,8 @@ class SelectProfilePage extends StatelessWidget {
                                                     .deleteProfile(profile.id!);
                                                 if (!context.mounted) return;
                                                 ScaffoldMessenger.of(context)
-                                                    .showSnackBar(const SnackBar(
+                                                    .showSnackBar(
+                                                        const SnackBar(
                                                   content: Text(
                                                     'Profile deleted successfully.',
                                                   ),
@@ -219,6 +227,7 @@ class SelectProfilePage extends StatelessWidget {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton.extended(
+        heroTag: 'select_profile_fab',
         onPressed: () {
           Navigator.push(
             context,
@@ -236,7 +245,8 @@ class SelectProfilePage extends StatelessWidget {
                 color: Theme.of(context).colorScheme.onPrimary,
               ),
         ),
-        icon: Icon(Icons.person_add, color: Theme.of(context).colorScheme.onPrimary),
+        icon: Icon(Icons.person_add,
+            color: Theme.of(context).colorScheme.onPrimary),
       ),
     );
   }

@@ -25,8 +25,7 @@ class ZoomableImage extends StatelessWidget {
   }
 
   void _openFullScreenImage(BuildContext context) {
-    Navigator.push(
-      context,
+    Navigator.of(context, rootNavigator: true).push(
       MaterialPageRoute(
         builder: (context) => FullScreenImage(imagePath: imagePath),
       ),

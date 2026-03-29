@@ -95,6 +95,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
           ),
           floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
           floatingActionButton: FloatingActionButton.extended(
+            heroTag: 'edit_profile_fab',
             onPressed: () => _profileFormKey.currentState?.submit(),
             backgroundColor: theme.colorScheme.primary,
             elevation: 2,
