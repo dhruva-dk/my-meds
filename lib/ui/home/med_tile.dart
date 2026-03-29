@@ -181,12 +181,8 @@ class MedicationTile extends StatelessWidget {
       if (!context.mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'Medication deleted successfully.',
-            style: TextStyle(color: theme.colorScheme.onPrimary),
-          ),
-          backgroundColor: theme.colorScheme.primary,
+        const SnackBar(
+          content: Text('Medication deleted successfully.'),
         ),
       );
     } catch (e) {

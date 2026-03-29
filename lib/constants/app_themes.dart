@@ -28,12 +28,24 @@ class AppThemes {
     ),
     dialogTheme: const DialogThemeData(
       titleTextStyle: TextStyle(
-        color: Colors.black, // Blue text for dialog title
+        color: Colors.black,
         fontSize: 16,
       ),
       contentTextStyle: TextStyle(
-        color: Colors.black, // Blue text for dialog content
+        color: Colors.black,
         fontSize: 16,
+      ),
+    ),
+    snackBarTheme: const SnackBarThemeData(
+      backgroundColor: AppColors.lightTextPrimary,
+      contentTextStyle: TextStyle(
+        color: AppColors.lightBackgroundSecondary,
+        fontFamily: "Inter",
+      ),
+    ),
+    textButtonTheme: TextButtonThemeData(
+      style: TextButton.styleFrom(
+        foregroundColor: AppColors.lightTextPrimary,
       ),
     ),
     textTheme: const TextTheme(
@@ -98,6 +110,18 @@ class AppThemes {
       contentTextStyle: TextStyle(
         color: Colors.white,
         fontSize: 16,
+      ),
+    ),
+    snackBarTheme: const SnackBarThemeData(
+      backgroundColor: AppColors.darkTextPrimary,
+      contentTextStyle: TextStyle(
+        color: AppColors.darkBackgroundPrimary,
+        fontFamily: "Inter",
+      ),
+    ),
+    textButtonTheme: TextButtonThemeData(
+      style: TextButton.styleFrom(
+        foregroundColor: AppColors.darkTextPrimary,
       ),
     ),
     textTheme: lightTheme.textTheme.apply(

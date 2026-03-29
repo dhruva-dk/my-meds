@@ -184,15 +184,10 @@ class SelectProfilePage extends StatelessWidget {
                                                     .deleteProfile(profile.id!);
                                                 if (!context.mounted) return;
                                                 ScaffoldMessenger.of(context)
-                                                    .showSnackBar(SnackBar(
+                                                    .showSnackBar(const SnackBar(
                                                   content: Text(
                                                     'Profile deleted successfully.',
-                                                    style: TextStyle(
-                                                        color: theme.colorScheme
-                                                            .onPrimary),
                                                   ),
-                                                  backgroundColor:
-                                                      theme.colorScheme.primary,
                                                 ));
                                               } catch (e) {
                                                 if (!context.mounted) return;
