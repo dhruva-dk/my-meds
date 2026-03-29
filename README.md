@@ -5,12 +5,13 @@ A simple, private medication list app. Your data stays on your device.
 ---
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/fc699ae1-50c4-4903-a2a6-20ccbc0f5959" width="18%" />
-  <img src="https://github.com/user-attachments/assets/fe35acba-78f0-4589-b103-f6087ccb34d2" width="18%" />
-  <img src="https://github.com/user-attachments/assets/70a094aa-bb49-43d8-89dc-ec892ebc3162" width="18%" />
-  <img src="https://github.com/user-attachments/assets/f3c5d2c8-1254-4925-96d0-5d4edd84aef2" width="18%" />
-  <img src="https://github.com/user-attachments/assets/008b4fb9-f56d-456a-9222-a782dbc56cc7" width="18%" />
+<img width="18%" alt="5" src="https://github.com/user-attachments/assets/c3b535c5-4600-4d9b-8258-369b4911ee5a" />
+<img width="18%" alt="4" src="https://github.com/user-attachments/assets/05d6c687-8ebf-4bb0-b331-d3f4d66b1086" />
+<img width="18%" alt="3" src="https://github.com/user-attachments/assets/cfe1ef0b-41db-485c-a26a-3d3875240722" />
+<img width="18%" alt="2" src="https://github.com/user-attachments/assets/65f17bcb-c83b-497c-8894-1d70dfd3319f" />
+<img width="18%" alt="1" src="https://github.com/user-attachments/assets/87c1150d-c22b-4533-bc7a-e6ca8be35a9c" />
 </p>
+
 
 ---
 
