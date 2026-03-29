@@ -45,7 +45,6 @@ dependencies:
   image_picker: ^1.0.6
   path: ^1.8.3
   permission_handler: ^11.0.1
-  icons_launcher: ^2.1.6
   change_app_package_name: ^1.1.0
   mask_text_input_formatter: ^2.7.0
   auto_size_text: ^3.0.0
@@ -54,13 +53,12 @@ dependencies:
   url_launcher: ^6.2.4
   flutter_native_splash: ^2.3.11
 
-icons_launcher:
+flutter_launcher_icons:
+  android: true
+  ios: true
   image_path: "assets/icon/icon.png"
-  platforms:
-    android:
-      enable: true
-    ios:
-      enable: true
+  adaptive_icon_background: "#2F3A33"
+  adaptive_icon_foreground: "assets/icon/splash_logo.png"
 
 flutter_native_splash:
   color: "#2F3A33"
@@ -80,6 +78,7 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
+  flutter_launcher_icons: ^0.14.4
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
