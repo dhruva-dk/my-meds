@@ -1,16 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:medication_tracker/data/providers/fda_api_provider.dart';
+import 'package:medication_tracker/data/providers/profile_provider.dart';
 import 'package:medication_tracker/services/image/image_service.dart';
 import 'package:medication_tracker/ui/core/primary_button.dart';
 import 'package:medication_tracker/ui/create_medication/create_medication_view.dart';
 import 'package:medication_tracker/ui/core/header.dart';
+import 'package:medication_tracker/ui/core/no_profile_view.dart';
 import 'package:medication_tracker/ui/core/photo_upload_button.dart';
 import 'package:provider/provider.dart';
 import 'package:medication_tracker/ui/search/search_tile.dart';
 import 'dart:async';
 
 class FDASearchPage extends StatefulWidget {
-  const FDASearchPage({super.key});
+  /// Passed through to [CreateMedicationPage] so the shell can switch to
+  /// the Home tab after a medication is added.
+  final VoidCallback? onMedicationAdded;
+
+  const FDASearchPage({super.key, this.onMedicationAdded});
 
   @override
   State<FDASearchPage> createState() => _FDASearchPageState();
@@ -53,6 +59,7 @@ class _FDASearchPageState extends State<FDASearchPage> {
         MaterialPageRoute(
           builder: (context) => CreateMedicationPage(
             imageFileName: imageFileName,
+            onAdded: widget.onMedicationAdded,
           ),
         ),
       );
@@ -73,6 +80,7 @@ class _FDASearchPageState extends State<FDASearchPage> {
         MaterialPageRoute(
           builder: (context) => CreateMedicationPage(
             imageFileName: imageFileName,
+            onAdded: widget.onMedicationAdded,
           ),
         ),
       );
@@ -89,6 +97,19 @@ class _FDASearchPageState extends State<FDASearchPage> {
 
   @override
   Widget build(BuildContext context) {
+    final selectedProfile =
+        context.watch<ProfileProvider>().selectedProfile;
+
+    if (selectedProfile == null) {
+      return const NoProfileView(
+        title: 'Add Medication',
+        header: Header(
+          title: 'Add Medication',
+          showBackButton: false,
+        ),
+      );
+    }
+
     final theme = Theme.of(context);
 
     return Scaffold(
@@ -130,7 +151,8 @@ class _FDASearchPageState extends State<FDASearchPage> {
                           hintText: 'Search',
                           prefixIcon: const Icon(Icons.search),
                           filled: true,
-                          fillColor: Colors.white, // Set background to white
+                          fillColor: theme.colorScheme
+                              .secondaryContainer, // Adapt to theme
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(24),
                             borderSide: BorderSide.none,
@@ -161,8 +183,9 @@ class _FDASearchPageState extends State<FDASearchPage> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) =>
-                                        const CreateMedicationPage(),
+                                    builder: (context) => CreateMedicationPage(
+                                      onAdded: widget.onMedicationAdded,
+                                    ),
                                   ),
                                 );
                               },
@@ -214,6 +237,7 @@ class _FDASearchPageState extends State<FDASearchPage> {
                                               CreateMedicationPage(
                                             initialDrug:
                                                 provider.searchResults[index],
+                                            onAdded: widget.onMedicationAdded,
                                           ),
                                         ),
                                       );

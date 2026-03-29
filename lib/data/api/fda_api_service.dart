@@ -20,7 +20,7 @@ class FDAAPIService {
               .toList());
         }
       }
-      throw Exception('No results found');
+      throw "No results found";
     } catch (e) {
       rethrow;
     }

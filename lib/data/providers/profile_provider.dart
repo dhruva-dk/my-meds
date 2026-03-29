@@ -26,8 +26,18 @@ class ProfileProvider with ChangeNotifier {
 
     try {
       _profiles = await _databaseService.getAllProfiles();
+      // Only auto-select on initial load if nothing is selected
       if (_profiles.isNotEmpty && _selectedProfile == null) {
         _selectedProfile = _profiles.first;
+      } else if (_selectedProfile != null) {
+        // Refresh the selected profile object from the new list if it still exists
+        final index =
+            _profiles.indexWhere((p) => p.id == _selectedProfile?.id);
+        if (index != -1) {
+          _selectedProfile = _profiles[index];
+        } else {
+          _selectedProfile = null;
+        }
       }
     } catch (e) {
       _errorMessage = 'Failed to load profiles: $e';
@@ -69,9 +79,6 @@ class ProfileProvider with ChangeNotifier {
     try {
       await _databaseService.updateProfile(profile);
       await loadProfiles();
-      if (_selectedProfile?.id == profile.id) {
-        _selectedProfile = _profiles.firstWhere((p) => p.id == profile.id);
-      }
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -85,7 +92,7 @@ class ProfileProvider with ChangeNotifier {
     try {
       await _databaseService.deleteProfile(id);
       if (_selectedProfile?.id == id) {
-        _selectedProfile = _profiles.isNotEmpty ? _profiles.first : null;
+        _selectedProfile = null;
       }
       await loadProfiles();
     } finally {
@@ -93,4 +100,6 @@ class ProfileProvider with ChangeNotifier {
       notifyListeners();
     }
   }
+
+
 }

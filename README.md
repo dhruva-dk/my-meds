@@ -18,9 +18,10 @@ A simple, private medication list app. Your data stays on your device.
 
 Most medication apps are either too complex or send your data to external services.  
 **My Meds** was created for people who just want a simple, secure way to track their meds.  
-The app has over 5,000 downloads on the iOS App Store!
+The app has over **7,000 downloads** on the iOS App Store!
 
 ## Tech Stack
+
 Built with Flutter (cross-platform mobile application framework)
 
 ## Features
@@ -34,7 +35,7 @@ Built with Flutter (cross-platform mobile application framework)
 ## Download
 
 - **iOS:** [My Meds on the App Store](https://apps.apple.com/us/app/my-meds-personal-meds-list/id6475703887)
-- **Android:** [Get APKs from GitHub Releases](https://github.com/subbuguru/medication_tracker/releases)
+- **Android:** [Get APKs from GitHub Releases](https://github.com/dhruva-dk/my-meds/releases)
 
 ## Architecture Overview
 
@@ -46,21 +47,20 @@ Built with Flutter (cross-platform mobile application framework)
 ## Development Setup
 
 1. **Clone the repo**
-    ```sh
-    git clone https://github.com/yourusername/medication_tracker.git
-    cd medication_tracker
-    ```
+   ```sh
+   git clone https://github.com/yourusername/my-meds.git
+   cd my-meds
+   ```
 2. **Install Flutter**  
    [Flutter install guide](https://flutter.dev/docs/get-started/install)
 
 3. **Install dependencies**
-    ```sh
-    flutter pub get
-    ```
+
+   ```sh
+   flutter pub get
+   ```
 
 4. **Run the app**
-    ```sh
-    flutter run
-    ```
-
-
+   ```sh
+   flutter run
+   ```

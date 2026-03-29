@@ -42,22 +42,14 @@ class Header extends StatelessWidget {
               child: Row(
                 children: [
                   if (showBackButton && Navigator.of(context).canPop())
-                    Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.rectangle,
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(
-                            color: Colors.white, width: 1), // White border
+                    IconButton(
+                      icon: Icon(
+                        Icons.chevron_left,
+                        color: theme.colorScheme.onSecondary,
+                        size: 32,
                       ),
-                      child: IconButton(
-                        icon: Icon(
-                          Icons.chevron_left,
-                          color: theme.colorScheme.onSecondary,
-                          size: 32,
-                        ),
-                        onPressed:
-                            onBackPressed ?? () => Navigator.of(context).pop(),
-                      ),
+                      onPressed:
+                          onBackPressed ?? () => Navigator.of(context).pop(),
                     ),
                   const SizedBox(width: 16), // Space between icon and text
                   Expanded(

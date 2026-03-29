@@ -2,17 +2,101 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:medication_tracker/data/providers/medication_provider.dart';
 import 'package:medication_tracker/data/providers/profile_provider.dart';
+import 'package:medication_tracker/services/export/pdf_service.dart';
 import 'package:medication_tracker/ui/edit_medication/edit_medication_view.dart';
-import 'package:medication_tracker/ui/search/fda_search_view.dart';
 import 'package:medication_tracker/ui/home/med_tile.dart';
-import 'package:medication_tracker/ui/home/nav_bar.dart';
+import 'package:medication_tracker/ui/core/no_profile_view.dart';
 import 'package:provider/provider.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  final GlobalKey _exportKey = GlobalKey();
+
+  void _shareExport(BuildContext context) async {
+    final pdfService = Provider.of<PDFService>(context, listen: false);
+    final medicationProvider =
+        Provider.of<MedicationProvider>(context, listen: false);
+
+    final box = _exportKey.currentContext?.findRenderObject() as RenderBox?;
+    final Rect? origin =
+        box != null ? box.localToGlobal(Offset.zero) & box.size : null;
+
+    try {
+      await pdfService.shareMedications(medicationProvider.medications,
+          shareOrigin: origin);
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Medications PDF shared successfully!')),
+      );
+    } catch (e) {
+      if (!context.mounted) return;
+      // Handle the case where 'e' is an Exception or a String, 
+      // and remove the 'Exception: ' prefix for a cleaner UI.
+      final String fullError = e.toString();
+      final String cleanError = fullError.startsWith('Exception: ') 
+          ? fullError.replaceFirst('Exception: ', '') 
+          : fullError;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(cleanError)),
+      );
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final profileProvider = Provider.of<ProfileProvider>(context, listen: true);
+    final selectedProfile = profileProvider.selectedProfile;
+
+    if (selectedProfile == null) {
+      return NoProfileView(
+        title: 'Home',
+        header: Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.secondary,
+            borderRadius: const BorderRadius.only(
+              bottomLeft: Radius.circular(48),
+              bottomRight: Radius.circular(48),
+            ),
+          ),
+          padding: EdgeInsets.only(
+            top: MediaQuery.of(context).padding.top + 8,
+            left: 32.0,
+            right: 32.0,
+            bottom: 16.0,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              AutoSizeText(
+                "Name N/A",
+                style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                      color: Theme.of(context).colorScheme.onSecondary,
+                    ),
+                overflow: TextOverflow.ellipsis,
+                minFontSize: 18,
+                maxLines: 1,
+              ),
+              const SizedBox(height: 4),
+              Text(
+                "N/A",
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      color: Theme.of(context).colorScheme.onSecondary,
+                    ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
     final theme = Theme.of(context);
 
     return Scaffold(
@@ -44,7 +128,7 @@ class HomeScreen extends StatelessWidget {
                           ),
                         );
                       }
-                      return Container(); // Return an empty container if no medications
+                      return const SizedBox.shrink();
                     },
                   ),
                   Expanded(
@@ -52,8 +136,7 @@ class HomeScreen extends StatelessWidget {
                       builder: (context, medicationProvider, child) {
                         if (medicationProvider.isLoading) {
                           return const Center(
-                            child: CircularProgressIndicator(),
-                          );
+                              child: CircularProgressIndicator());
                         }
 
                         if (medicationProvider.errorMessage.isNotEmpty) {
@@ -75,7 +158,7 @@ class HomeScreen extends StatelessWidget {
                             child: Padding(
                               padding: const EdgeInsets.all(16.0),
                               child: Text(
-                                "No medications. Add by pressing the + button below.",
+                                "No medications. Add by tapping Add Med below.",
                                 textAlign: TextAlign.center,
                                 style: theme.textTheme.bodyMedium,
                               ),
@@ -124,27 +207,20 @@ class HomeScreen extends StatelessWidget {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const FDASearchPage()),
-          );
-        },
+        key: _exportKey,
+        heroTag: 'home_fab',
+        onPressed: () => _shareExport(context),
         backgroundColor: theme.colorScheme.primary,
         elevation: 2,
         shape: const StadiumBorder(),
         label: Text(
-          'Add',
+          'Export',
           style: theme.textTheme.labelLarge?.copyWith(
             color: theme.colorScheme.onPrimary,
           ),
         ),
-        icon: Icon(
-          Icons.add,
-          color: theme.colorScheme.onPrimary,
-        ),
+        icon: Icon(Icons.share, color: theme.colorScheme.onPrimary),
       ),
-      bottomNavigationBar: const NavBar(),
     );
   }
 

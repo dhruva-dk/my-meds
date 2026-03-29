@@ -10,7 +10,7 @@ import 'package:medication_tracker/services/export/pdf_service.dart';
 import 'package:medication_tracker/services/image/image_service.dart';
 import 'package:medication_tracker/services/permission/check_permission_service.dart';
 import 'package:medication_tracker/services/storage/local_storage_service.dart';
-import 'package:medication_tracker/ui/select_profile/select_profile_view.dart';
+import 'package:medication_tracker/ui/shell/app_shell.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -77,8 +77,9 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           //showSemanticsDebugger: false,
           theme: AppThemes.lightTheme,
+          darkTheme: AppThemes.darkTheme,
           themeMode: ThemeMode.system,
-          home: const SelectProfilePage()),
+          home: const AppShell()),
     );
   }
 }

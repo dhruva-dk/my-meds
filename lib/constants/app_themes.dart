@@ -6,7 +6,7 @@ class AppThemes {
     useMaterial3: true,
     fontFamily: "Inter",
     colorScheme: const ColorScheme.light(
-      primary: AppColors.lightAccent,
+      primary: AppColors.lightAccentSecondary,
       onPrimary: AppColors.lightBackgroundSecondary,
       secondary: AppColors.lightAccentSecondary,
       onSecondary: AppColors.lightBackgroundSecondary,
@@ -28,12 +28,24 @@ class AppThemes {
     ),
     dialogTheme: const DialogThemeData(
       titleTextStyle: TextStyle(
-        color: Colors.black, // Blue text for dialog title
+        color: Colors.black,
         fontSize: 16,
       ),
       contentTextStyle: TextStyle(
-        color: Colors.black, // Blue text for dialog content
+        color: Colors.black,
         fontSize: 16,
+      ),
+    ),
+    snackBarTheme: const SnackBarThemeData(
+      backgroundColor: AppColors.lightTextPrimary,
+      contentTextStyle: TextStyle(
+        color: AppColors.lightBackgroundSecondary,
+        fontFamily: "Inter",
+      ),
+    ),
+    textButtonTheme: TextButtonThemeData(
+      style: TextButton.styleFrom(
+        foregroundColor: AppColors.lightTextPrimary,
       ),
     ),
     textTheme: const TextTheme(
@@ -63,6 +75,58 @@ class AppThemes {
         fontSize: 12,
         fontWeight: FontWeight.normal,
       ),
+    ),
+  );
+
+  static final ThemeData darkTheme = ThemeData(
+    useMaterial3: true,
+    fontFamily: "Inter",
+    colorScheme: const ColorScheme.dark(
+      primary: AppColors.lightAccentSecondary, // Keeping high-brand consistency
+      onPrimary: Colors.white,
+      secondary: AppColors.lightAccentSecondary,
+      onSecondary: Colors.white,
+      surface: AppColors.darkBackgroundPrimary,
+      onSurface: AppColors.darkTextPrimary,
+      secondaryContainer: AppColors.darkBackgroundSecondary,
+      onSecondaryContainer: AppColors.darkTextPrimary,
+      error: AppColors.darkError,
+      onError: AppColors.darkTextPrimary,
+      onSurfaceVariant: AppColors.darkTextSecondary,
+    ),
+    scaffoldBackgroundColor: AppColors.darkBackgroundPrimary,
+    popupMenuTheme: const PopupMenuThemeData(
+      color: AppColors.darkBackgroundSecondary,
+      textStyle: TextStyle(color: AppColors.darkTextPrimary),
+    ),
+    datePickerTheme: const DatePickerThemeData(
+      backgroundColor: AppColors.darkBackgroundSecondary,
+    ),
+    dialogTheme: const DialogThemeData(
+      titleTextStyle: TextStyle(
+        color: Colors.white,
+        fontSize: 16,
+      ),
+      contentTextStyle: TextStyle(
+        color: Colors.white,
+        fontSize: 16,
+      ),
+    ),
+    snackBarTheme: const SnackBarThemeData(
+      backgroundColor: AppColors.darkTextPrimary,
+      contentTextStyle: TextStyle(
+        color: AppColors.darkBackgroundPrimary,
+        fontFamily: "Inter",
+      ),
+    ),
+    textButtonTheme: TextButtonThemeData(
+      style: TextButton.styleFrom(
+        foregroundColor: AppColors.darkTextPrimary,
+      ),
+    ),
+    textTheme: lightTheme.textTheme.apply(
+      bodyColor: AppColors.darkTextPrimary,
+      displayColor: AppColors.darkTextPrimary,
     ),
   );
 }

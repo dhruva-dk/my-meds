@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import 'package:medication_tracker/data/model/medication_model.dart';
 import 'package:medication_tracker/data/model/user_profile_model.dart';
 import 'package:path/path.dart' as path;
@@ -127,7 +128,7 @@ class DatabaseService {
   Future<int> _createDefaultProfile(Transaction txn) async {
     return await txn.insert(profileTable, {
       'name': 'Default Profile',
-      'dob': DateTime.now().toIso8601String(),
+      'dob': DateFormat('MM/dd/yyyy').format(DateTime.now()),
       'pcp': '',
       'healthConditions': '',
       'pharmacy': ''
@@ -137,7 +138,8 @@ class DatabaseService {
   // Add methods for CRUD operations on profiles and medications
   Future<List<UserProfile>> getAllProfiles() async {
     Database db = await database;
-    final List<Map<String, dynamic>> maps = await db.query(profileTable);
+    final List<Map<String, dynamic>> maps =
+        await db.query(profileTable, orderBy: 'name COLLATE NOCASE');
     return List.generate(maps.length, (i) => UserProfile.fromMap(maps[i]));
   }
 
@@ -182,6 +184,7 @@ class DatabaseService {
       medicationTable,
       where: 'profile_id = ?',
       whereArgs: [profileId],
+      orderBy: 'name COLLATE NOCASE',
     );
     return List.generate(maps.length, (i) => Medication.fromMap(maps[i]));
   }
