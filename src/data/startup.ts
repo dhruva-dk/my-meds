@@ -1,11 +1,7 @@
 import { File, Paths } from 'expo-file-system';
-import type { Db } from './db';
+import { openAppDatabase, type Documents } from './openAppDatabase';
 import { openDeviceDb } from './openDeviceDb';
-import { prepareDatabase } from './prepareDatabase';
 import { initStore } from './store';
-
-const DATABASE_NAME = 'CombinedDatabase.db';
-const BACKUP_NAME = 'CombinedDatabase.v1.bak';
 
 export type StartupResult = { ok: true } | { ok: false; error: unknown };
 
@@ -18,24 +14,23 @@ export function startApp(): StartupResult {
 }
 
 function openAndLoad(): StartupResult {
-  let db: Db | undefined;
   try {
-    db = openDeviceDb(DATABASE_NAME);
-    const backup = new File(Paths.document, BACKUP_NAME);
-    prepareDatabase(db, { backupPath: filePath(backup), backupExists: backup.exists });
-    initStore(db);
+    initStore(openAppDatabase(deviceDocuments()));
     return { ok: true };
   } catch (error) {
     console.error('Could not open data', error);
-    try {
-      db?.close();
-    } catch {
-      // Already failed; the fatal screen is shown either way.
-    }
     return { ok: false, error };
   }
 }
 
-function filePath(file: File): string {
-  return decodeURIComponent(file.uri.replace(/^file:\/\//, ''));
+function deviceDocuments(): Documents {
+  return {
+    path: decodeURIComponent(Paths.document.uri.replace(/^file:\/\//, '').replace(/\/$/, '')),
+    exists: (name) => new File(Paths.document, name).exists,
+    remove: (name) => {
+      const file = new File(Paths.document, name);
+      if (file.exists) file.delete();
+    },
+    openDb: openDeviceDb,
+  };
 }

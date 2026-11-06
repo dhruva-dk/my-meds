@@ -1,8 +1,9 @@
-import { copyFileSync, mkdtempSync } from 'node:fs';
+import { copyFileSync, existsSync, mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { DatabaseSync } from 'node:sqlite';
 import { configureConnection, type Db, type SqlValue } from '@/data/db';
+import type { Documents } from '@/data/openAppDatabase';
 
 /** Opens a database file with node:sqlite behind the app's Db interface. */
 export function openTestDb(path: string): Db {
@@ -31,4 +32,14 @@ export function copyFixture(name: 'v1-fresh.db' | 'v1-seeded.db'): string {
   const path = join(tempDir(), 'CombinedDatabase.db');
   copyFileSync(join(__dirname, 'fixtures', name), path);
   return path;
+}
+
+/** The app's Documents directory, backed by a real directory on disk. */
+export function nodeDocuments(dir: string = tempDir()): Documents {
+  return {
+    path: dir,
+    exists: (name) => existsSync(join(dir, name)),
+    remove: (name) => rmSync(join(dir, name), { force: true }),
+    openDb: (name) => openTestDb(join(dir, name)),
+  };
 }

@@ -1,4 +1,5 @@
 import { transaction, type Db } from './db';
+import { attachLegacy, importLegacy, type LegacyFiles } from './legacyImport';
 
 export const SCHEMA_VERSION = 2;
 
@@ -6,6 +7,8 @@ export type PrepareOptions = {
   /** Filesystem path for the one-time copy of a 1.x database, taken before it is first migrated. */
   backupPath: string;
   backupExists: boolean;
+  /** Pre-1.1 databases to import. Only used when the database has never been set up. */
+  legacy?: LegacyFiles;
 };
 
 /**
@@ -14,22 +17,33 @@ export type PrepareOptions = {
  * Every step only adds, so 1.2.0 can still open the file if 2.0 is pulled. 1.2.0 resets
  * `user_version` to 1 when it opens a newer file, so each step is safe to repeat.
  */
-export function prepareDatabase(db: Db, { backupPath, backupExists }: PrepareOptions): void {
+export function prepareDatabase(
+  db: Db,
+  { backupPath, backupExists, legacy = {} }: PrepareOptions,
+): void {
   const version = userVersion(db);
   if (version === 1 && !backupExists) {
     db.run('VACUUM INTO ?', [backupPath]);
   }
 
-  transaction(db, () => {
-    if (version < SCHEMA_VERSION) {
-      createV1Tables(db);
-      addV2Schema(db);
-      deleteOrphanedMedications(db);
-      cleanUpLegacyValues(db);
-      db.exec(`PRAGMA user_version = ${SCHEMA_VERSION}`);
-    }
-    repairInvariants(db);
-  });
+  const detachLegacy = version === 0 ? attachLegacy(db, legacy) : () => {};
+  try {
+    transaction(db, () => migrate(db, version));
+  } finally {
+    detachLegacy();
+  }
+}
+
+function migrate(db: Db, version: number) {
+  if (version < SCHEMA_VERSION) {
+    createV1Tables(db);
+    if (version === 0) importLegacy(db);
+    addV2Schema(db);
+    deleteOrphanedMedications(db);
+    cleanUpLegacyValues(db);
+    db.exec(`PRAGMA user_version = ${SCHEMA_VERSION}`);
+  }
+  repairInvariants(db);
 }
 
 function userVersion(db: Db): number {
