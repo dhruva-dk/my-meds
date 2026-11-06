@@ -1,7 +1,9 @@
 import { DarkTheme, DefaultTheme, ThemeProvider, type ErrorBoundaryProps } from 'expo-router';
 import { NativeTabs } from 'expo-router/native-tabs';
 import { StatusBar } from 'expo-status-bar';
+import { useState } from 'react';
 import { useColorScheme } from 'react-native';
+import { startApp } from '@/data/startup';
 import { MessageScreen } from '@/ui/MessageScreen';
 import { colors, tintHex } from '@/ui/theme';
 
@@ -17,12 +19,22 @@ export function ErrorBoundary({ retry }: ErrorBoundaryProps) {
 }
 
 export default function RootLayout() {
+  const [startup] = useState(startApp);
   const scheme = useColorScheme();
   const base = scheme === 'dark' ? DarkTheme : DefaultTheme;
   const theme = {
     ...base,
     colors: { ...base.colors, primary: scheme === 'dark' ? tintHex.dark : tintHex.light },
   };
+
+  if (!startup.ok) {
+    return (
+      <MessageScreen
+        title="Couldn't open your data"
+        message="My Meds couldn't open your medications. Nothing was changed. Close the app and try again."
+      />
+    );
+  }
 
   return (
     <ThemeProvider value={theme}>

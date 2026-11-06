@@ -1,4 +1,4 @@
-import { mkdtempSync } from 'node:fs';
+import { copyFileSync, mkdtempSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { DatabaseSync } from 'node:sqlite';
@@ -24,4 +24,11 @@ export function openTestDb(path: string): Db {
 /** A fresh, empty temporary directory. */
 export function tempDir(): string {
   return mkdtempSync(join(tmpdir(), 'mymeds-'));
+}
+
+/** Copies a committed 1.2.0 fixture database into a fresh temporary directory. */
+export function copyFixture(name: 'v1-fresh.db' | 'v1-seeded.db'): string {
+  const path = join(tempDir(), 'CombinedDatabase.db');
+  copyFileSync(join(__dirname, 'fixtures', name), path);
+  return path;
 }
