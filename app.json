@@ -1,0 +1,39 @@
+{
+  "expo": {
+    "name": "My Meds",
+    "slug": "my-meds",
+    "version": "2.0.0",
+    "platforms": ["ios"],
+    "orientation": "portrait",
+    "icon": "./assets/icon/icon.png",
+    "scheme": "mymeds",
+    "userInterfaceStyle": "automatic",
+    "ios": {
+      "bundleIdentifier": "com.dhruvakumar.rxtrack",
+      "buildNumber": "8",
+      "appleTeamId": "U8T9DRAA9W",
+      "supportsTablet": false,
+      "config": {
+        "usesNonExemptEncryption": false
+      },
+      "infoPlist": {
+        "LSApplicationCategoryType": "public.app-category.healthcare-fitness"
+      }
+    },
+    "plugins": [
+      "expo-router",
+      "expo-sqlite",
+      "expo-sharing",
+      "@react-native-community/datetimepicker",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/icon/splash_logo.png",
+          "imageWidth": 360,
+          "resizeMode": "contain",
+          "backgroundColor": "#2F3A33"
+        }
+      ]
+    ]
+  }
+}
