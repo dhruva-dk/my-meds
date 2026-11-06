@@ -19,12 +19,7 @@ export interface Db {
 export function transaction<T>(db: Db, fn: () => T): T {
   db.exec('BEGIN');
   try {
-    const result = fn();
-    if (isThenable(result)) {
-      throw new Error(
-        'transaction() needs a synchronous function; awaited work would run after COMMIT.',
-      );
-    }
+    const result = assertSynchronous(fn());
     db.exec('COMMIT');
     return result;
   } catch (error) {
@@ -43,6 +38,12 @@ export function configureConnection(db: Db): Db {
   return db;
 }
 
-function isThenable(value: unknown): boolean {
-  return typeof (value as { then?: unknown } | null)?.then === 'function';
+/** Writes must finish inside their transaction; awaited work would run after COMMIT. */
+export function assertSynchronous<T>(value: T): T {
+  if (typeof (value as { then?: unknown } | null)?.then === 'function') {
+    throw new Error(
+      'Database writes need a synchronous function; awaited work would run after COMMIT.',
+    );
+  }
+  return value;
 }

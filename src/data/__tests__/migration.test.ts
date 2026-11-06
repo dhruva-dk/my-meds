@@ -1,20 +1,16 @@
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import type { Db } from '@/data/db';
-import { prepareDatabase } from '@/data/prepareDatabase';
-import { copyFixture, openTestDb, tempDir } from '../../../test/nodeDb';
+import { BACKUP_FILE, openAppDatabase } from '@/data/openAppDatabase';
+import { copyFixture, nodeDocuments, openTestDb, tempDir } from '../../../test/nodeDb';
 
+/** Opens the database at `path` the way the app does at launch. */
 function prepare(path: string): Db {
-  const db = openTestDb(path);
-  prepareDatabase(db, {
-    backupPath: backupPathFor(path),
-    backupExists: existsSync(backupPathFor(path)),
-  });
-  return db;
+  return openAppDatabase(nodeDocuments(dirname(path))).db;
 }
 
 function backupPathFor(path: string) {
-  return join(dirname(path), 'CombinedDatabase.v1.bak');
+  return join(dirname(path), BACKUP_FILE);
 }
 
 const medicationRows = (db: Db) =>
@@ -23,7 +19,7 @@ const medicationRows = (db: Db) =>
      FROM medications ORDER BY id`,
   );
 
-describe('prepareDatabase on the seeded 1.2.0 database', () => {
+describe('migrating the seeded 1.2.0 database', () => {
   it('migrates every medication to exactly the expected row', () => {
     const db = prepare(copyFixture('v1-seeded.db'));
 
@@ -142,7 +138,7 @@ const activeProfileId = (db: Db) =>
   db.get<{ active_profile_id: number }>('SELECT active_profile_id FROM app_state')
     ?.active_profile_id;
 
-describe('prepareDatabase on 1.2.0 databases', () => {
+describe('migrating 1.2.0 databases', () => {
   it('keeps profiles unchanged and starts on the profile 1.2.0 showed first', () => {
     const db = prepare(copyFixture('v1-seeded.db'));
 
@@ -216,6 +212,37 @@ describe('prepareDatabase on 1.2.0 databases', () => {
     expect(again.get('PRAGMA user_version')).toEqual({ user_version: 2 });
   });
 
+  it('drops the generic name and dosage form when 1.2.0 renamed the medication', () => {
+    const path = copyFixture('v1-seeded.db');
+    const db = prepare(path);
+    // After a rollback, 1.2.0 can edit only the columns it knows about.
+    db.exec('PRAGMA user_version = 1');
+    db.run("UPDATE medications SET name = 'Crestor', dosage = '10 mg' WHERE id = 1");
+    db.close();
+
+    const again = prepare(path);
+
+    expect(
+      again.get('SELECT name, generic_name, dosage_form FROM medications WHERE id = 1'),
+    ).toEqual({ name: 'Crestor', generic_name: null, dosage_form: null });
+    expect(again.get('SELECT generic_name FROM medications WHERE id = 5')).toEqual({
+      generic_name: 'Ibuprofen',
+    });
+  });
+
+  it('keeps values saved in 2.0 when migrating again after a rollback', () => {
+    const path = copyFixture('v1-seeded.db');
+    const db = prepare(path);
+    // A note typed in 2.0 that happens to look like what 1.2.0 saved.
+    db.run("UPDATE medications SET additionalInfo = 'Dosage type: chewable' WHERE id = 1");
+    db.exec('PRAGMA user_version = 1');
+    db.close();
+
+    expect(
+      prepare(path).get('SELECT dosage_form, additionalInfo FROM medications WHERE id = 1'),
+    ).toEqual({ dosage_form: 'Tablet, Film Coated', additionalInfo: 'Dosage type: chewable' });
+  });
+
   it('keeps every column 1.2.0 reads', () => {
     const db = prepare(copyFixture('v1-seeded.db'));
     const columns = (table: string) =>
@@ -237,16 +264,20 @@ describe('prepareDatabase on 1.2.0 databases', () => {
     setup.close();
     const before = readFileSync(path);
 
-    const db = openTestDb(path);
-    expect(() =>
-      prepareDatabase(db, {
-        backupPath: backupPathFor(path),
-        backupExists: existsSync(backupPathFor(path)),
-      }),
-    ).toThrow();
-    db.close();
+    expect(() => prepare(path)).toThrow();
 
     expect(readFileSync(path).equals(before)).toBe(true);
+  });
+
+  it('backs up again when a killed launch left the backup unfinished', () => {
+    const path = copyFixture('v1-seeded.db');
+    writeFileSync(join(dirname(path), `${BACKUP_FILE}.partial`), 'the first half of a backup');
+    const original = v1Contents(openTestDb(path));
+
+    prepare(path);
+
+    expect(v1Contents(openTestDb(backupPathFor(path)))).toEqual(original);
+    expect(existsSync(join(dirname(path), `${BACKUP_FILE}.partial`))).toBe(false);
   });
 
   it('backs up the 1.2.0 database exactly once', () => {
@@ -272,7 +303,7 @@ const v1Contents = (db: Db) => ({
   medications: db.all('SELECT * FROM medications ORDER BY id'),
 });
 
-describe('prepareDatabase on a new install', () => {
+describe('a new install', () => {
   it('creates an active Default Profile with no date of birth and no backup', () => {
     const path = join(tempDir(), 'CombinedDatabase.db');
     const db = prepare(path);
@@ -286,7 +317,7 @@ describe('prepareDatabase on a new install', () => {
   });
 });
 
-describe('prepareDatabase repairs invariants on every launch', () => {
+describe('repairing invariants on every launch', () => {
   it('creates Default Profile when no profile exists', () => {
     const path = copyFixture('v1-fresh.db');
     prepare(path).exec('DELETE FROM profiles');
@@ -303,12 +334,17 @@ describe('prepareDatabase repairs invariants on every launch', () => {
     const path = copyFixture('v1-seeded.db');
     const db = prepare(path);
     db.run('UPDATE app_state SET active_profile_id = 2');
-    // 1.2.0 deletes profiles without foreign keys, so nothing clears the reference.
+    // After a rollback, 1.2.0 resets the version and deletes a profile without foreign keys,
+    // so nothing clears the reference or the profile's medications.
+    db.exec('PRAGMA user_version = 1');
     db.exec('PRAGMA foreign_keys = OFF');
     db.run('DELETE FROM profiles WHERE id = 2');
     db.close();
 
-    expect(activeProfileId(prepare(path))).toBe(1);
+    const again = prepare(path);
+
+    expect(activeProfileId(again)).toBe(1);
+    expect(again.all('SELECT id FROM medications WHERE profile_id = 2')).toEqual([]);
   });
 
   it('keeps an active profile that still exists', () => {

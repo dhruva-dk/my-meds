@@ -15,7 +15,8 @@ export function startApp(): StartupResult {
 
 function openAndLoad(): StartupResult {
   try {
-    initStore(openAppDatabase(deviceDocuments()));
+    const { db, snapshot } = openAppDatabase(deviceDocuments());
+    initStore(db, snapshot);
     return { ok: true };
   } catch (error) {
     console.error('Could not open data', error);
@@ -31,6 +32,10 @@ function deviceDocuments(): Documents {
       const file = new File(Paths.document, name);
       if (file.exists) file.delete();
     },
+    copy: (from, to) =>
+      new File(Paths.document, from).copySync(new File(Paths.document, to), { overwrite: true }),
+    move: (from, to) =>
+      new File(Paths.document, from).moveSync(new File(Paths.document, to), { overwrite: true }),
     openDb: openDeviceDb,
   };
 }

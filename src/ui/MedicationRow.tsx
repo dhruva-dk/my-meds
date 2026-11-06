@@ -15,20 +15,32 @@ export function MedicationRow({ name, genericName, dosage, photoUri, onPress }: 
   const label = [name, showGeneric ? `generic ${genericName}` : null, dosage || null]
     .filter(Boolean)
     .join(', ');
-  return (
-    <Pressable
-      onPress={onPress}
-      disabled={!onPress}
-      accessibilityRole={onPress ? 'button' : undefined}
-      accessibilityLabel={label}
-      style={({ pressed }) => [styles.row, pressed && styles.pressed]}
-    >
+  const content = (
+    <>
       <Thumbnail uri={photoUri} />
       <View style={styles.text}>
         <Text style={styles.name}>{name}</Text>
         {showGeneric ? <Text style={styles.detail}>{genericName}</Text> : null}
         {dosage ? <Text style={styles.detail}>{dosage}</Text> : null}
       </View>
+    </>
+  );
+  // A disabled Pressable would make VoiceOver read every row as "dimmed".
+  if (!onPress) {
+    return (
+      <View accessible accessibilityLabel={label} style={styles.row}>
+        {content}
+      </View>
+    );
+  }
+  return (
+    <Pressable
+      onPress={onPress}
+      accessibilityRole="button"
+      accessibilityLabel={label}
+      style={({ pressed }) => [styles.row, pressed && styles.pressed]}
+    >
+      {content}
     </Pressable>
   );
 }

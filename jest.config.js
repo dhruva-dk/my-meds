@@ -4,4 +4,5 @@ module.exports = {
   roots: ['<rootDir>/src', '<rootDir>/test'],
   transform: { '\\.[jt]sx?$': ['babel-jest', { presets: ['babel-preset-expo'] }] },
   moduleNameMapper: { '^@/(.*)$': '<rootDir>/src/$1' },
+  setupFilesAfterEnv: ['<rootDir>/test/setup.ts'],
 };

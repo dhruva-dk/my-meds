@@ -1,14 +1,14 @@
-import { existsSync } from 'node:fs';
-import { dirname, join } from 'node:path';
+import { dirname } from 'node:path';
 import type { Db } from '@/data/db';
-import { prepareDatabase } from '@/data/prepareDatabase';
-import { copyFixture, openTestDb } from './nodeDb';
+import { openAppDatabase } from '@/data/openAppDatabase';
+import type { Snapshot } from '@/data/snapshot';
+import { copyFixture, nodeDocuments } from './nodeDb';
 
-/** Opens a copy of a 1.2.0 fixture, migrated and repaired the way the app does at launch. */
+/** Opens a copy of a 1.2.0 fixture the way the app does at launch. */
+export function openFixture(name: 'v1-fresh.db' | 'v1-seeded.db'): { db: Db; snapshot: Snapshot } {
+  return openAppDatabase(nodeDocuments(dirname(copyFixture(name))));
+}
+
 export function preparedFixture(name: 'v1-fresh.db' | 'v1-seeded.db'): Db {
-  const path = copyFixture(name);
-  const db = openTestDb(path);
-  const backupPath = join(dirname(path), 'CombinedDatabase.v1.bak');
-  prepareDatabase(db, { backupPath, backupExists: existsSync(backupPath) });
-  return db;
+  return openFixture(name).db;
 }

@@ -1,4 +1,4 @@
-import { copyFileSync, existsSync, mkdtempSync, rmSync } from 'node:fs';
+import { copyFileSync, existsSync, mkdtempSync, renameSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { DatabaseSync } from 'node:sqlite';
@@ -22,9 +22,17 @@ export function openTestDb(path: string): Db {
   });
 }
 
-/** A fresh, empty temporary directory. */
+const tempDirs: string[] = [];
+
+/** A fresh, empty temporary directory, removed after the test file finishes. */
 export function tempDir(): string {
-  return mkdtempSync(join(tmpdir(), 'mymeds-'));
+  const dir = mkdtempSync(join(tmpdir(), 'mymeds-'));
+  tempDirs.push(dir);
+  return dir;
+}
+
+export function removeTempDirs(): void {
+  tempDirs.splice(0).forEach((dir) => rmSync(dir, { recursive: true, force: true }));
 }
 
 /** Copies a committed 1.2.0 fixture database into a fresh temporary directory. */
@@ -40,6 +48,8 @@ export function nodeDocuments(dir: string = tempDir()): Documents {
     path: dir,
     exists: (name) => existsSync(join(dir, name)),
     remove: (name) => rmSync(join(dir, name), { force: true }),
+    copy: (from, to) => copyFileSync(join(dir, from), join(dir, to)),
+    move: (from, to) => renameSync(join(dir, from), join(dir, to)),
     openDb: (name) => openTestDb(join(dir, name)),
   };
 }

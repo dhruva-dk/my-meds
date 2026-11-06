@@ -1,9 +1,14 @@
 import { commit, getSnapshot, initStore, subscribe } from '@/data/store';
-import { preparedFixture } from '../../../test/prepared';
+import { openFixture } from '../../../test/prepared';
+
+function open(name: 'v1-seeded.db') {
+  const { db, snapshot } = openFixture(name);
+  initStore(db, snapshot);
+}
 
 describe('store', () => {
   it('rebuilds the snapshot and notifies subscribers after a commit', () => {
-    initStore(preparedFixture('v1-seeded.db'));
+    open('v1-seeded.db');
     const before = getSnapshot();
     const listener = jest.fn();
     const unsubscribe = subscribe(listener);
@@ -17,7 +22,7 @@ describe('store', () => {
   });
 
   it('leaves the data and snapshot unchanged when a commit throws', () => {
-    initStore(preparedFixture('v1-seeded.db'));
+    open('v1-seeded.db');
     const before = getSnapshot();
     const listener = jest.fn();
     const unsubscribe = subscribe(listener);
@@ -34,5 +39,34 @@ describe('store', () => {
     commit(() => undefined);
     expect(getSnapshot().activeProfile.name).toBe('Default Profile');
     unsubscribe();
+  });
+
+  it('keeps a valid active profile when a commit deletes it', () => {
+    open('v1-seeded.db');
+    commit((db) => db.run('UPDATE app_state SET active_profile_id = 3'));
+
+    commit((db) => db.run('DELETE FROM profiles WHERE id = 3'));
+    expect(getSnapshot().activeProfile.name).toBe('Default Profile');
+
+    commit((db) => db.run('DELETE FROM profiles'));
+    expect(getSnapshot().profiles).toEqual([
+      { id: 4, name: 'Default Profile', dob: '', pcp: '', healthConditions: '', pharmacy: '' },
+    ]);
+    expect(getSnapshot().activeProfile.id).toBe(4);
+    expect(getSnapshot().medications).toEqual([]);
+  });
+
+  it('refuses an async function, leaving the data unchanged', () => {
+    open('v1-seeded.db');
+    const before = getSnapshot();
+
+    expect(() =>
+      commit(async (db) => {
+        db.run("UPDATE profiles SET name = 'Changed' WHERE id = 1");
+      }),
+    ).toThrow(/synchronous/);
+
+    commit(() => undefined);
+    expect(getSnapshot()).toEqual(before);
   });
 });

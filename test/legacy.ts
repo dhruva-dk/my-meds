@@ -1,6 +1,8 @@
+import { copyFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { DatabaseSync } from 'node:sqlite';
 import type { SqlValue } from '@/data/db';
-import { openTestDb } from './nodeDb';
+import { openTestDb, tempDir } from './nodeDb';
 
 /** Table definitions exactly as the pre-1.1 app created them (schema version 2). */
 const PROFILE_TABLE = `
@@ -62,4 +64,22 @@ export function writeLegacyMedications(
     rows,
     v1 ? 1 : 2,
   );
+}
+
+/**
+ * Leaves `name` as the old app would if it were killed mid-write: a hot journal next to a
+ * file that already holds part of an unfinished change.
+ */
+export function leaveHotJournal(dir: string, name: string, unfinishedChange: string) {
+  const scratch = join(tempDir(), name);
+  copyFileSync(join(dir, name), scratch);
+  const db = new DatabaseSync(scratch);
+  // A tiny page cache makes SQLite write changed pages to the file before committing.
+  db.exec('PRAGMA cache_size = 1');
+  db.exec('BEGIN');
+  db.exec(unfinishedChange);
+  copyFileSync(scratch, join(dir, name));
+  copyFileSync(`${scratch}-journal`, join(dir, `${name}-journal`));
+  db.exec('ROLLBACK');
+  db.close();
 }

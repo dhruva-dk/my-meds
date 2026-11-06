@@ -1,52 +1,46 @@
 import { transaction, type Db } from './db';
-import { attachLegacy, importLegacy, type LegacyFiles } from './legacyImport';
+import { repairInvariants } from './invariants';
+import { attachLegacy, importLegacy, type AttachedLegacy, type LegacyFiles } from './legacyImport';
+import { loadSnapshot, type Snapshot } from './snapshot';
 
 export const SCHEMA_VERSION = 2;
 
-export type PrepareOptions = {
-  /** Filesystem path for the one-time copy of a 1.x database, taken before it is first migrated. */
-  backupPath: string;
-  backupExists: boolean;
-  /** Pre-1.1 databases to import. Only used when the database has never been set up. */
-  legacy?: LegacyFiles;
-};
-
 /**
- * Brings the database to the current schema and repairs its invariants.
+ * Brings the database to the current schema, repairs its invariants and loads the first
+ * snapshot, all in one transaction: if anything fails, nothing was changed.
  *
  * Every step only adds, so 1.2.0 can still open the file if 2.0 is pulled. 1.2.0 resets
  * `user_version` to 1 when it opens a newer file, so each step is safe to repeat.
+ *
+ * `legacy` names pre-1.1 databases to import if this database has never been set up.
  */
-export function prepareDatabase(
-  db: Db,
-  { backupPath, backupExists, legacy = {} }: PrepareOptions,
-): void {
+export function prepareDatabase(db: Db, legacy: LegacyFiles = {}): Snapshot {
   const version = userVersion(db);
-  if (version === 1 && !backupExists) {
-    db.run('VACUUM INTO ?', [backupPath]);
-  }
-
-  const detachLegacy = version === 0 ? attachLegacy(db, legacy) : () => {};
+  const isEmpty = version === 0 && !db.get("SELECT 1 FROM sqlite_master WHERE name = 'profiles'");
+  const attached = isEmpty ? attachLegacy(db, legacy) : null;
   try {
-    transaction(db, () => migrate(db, version));
+    return transaction(db, () => {
+      if (version < SCHEMA_VERSION) migrate(db, attached);
+      repairInvariants(db);
+      return loadSnapshot(db);
+    });
   } finally {
-    detachLegacy();
+    attached?.detach();
   }
 }
 
-function migrate(db: Db, version: number) {
-  if (version < SCHEMA_VERSION) {
-    createV1Tables(db);
-    if (version === 0) importLegacy(db);
-    addV2Schema(db);
-    deleteOrphanedMedications(db);
-    cleanUpLegacyValues(db);
-    db.exec(`PRAGMA user_version = ${SCHEMA_VERSION}`);
-  }
-  repairInvariants(db);
+function migrate(db: Db, legacy: AttachedLegacy | null) {
+  createV1Tables(db);
+  if (legacy) importLegacy(db, legacy);
+  addV2Schema(db);
+  dropDetailsOfRenamedMedications(db);
+  deleteOrphanedMedications(db);
+  cleanUpLegacyValues(db);
+  db.run('UPDATE medications SET details_name = name');
+  db.exec(`PRAGMA user_version = ${SCHEMA_VERSION}`);
 }
 
-function userVersion(db: Db): number {
+export function userVersion(db: Db): number {
   return db.get<{ user_version: number }>('PRAGMA user_version')?.user_version ?? 0;
 }
 
@@ -77,7 +71,9 @@ function addV2Schema(db: Db) {
   const columns = new Set(
     db.all<{ name: string }>('PRAGMA table_info(medications)').map((column) => column.name),
   );
-  for (const column of ['generic_name', 'dosage_form', 'ndc']) {
+  // details_name is the name the generic name, dosage form and NDC were saved with.
+  // 2.0 sets it on every save; 1.2.0 doesn't know it, so it detects renames made in 1.2.0.
+  for (const column of ['generic_name', 'dosage_form', 'ndc', 'details_name']) {
     if (!columns.has(column)) db.exec(`ALTER TABLE medications ADD COLUMN ${column} TEXT`);
   }
   db.exec(`
@@ -85,6 +81,14 @@ function addV2Schema(db: Db) {
       id INTEGER PRIMARY KEY CHECK (id = 1),
       active_profile_id INTEGER REFERENCES profiles (id) ON DELETE SET NULL
     );
+  `);
+}
+
+/** After a rollback, 1.2.0 can rename a medication; its 2.0 details then describe another drug. */
+function dropDetailsOfRenamedMedications(db: Db) {
+  db.run(`
+    UPDATE medications SET generic_name = NULL, dosage_form = NULL, ndc = NULL
+    WHERE details_name IS NOT name
   `);
 }
 
@@ -99,13 +103,25 @@ const UNKNOWN_FORM = 'Unknown';
 const FDA_NAME = /^Brand: ([^\n]*)\nGeneric: ([^\n]*)$/;
 const DOSAGE_TYPE = /^Dosage type: ([^\n]*)$/;
 
-type LegacyRow = { id: number; name: string; dosage: string; additionalInfo: string };
+type LegacyRow = {
+  id: number;
+  name: string;
+  generic_name: string | null;
+  dosage: string;
+  dosage_form: string | null;
+  additionalInfo: string;
+};
 
-/** Splits values 1.2.0 packed into text, but only when the whole value matches exactly. */
+/**
+ * Splits values 1.2.0 packed into text, but only when the whole value matches exactly and
+ * the value it fills is empty, so it never overwrites what 2.0 saved.
+ */
 function cleanUpLegacyValues(db: Db) {
-  const rows = db.all<LegacyRow>('SELECT id, name, dosage, additionalInfo FROM medications');
+  const rows = db.all<LegacyRow>(
+    'SELECT id, name, generic_name, dosage, dosage_form, additionalInfo FROM medications',
+  );
   for (const row of rows) {
-    const nameMatch = FDA_NAME.exec(row.name);
+    const nameMatch = row.generic_name === null ? FDA_NAME.exec(row.name) : null;
     if (nameMatch) {
       const brand = known(nameMatch[1], UNKNOWN_BRAND);
       const generic = known(nameMatch[2], UNKNOWN_GENERIC);
@@ -119,7 +135,7 @@ function cleanUpLegacyValues(db: Db) {
       }
     }
 
-    const formMatch = DOSAGE_TYPE.exec(row.additionalInfo);
+    const formMatch = row.dosage_form === null ? DOSAGE_TYPE.exec(row.additionalInfo) : null;
     if (formMatch) {
       db.run("UPDATE medications SET dosage_form = ?, additionalInfo = '' WHERE id = ?", [
         known(formMatch[1], UNKNOWN_FORM),
@@ -137,22 +153,4 @@ function cleanUpLegacyValues(db: Db) {
 function known(value: string, placeholder: string): string | null {
   const trimmed = value.trim();
   return trimmed === '' || trimmed === placeholder ? null : trimmed;
-}
-
-/** There is always a profile, and the active profile always exists. */
-function repairInvariants(db: Db) {
-  const anyProfile = db.get('SELECT id FROM profiles LIMIT 1');
-  if (!anyProfile) {
-    db.run(
-      "INSERT INTO profiles (name, dob, pcp, healthConditions, pharmacy) VALUES ('Default Profile', '', '', '', '')",
-    );
-  }
-  db.run('INSERT OR IGNORE INTO app_state (id) VALUES (1)');
-  db.run(`
-    UPDATE app_state
-    SET active_profile_id = (SELECT id FROM profiles ORDER BY name COLLATE NOCASE, id LIMIT 1)
-    WHERE id = 1
-      AND (active_profile_id IS NULL
-        OR active_profile_id NOT IN (SELECT id FROM profiles))
-  `);
 }

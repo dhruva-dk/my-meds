@@ -1,22 +1,51 @@
-import type { Db, SqlValue } from './db';
+import type { Db } from './db';
+import { insertDefaultProfile } from './invariants';
 
-/** Absolute paths of the pre-1.1 database files that exist, if any. */
+/** Absolute paths of copies of the pre-1.1 database files, if they exist. */
 export type LegacyFiles = { profilesPath?: string; medicationsPath?: string };
+
+/** Which legacy files are attached to the connection, and how to detach them. */
+export type AttachedLegacy = { profiles: boolean; medications: boolean; detach(): void };
 
 const PROFILES = 'legacy_profiles';
 const MEDICATIONS = 'legacy_medications';
 
-/** Attaches the legacy files read-only by convention: the import only ever SELECTs from them. */
-export function attachLegacy(db: Db, files: LegacyFiles): () => void {
-  const attached: string[] = [];
-  const attach = (path: string | undefined, schema: string) => {
-    if (!path) return;
-    db.run(`ATTACH DATABASE ? AS ${schema}`, [path]);
-    attached.push(schema);
+/** Attaches the legacy files. Must run outside a transaction, as must `detach`. */
+export function attachLegacy(db: Db, files: LegacyFiles): AttachedLegacy {
+  const profiles = attach(db, files.profilesPath, PROFILES);
+  const medications = attach(db, files.medicationsPath, MEDICATIONS);
+  return {
+    profiles,
+    medications,
+    detach: () => {
+      if (profiles) detach(db, PROFILES);
+      if (medications) detach(db, MEDICATIONS);
+    },
   };
-  attach(files.profilesPath, PROFILES);
-  attach(files.medicationsPath, MEDICATIONS);
-  return () => attached.forEach((schema) => db.exec(`DETACH DATABASE ${schema}`));
+}
+
+function attach(db: Db, path: string | undefined, schema: string): boolean {
+  if (!path) return false;
+  try {
+    db.run(`ATTACH DATABASE ? AS ${schema}`, [path]);
+    return true;
+  } catch (error) {
+    // A damaged file would otherwise block every launch; there is nothing in it to import.
+    if (/not a database/i.test(String(error))) {
+      console.warn(`Skipping unreadable legacy database ${schema}`, error);
+      return false;
+    }
+    throw error;
+  }
+}
+
+function detach(db: Db, schema: string) {
+  try {
+    db.exec(`DETACH DATABASE ${schema}`);
+  } catch (error) {
+    // Don't hide the error that ended the import.
+    console.warn(`Could not detach ${schema}`, error);
+  }
 }
 
 type LegacyProfile = {
@@ -40,23 +69,28 @@ type LegacyMedication = {
  * Copies the first legacy profile (or a new Default Profile) and every legacy medication,
  * keeping their ids, into the new combined tables. Runs inside the migration transaction.
  */
-export function importLegacy(db: Db): void {
-  const profile = hasTable(db, PROFILES, 'profile_table')
-    ? db.get<LegacyProfile>(`SELECT * FROM ${PROFILES}.profile_table ORDER BY id LIMIT 1`)
-    : undefined;
+export function importLegacy(db: Db, legacy: AttachedLegacy): void {
+  const profile =
+    legacy.profiles && hasTable(db, PROFILES, 'profile_table')
+      ? db.get<LegacyProfile>(`SELECT * FROM ${PROFILES}.profile_table ORDER BY id LIMIT 1`)
+      : undefined;
 
   const profileId = profile
-    ? insertProfile(db, [
-        profile.id,
-        profile.name,
-        profile.dob,
-        profile.pcp ?? '',
-        profile.healthConditions ?? '',
-        profile.pharmacy ?? '',
-      ])
-    : insertProfile(db, [null, 'Default Profile', '', '', '', '']);
+    ? db.run(
+        `INSERT INTO profiles (id, name, dob, pcp, healthConditions, pharmacy)
+         VALUES (?, ?, ?, ?, ?, ?)`,
+        [
+          profile.id,
+          profile.name,
+          profile.dob,
+          profile.pcp ?? '',
+          profile.healthConditions ?? '',
+          profile.pharmacy ?? '',
+        ],
+      ).lastInsertRowId
+    : insertDefaultProfile(db);
 
-  if (!hasTable(db, MEDICATIONS, 'medication_table')) return;
+  if (!legacy.medications || !hasTable(db, MEDICATIONS, 'medication_table')) return;
   const medications = db.all<LegacyMedication>(
     `SELECT * FROM ${MEDICATIONS}.medication_table ORDER BY id`,
   );
@@ -76,27 +110,14 @@ export function importLegacy(db: Db): void {
   }
 }
 
+/** An empty legacy file attaches fine but has no tables. */
 function hasTable(db: Db, schema: string, table: string): boolean {
-  try {
-    return !!db.get(`SELECT name FROM ${schema}.sqlite_master WHERE type = 'table' AND name = ?`, [
-      table,
-    ]);
-  } catch {
-    // The file was not attached.
-    return false;
-  }
-}
-
-function insertProfile(db: Db, values: SqlValue[]): number {
-  return db.run(
-    `INSERT INTO profiles (id, name, dob, pcp, healthConditions, pharmacy)
-     VALUES (?, ?, ?, ?, ?, ?)`,
-    values,
-  ).lastInsertRowId;
+  return !!db.get(`SELECT 1 FROM ${schema}.sqlite_master WHERE type = 'table' AND name = ?`, [
+    table,
+  ]);
 }
 
 /** Legacy versions stored full paths; photos are found by filename in Documents. */
 function fileName(imageUrl: string | null | undefined): string | null {
-  const name = imageUrl?.split('/').pop()?.trim();
-  return name ? name : null;
+  return imageUrl?.split('/').pop() || null;
 }
