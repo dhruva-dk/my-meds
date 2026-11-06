@@ -1,13 +1,14 @@
 import { DarkTheme, DefaultTheme, ThemeProvider, type ErrorBoundaryProps } from 'expo-router';
 import { NativeTabs } from 'expo-router/native-tabs';
 import { StatusBar } from 'expo-status-bar';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useColorScheme } from 'react-native';
 import { startApp } from '@/data/startup';
 import { MessageScreen } from '@/ui/MessageScreen';
 import { colors, tintHex } from '@/ui/theme';
 
-export function ErrorBoundary({ retry }: ErrorBoundaryProps) {
+export function ErrorBoundary({ error, retry }: ErrorBoundaryProps) {
+  useEffect(() => console.error('Unhandled render error', error), [error]);
   return (
     <MessageScreen
       title="Something went wrong"
@@ -18,14 +19,15 @@ export function ErrorBoundary({ retry }: ErrorBoundaryProps) {
   );
 }
 
+const lightTheme = {
+  ...DefaultTheme,
+  colors: { ...DefaultTheme.colors, primary: tintHex.light },
+};
+const darkTheme = { ...DarkTheme, colors: { ...DarkTheme.colors, primary: tintHex.dark } };
+
 export default function RootLayout() {
   const [startup] = useState(startApp);
   const scheme = useColorScheme();
-  const base = scheme === 'dark' ? DarkTheme : DefaultTheme;
-  const theme = {
-    ...base,
-    colors: { ...base.colors, primary: scheme === 'dark' ? tintHex.dark : tintHex.light },
-  };
 
   if (!startup.ok) {
     return (
@@ -37,7 +39,7 @@ export default function RootLayout() {
   }
 
   return (
-    <ThemeProvider value={theme}>
+    <ThemeProvider value={scheme === 'dark' ? darkTheme : lightTheme}>
       <StatusBar style="auto" />
       <NativeTabs tintColor={colors.tint}>
         <NativeTabs.Trigger name="(home)">

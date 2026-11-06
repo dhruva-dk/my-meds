@@ -43,6 +43,20 @@ describe('transaction', () => {
   });
 });
 
+describe('transaction with an async function', () => {
+  it('rolls back and refuses, because the work would finish after COMMIT', () => {
+    const db = openTestDb(`${tempDir()}/async.db`);
+    db.exec('CREATE TABLE t (name TEXT NOT NULL)');
+
+    expect(() =>
+      transaction(db, async () => {
+        db.run('INSERT INTO t VALUES (?)', ['too early']);
+      }),
+    ).toThrow(/synchronous/);
+    expect(db.all('SELECT name FROM t')).toEqual([]);
+  });
+});
+
 describe('opening a database', () => {
   it('enforces foreign keys on every connection', () => {
     const path = `${tempDir()}/c.db`;

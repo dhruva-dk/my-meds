@@ -26,6 +26,14 @@
       "expo-sharing",
       "@react-native-community/datetimepicker",
       [
+        "expo-image-picker",
+        {
+          "photosPermission": "My Meds uses your photo library so you can add photos of your medications.",
+          "cameraPermission": "My Meds uses the camera so you can take photos of your medications.",
+          "microphonePermission": false
+        }
+      ],
+      [
         "expo-splash-screen",
         {
           "image": "./assets/icon/splash_logo.png",
@@ -33,7 +41,8 @@
           "resizeMode": "contain",
           "backgroundColor": "#2F3A33"
         }
-      ]
+      ],
+      "./plugins/withNoMacOrVisionPro"
     ]
   }
 }

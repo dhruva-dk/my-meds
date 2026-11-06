@@ -20,6 +20,11 @@ export function transaction<T>(db: Db, fn: () => T): T {
   db.exec('BEGIN');
   try {
     const result = fn();
+    if (isThenable(result)) {
+      throw new Error(
+        'transaction() needs a synchronous function; awaited work would run after COMMIT.',
+      );
+    }
     db.exec('COMMIT');
     return result;
   } catch (error) {
@@ -36,4 +41,8 @@ export function transaction<T>(db: Db, fn: () => T): T {
 export function configureConnection(db: Db): Db {
   db.exec('PRAGMA foreign_keys = ON');
   return db;
+}
+
+function isThenable(value: unknown): boolean {
+  return typeof (value as { then?: unknown } | null)?.then === 'function';
 }
