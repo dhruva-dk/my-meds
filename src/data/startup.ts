@@ -1,6 +1,9 @@
 import { File, Paths } from 'expo-file-system';
+import type { Db } from './db';
+import { devicePhotoFiles } from './devicePhotoFiles';
 import { openAppDatabase, type Documents } from './openAppDatabase';
 import { openDeviceDb } from './openDeviceDb';
+import { removeUnreferencedPhotos } from './photoFiles';
 import { initStore } from './store';
 
 export type StartupResult = { ok: true } | { ok: false; error: unknown };
@@ -16,11 +19,21 @@ export function startApp(): StartupResult {
 function openAndLoad(): StartupResult {
   try {
     const { db, snapshot } = openAppDatabase(deviceDocuments());
-    initStore(db, snapshot);
+    initStore(db, snapshot, devicePhotoFiles);
+    cleanUpPhotos(db);
     return { ok: true };
   } catch (error) {
     console.error('Could not open data', error);
     return { ok: false, error };
+  }
+}
+
+/** A file left over is harmless, so a failure here must not stop the app opening. */
+function cleanUpPhotos(db: Db) {
+  try {
+    removeUnreferencedPhotos(db, devicePhotoFiles);
+  } catch (error) {
+    console.warn('Could not clean up photos', error);
   }
 }
 

@@ -12,7 +12,6 @@ A simple, private medication list app. Your data stays on your device.
 <img width="18%" alt="1" src="https://github.com/user-attachments/assets/87c1150d-c22b-4533-bc7a-e6ca8be35a9c" />
 </p>
 
-
 ---
 
 ## Why My Meds?
@@ -23,45 +22,35 @@ The app has over **7,000 downloads** on the iOS App Store!
 
 ## Tech Stack
 
-Built with Flutter (cross-platform mobile application framework)
+An [Expo](https://expo.dev) app (SDK 58, React Native, TypeScript) with native iOS UI through Expo Router and `@expo/ui` SwiftUI views.
+
+**iOS only.** My Meds 2.0 runs on iPhone with iOS 17 or later, in portrait. Android is no longer supported. The last Flutter build is tagged `flutter-final`.
 
 ## Features
 
-- Search for meds using FDA NDC API
-- Add, edit, and delete meds (SQLite with `flutter_sqflite`)
-- Personal notes and profile info
-- Add images with `image_picker`
-- Export your list to PDF (`flutter_pdf`)
+- Search for meds using the FDA NDC API
+- Add, edit, and delete meds, stored in SQLite on your device
+- Several profiles, each with its own medication list
+- Add photos of your medications
+- Export your list to a PDF to share
+
+The only data that leaves your device is what you type into the FDA search field. There are no analytics or crash-reporting SDKs.
 
 ## Download
 
 - **iOS:** [My Meds on the App Store](https://apps.apple.com/us/app/my-meds-personal-meds-list/id6475703887)
-- **Android:** [Get APKs from GitHub Releases](https://github.com/dhruva-dk/my-meds/releases)
 
 ## Architecture Overview
 
-- **Provider**: App-wide state management (`provider` package).
-- **Models**: Data structures (e.g. [Medication model](lib/data/model/medication_model.dart)).
-- **Services**: Database and native features (e.g. [DatabaseService](lib/data/database/database.dart)).
-- **UI**: Screens and widgets (e.g. [CreateMedicationView](lib/ui/create_medication/create_medication_view.dart)).
+- **Routes** live in `src/app/`. Each tab has its own native stack.
+- **Data** (`src/data/`): synchronous SQLite is the single source of truth. The UI renders one immutable snapshot, rebuilt after every write, and data changes only through commands in `commands.ts`.
+- **Migrations only add** to the 1.2.0 database, so a 1.2.0 build can still open it after a rollback.
+- **Pure logic** sits in `src/domain/`, `src/fda/` and `src/export/`, and is covered by unit tests that run in Node.
 
 ## Development Setup
 
-1. **Clone the repo**
-   ```sh
-   git clone https://github.com/yourusername/my-meds.git
-   cd my-meds
-   ```
-2. **Install Flutter**  
-   [Flutter install guide](https://flutter.dev/docs/get-started/install)
+1. Clone the repo and install dependencies with `npm install`.
+2. Generate the native project and run it in a simulator with `npm run ios`. Xcode is required. Native projects are generated and not committed.
+3. Before committing, run `npm run check` for the typecheck, lint and tests.
 
-3. **Install dependencies**
-
-   ```sh
-   flutter pub get
-   ```
-
-4. **Run the app**
-   ```sh
-   flutter run
-   ```
+Builds are made locally with Xcode. See [the 2.0 release checklist](docs/release-2.0-qa.md).

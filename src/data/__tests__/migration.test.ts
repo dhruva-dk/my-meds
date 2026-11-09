@@ -15,34 +15,27 @@ function backupPathFor(path: string) {
 
 const medicationRows = (db: Db) =>
   db.all(
-    `SELECT id, profile_id, name, generic_name, dosage, dosage_form, ndc, additionalInfo, imageUrl
-     FROM medications ORDER BY id`,
+    'SELECT id, profile_id, name, dosage, additionalInfo, imageUrl FROM medications ORDER BY id',
   );
 
 describe('migrating the seeded 1.2.0 database', () => {
-  it('migrates every medication to exactly the expected row', () => {
+  it('keeps every saved medication unchanged and removes only the orphan', () => {
     const db = prepare(copyFixture('v1-seeded.db'));
 
     expect(medicationRows(db)).toEqual([
       {
         id: 1,
         profile_id: 2,
-        name: 'Lipitor',
-        generic_name: 'Atorvastatin Calcium',
+        name: 'Brand: Lipitor\nGeneric: Atorvastatin Calcium',
         dosage: '',
-        dosage_form: 'Tablet, Film Coated',
-        ndc: null,
-        additionalInfo: '',
+        additionalInfo: 'Dosage type: Tablet, Film Coated',
         imageUrl: null,
       },
       {
         id: 2,
         profile_id: 2,
         name: 'Metformin',
-        generic_name: null,
         dosage: '500 mg',
-        dosage_form: null,
-        ndc: null,
         additionalInfo: 'Twice daily with meals',
         imageUrl: 'image_picker_BE853A23-58D7-456D-A22B-91B9ED7A719C.jpg',
       },
@@ -50,10 +43,7 @@ describe('migrating the seeded 1.2.0 database', () => {
         id: 3,
         profile_id: 2,
         name: 'Insulin glargine',
-        generic_name: null,
-        dosage: '10',
-        dosage_form: null,
-        ndc: null,
+        dosage: '10 ',
         additionalInfo: '',
         imageUrl: null,
       },
@@ -61,32 +51,23 @@ describe('migrating the seeded 1.2.0 database', () => {
         id: 4,
         profile_id: 2,
         name: 'Fish oil',
-        generic_name: null,
         dosage: '1 capsule daily',
-        dosage_form: null,
-        ndc: null,
         additionalInfo: '',
         imageUrl: 'image_picker_9E21B643-C0C6-4540-9401-C76035161FC8.jpg',
       },
       {
         id: 5,
         profile_id: 2,
-        name: 'Ibuprofen',
-        generic_name: 'Ibuprofen',
+        name: 'Brand: Unknown Brand Name\nGeneric: Ibuprofen',
         dosage: '200 mg',
-        dosage_form: null,
-        ndc: null,
-        additionalInfo: '',
+        additionalInfo: 'Dosage type: Unknown',
         imageUrl: null,
       },
       {
         id: 6,
         profile_id: 2,
         name: 'Brand: Advil\nGeneric: Ibuprofen\nTake with food',
-        generic_name: null,
         dosage: '',
-        dosage_form: null,
-        ndc: null,
         additionalInfo: 'Dosage type: Tablet\nRefill in May',
         imageUrl: null,
       },
@@ -94,10 +75,7 @@ describe('migrating the seeded 1.2.0 database', () => {
         id: 7,
         profile_id: 1,
         name: 'Vitamin D',
-        generic_name: null,
         dosage: '1000 IU',
-        dosage_form: null,
-        ndc: null,
         additionalInfo: '',
         imageUrl: 'image_picker_F4DC60E1-C9E7-4B5C-BCB9-DC96667D7202.jpg',
       },
@@ -105,22 +83,16 @@ describe('migrating the seeded 1.2.0 database', () => {
         id: 9,
         profile_id: 3,
         name: 'amoxicillin',
-        generic_name: null,
         dosage: '250 mg',
-        dosage_form: null,
-        ndc: null,
         additionalInfo: 'Finish the full course',
         imageUrl: '',
       },
       {
         id: 10,
         profile_id: 3,
-        name: 'Tylenol',
-        generic_name: null,
+        name: 'Brand: Tylenol\nGeneric: Unknown Generic Name',
         dosage: '160 mg',
-        dosage_form: 'Suspension',
-        ndc: null,
-        additionalInfo: '',
+        additionalInfo: 'Dosage type: Suspension',
         imageUrl: '',
       },
     ]);
@@ -203,57 +175,35 @@ describe('migrating 1.2.0 databases', () => {
 
     const again = prepare(path);
 
-    expect(again.get("SELECT * FROM medications WHERE name = 'Zyrtec'")).toMatchObject({
-      generic_name: 'Cetirizine',
-      dosage: '5',
-      dosage_form: 'Tablet',
-      additionalInfo: '',
+    expect(again.get("SELECT * FROM medications WHERE name LIKE 'Brand: Zyrtec%'")).toMatchObject({
+      name: 'Brand: Zyrtec\nGeneric: Cetirizine',
+      dosage: '5 ',
+      additionalInfo: 'Dosage type: Tablet',
     });
     expect(again.get('PRAGMA user_version')).toEqual({ user_version: 2 });
   });
 
-  it('drops the generic name and dosage form when 1.2.0 renamed the medication', () => {
-    const path = copyFixture('v1-seeded.db');
-    const db = prepare(path);
-    // After a rollback, 1.2.0 can edit only the columns it knows about.
-    db.exec('PRAGMA user_version = 1');
-    db.run("UPDATE medications SET name = 'Crestor', dosage = '10 mg' WHERE id = 1");
-    db.close();
-
-    const again = prepare(path);
-
-    expect(
-      again.get('SELECT name, generic_name, dosage_form FROM medications WHERE id = 1'),
-    ).toEqual({ name: 'Crestor', generic_name: null, dosage_form: null });
-    expect(again.get('SELECT generic_name FROM medications WHERE id = 5')).toEqual({
-      generic_name: 'Ibuprofen',
-    });
-  });
-
-  it('keeps values saved in 2.0 when migrating again after a rollback', () => {
-    const path = copyFixture('v1-seeded.db');
-    const db = prepare(path);
-    // A note typed in 2.0 that happens to look like what 1.2.0 saved.
-    db.run("UPDATE medications SET additionalInfo = 'Dosage type: chewable' WHERE id = 1");
-    db.exec('PRAGMA user_version = 1');
-    db.close();
-
-    expect(
-      prepare(path).get('SELECT dosage_form, additionalInfo FROM medications WHERE id = 1'),
-    ).toEqual({ dosage_form: 'Tablet, Film Coated', additionalInfo: 'Dosage type: chewable' });
-  });
-
-  it('keeps every column 1.2.0 reads', () => {
+  it('leaves the medication table exactly as 1.2.0 created it', () => {
     const db = prepare(copyFixture('v1-seeded.db'));
     const columns = (table: string) =>
       db.all<{ name: string }>(`PRAGMA table_info(${table})`).map((column) => column.name);
 
-    expect(columns('profiles')).toEqual(
-      expect.arrayContaining(['id', 'name', 'dob', 'pcp', 'healthConditions', 'pharmacy']),
-    );
-    expect(columns('medications')).toEqual(
-      expect.arrayContaining(['id', 'profile_id', 'name', 'dosage', 'additionalInfo', 'imageUrl']),
-    );
+    expect(columns('profiles')).toEqual([
+      'id',
+      'name',
+      'dob',
+      'pcp',
+      'healthConditions',
+      'pharmacy',
+    ]);
+    expect(columns('medications')).toEqual([
+      'id',
+      'profile_id',
+      'name',
+      'dosage',
+      'additionalInfo',
+      'imageUrl',
+    ]);
   });
 
   it('leaves the original file byte-identical when the migration fails', () => {

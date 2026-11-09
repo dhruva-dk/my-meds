@@ -32,11 +32,8 @@ export function prepareDatabase(db: Db, legacy: LegacyFiles = {}): Snapshot {
 function migrate(db: Db, legacy: AttachedLegacy | null) {
   createV1Tables(db);
   if (legacy) importLegacy(db, legacy);
-  addV2Schema(db);
-  dropDetailsOfRenamedMedications(db);
+  addAppState(db);
   deleteOrphanedMedications(db);
-  cleanUpLegacyValues(db);
-  db.run('UPDATE medications SET details_name = name');
   db.exec(`PRAGMA user_version = ${SCHEMA_VERSION}`);
 }
 
@@ -67,15 +64,7 @@ function createV1Tables(db: Db) {
   `);
 }
 
-function addV2Schema(db: Db) {
-  const columns = new Set(
-    db.all<{ name: string }>('PRAGMA table_info(medications)').map((column) => column.name),
-  );
-  // details_name is the name the generic name, dosage form and NDC were saved with.
-  // 2.0 sets it on every save; 1.2.0 doesn't know it, so it detects renames made in 1.2.0.
-  for (const column of ['generic_name', 'dosage_form', 'ndc', 'details_name']) {
-    if (!columns.has(column)) db.exec(`ALTER TABLE medications ADD COLUMN ${column} TEXT`);
-  }
+function addAppState(db: Db) {
   db.exec(`
     CREATE TABLE IF NOT EXISTS app_state (
       id INTEGER PRIMARY KEY CHECK (id = 1),
@@ -84,73 +73,7 @@ function addV2Schema(db: Db) {
   `);
 }
 
-/** After a rollback, 1.2.0 can rename a medication; its 2.0 details then describe another drug. */
-function dropDetailsOfRenamedMedications(db: Db) {
-  db.run(`
-    UPDATE medications SET generic_name = NULL, dosage_form = NULL, ndc = NULL
-    WHERE details_name IS NOT name
-  `);
-}
-
 /** 1.2.0 never enabled foreign keys, so deleting a profile left its medications behind. */
 function deleteOrphanedMedications(db: Db) {
   db.run('DELETE FROM medications WHERE profile_id NOT IN (SELECT id FROM profiles)');
-}
-
-const UNKNOWN_BRAND = 'Unknown Brand Name';
-const UNKNOWN_GENERIC = 'Unknown Generic Name';
-const UNKNOWN_FORM = 'Unknown';
-const FDA_NAME = /^Brand: ([^\n]*)\nGeneric: ([^\n]*)$/;
-const DOSAGE_TYPE = /^Dosage type: ([^\n]*)$/;
-
-type LegacyRow = {
-  id: number;
-  name: string;
-  generic_name: string | null;
-  dosage: string;
-  dosage_form: string | null;
-  additionalInfo: string;
-};
-
-/**
- * Splits values 1.2.0 packed into text, but only when the whole value matches exactly and
- * the value it fills is empty, so it never overwrites what 2.0 saved.
- */
-function cleanUpLegacyValues(db: Db) {
-  const rows = db.all<LegacyRow>(
-    'SELECT id, name, generic_name, dosage, dosage_form, additionalInfo FROM medications',
-  );
-  for (const row of rows) {
-    const nameMatch = row.generic_name === null ? FDA_NAME.exec(row.name) : null;
-    if (nameMatch) {
-      const brand = known(nameMatch[1], UNKNOWN_BRAND);
-      const generic = known(nameMatch[2], UNKNOWN_GENERIC);
-      const name = brand ?? generic;
-      if (name) {
-        db.run('UPDATE medications SET name = ?, generic_name = ? WHERE id = ?', [
-          name,
-          generic,
-          row.id,
-        ]);
-      }
-    }
-
-    const formMatch = row.dosage_form === null ? DOSAGE_TYPE.exec(row.additionalInfo) : null;
-    if (formMatch) {
-      db.run("UPDATE medications SET dosage_form = ?, additionalInfo = '' WHERE id = ?", [
-        known(formMatch[1], UNKNOWN_FORM),
-        row.id,
-      ]);
-    }
-
-    const dosage = row.dosage.trim();
-    if (dosage !== row.dosage) {
-      db.run('UPDATE medications SET dosage = ? WHERE id = ?', [dosage, row.id]);
-    }
-  }
-}
-
-function known(value: string, placeholder: string): string | null {
-  const trimmed = value.trim();
-  return trimmed === '' || trimmed === placeholder ? null : trimmed;
 }

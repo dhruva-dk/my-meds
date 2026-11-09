@@ -3,10 +3,12 @@
   "version": "2.0.0",
   "main": "expo-router/entry",
   "dependencies": {
+    "@expo/ui": "~58.0.27",
     "@react-native-community/datetimepicker": "9.2.1",
     "expo": "~58.0.23",
     "expo-constants": "~58.0.15",
     "expo-file-system": "~58.0.13",
+    "expo-font": "~58.0.11",
     "expo-image-manipulator": "~58.0.16",
     "expo-image-picker": "~58.0.10",
     "expo-linking": "~58.0.16",

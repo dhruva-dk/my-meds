@@ -29,22 +29,16 @@ describe('loadSnapshot', () => {
         id: 9,
         profileId: 3,
         name: 'amoxicillin',
-        genericName: null,
         dosage: '250 mg',
-        dosageForm: null,
-        ndc: null,
         notes: 'Finish the full course',
         photo: null,
       },
       {
         id: 10,
         profileId: 3,
-        name: 'Tylenol',
-        genericName: null,
+        name: 'Brand: Tylenol\nGeneric: Unknown Generic Name',
         dosage: '160 mg',
-        dosageForm: 'Suspension',
-        ndc: null,
-        notes: '',
+        notes: 'Dosage type: Suspension',
         photo: null,
       },
     ]);
@@ -57,10 +51,10 @@ describe('loadSnapshot', () => {
     expect(loadSnapshot(db).medications.map((med) => [med.name, med.photo])).toEqual([
       ['Brand: Advil\nGeneric: Ibuprofen\nTake with food', null],
       ['Fish oil', 'image_picker_9E21B643-C0C6-4540-9401-C76035161FC8.jpg'],
-      ['Ibuprofen', null],
       ['Insulin glargine', null],
-      ['Lipitor', null],
+      ['Brand: Lipitor\nGeneric: Atorvastatin Calcium', null],
       ['Metformin', 'image_picker_BE853A23-58D7-456D-A22B-91B9ED7A719C.jpg'],
+      ['Brand: Unknown Brand Name\nGeneric: Ibuprofen', null],
     ]);
   });
 });

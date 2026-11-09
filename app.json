@@ -10,6 +10,7 @@
     "userInterfaceStyle": "automatic",
     "ios": {
       "bundleIdentifier": "com.dhruvakumar.rxtrack",
+      "deploymentTarget": "17.0",
       "buildNumber": "8",
       "appleTeamId": "U8T9DRAA9W",
       "supportsTablet": false,
@@ -42,7 +43,9 @@
           "backgroundColor": "#2F3A33"
         }
       ],
-      "./plugins/withNoMacOrVisionPro"
+      "./plugins/withNoMacOrVisionPro",
+      ["./plugins/withAccentColor", { "light": "#2F3A33", "dark": "#8FBFA0" }],
+      "expo-font"
     ]
   }
 }

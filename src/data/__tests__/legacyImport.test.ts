@@ -57,7 +57,7 @@ describe('importing pre-merge databases', () => {
         id: 8,
         profile_id: 4,
         name: 'Lisinopril',
-        dosage: '10 mg',
+        dosage: '10 mg ',
         additionalInfo: '',
         imageUrl: null,
       },
